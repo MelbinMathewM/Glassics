@@ -1,0 +1,111 @@
+<%- include('../partials/header') %>
+
+<div class="center-div" style="background-image: url(/static/img/hero/bg-3.jpg);">
+    <div class="alogdiv container text-center">
+        <div class="alogcon">
+            <h2 class="alogtit">Admin Login</h2>
+            <% if(locals.message) { %>
+                <div class="alert text-warning text-center" id="message">
+                    <%= message %>
+                </div>
+            <% } %>
+            <div id="error" class="text-warning fw-bold"></div>
+            <form id="form" action="/admin/login" method="post">
+                <div class="form-group mb-3">
+                    <input type="text" class="form-control" id="adminName" name="adminName" placeholder="Enter Username">
+                </div>
+                <div class="form-group mb-3">
+                    <input type="password" id="apassword" class="form-control" name="apassword" placeholder="Enter Password">
+                </div>
+                <button type="submit" class="btn btn-secondary rounded-pill">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+<style>
+    .center-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.alogdiv {
+    background-color: #f8f9fa;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px; /* Adjust the max-width as needed */
+    width: 100%;
+}
+
+.alogtit {
+    color: #333;
+}
+
+.alert {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    border-radius: 20px;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+}
+
+</style>
+
+<%- include('../partials/footer') %>
+
+<script>
+    
+    setTimeout(() => {
+        const messageDiv = document.getElementById('message');
+        if (messageDiv) {
+            messageDiv.remove();
+        }
+    }, 5000);
+    // setTimeout(() => {
+    //     const messageDiv = document.getElementById('error');
+    //     if (messageDiv) {
+    //         messageDiv.remove();
+    //     }
+    // }, 5000);
+
+    let form = document.getElementById("form");
+    let error = document.getElementById("error");
+    let message = [];
+
+    form.addEventListener("submit", (e) => {
+      message = [];
+      let email = document.getElementById("userName").value.trim();
+      let password = document.getElementById("password").value.trim();
+
+      // email_validate(email);
+
+      if (password.length < 3) {
+        message.push("Password should be at least 3 characters");
+      }
+  
+      if (message.length > 0) {
+        e.preventDefault();
+        error.innerText = message[0];
+      }
+    });
+
+    // function email_validate(email) {
+    //   let reg = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    //   let result = reg.test(email);
+    //   if (!result) {
+    //     message.push("Invalid Email");
+    //   }
+    // }
+</script>

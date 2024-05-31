@@ -1,0 +1,98 @@
+<%- include('../partials/header') %>
+
+<div class="container">
+    <h1><%= product.productName %></h1>
+    <div class="product-info">
+        <p><strong>Description:</strong> <%= product.productDescription %></p>
+        <p><strong>Brand:</strong> <%= product.productBrand %></p>
+        <p><strong>Category:</strong> <%= product.productCategory %></p>
+        <p><strong>Frame material:</strong> <%= product.frameMaterial %></p>
+        <p><strong>Frame shape:</strong> <%= product.frameShape %></p>
+        <p><strong>Frame style:</strong> <%= product.frameStyle %></p>
+        <p><strong>Lens type:</strong> <%= product.lensType %></p>
+        <p><strong>Special features:</strong> <%= product.specialFeatures %></p>
+    </div>
+
+    <!-- Display Variants -->
+    <h2>Variants:</h2>
+    <% product.variants.forEach((variant, variantIndex) => { %>
+        <div class="variant">
+            <h3>Variant <%= variantIndex + 1 %></h3>
+            <p><strong>Color:</strong> <%= variant.color %></p>
+            <p><strong>Price:</strong> <%= variant.price %></p>
+            <% if (variant.discountPrice) { %>
+                <p><strong>Discount Price:</strong> <%= variant.discountPrice %></p>
+            <% } %>
+            <!-- Display Images for Variant -->
+            <div class="variant-images">
+                <% variant.images.forEach((image, imageIndex) => { %>
+                    <img src="/static/productImages/<%= image %>" alt="Variant Image">
+                <% }) %>
+            </div>
+            <!-- Display Sub-Variants -->
+            <h4>Sub-Variants:</h4>
+            <% variant.subVariants.forEach((subVariant, subVariantIndex) => { %>
+                <div class="sub-variant">
+                    <p class="pe-4"><strong>Size:</strong> <%= subVariant.size %></p>
+                    <p><strong>Quantity:</strong> <%= subVariant.quantity %></p>
+                    <hr>
+                </div>
+            <% }) %>
+        </div>
+    <% }) %>
+</div>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+        margin-top: 0;
+        color: #333;
+    }
+    .product-info {
+        margin-bottom: 20px;
+    }
+    .variant {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+    }
+    .variant h3 {
+        margin-top: 0;
+        color: #666;
+    }
+    .variant p {
+        margin: 5px 0;
+    }
+    .variant-images{
+        display: flex;
+        flex-direction: row;
+    }
+    .variant-images img {
+
+        margin-bottom: 10px;
+        max-width: 30%;
+        height: auto;
+        border-radius: 5px;
+    }
+    .sub-variant {
+        margin-left: 20px;
+        color: #888;
+        display: flex;
+        flex-direction: row;
+    }
+</style>
+
+<%- include('../partials/footer') %>

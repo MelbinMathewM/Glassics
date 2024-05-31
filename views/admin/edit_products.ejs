@@ -1,0 +1,508 @@
+<%- include('../partials/header') %>
+
+  <div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+        <a class="navbar-brand brand-logo" href="../admin/dashboard"><img src="/assets/images/logo.svg" alt="logo" /></a>
+        <a class="navbar-brand brand-logo-mini" href="../admin/dashboard" src="/assets/images/logo-mini.svg" alt="logo" /></a>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-stretch">
+        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+          <span class="mdi mdi-menu"></span>
+        </button>
+        <div class="search-field d-none d-md-block">
+          <form class="d-flex align-items-center h-100" action="#">
+            <div class="input-group">
+              <div class="input-group-prepend bg-transparent">
+                <i class="input-group-text border-0 mdi mdi-magnify"></i>
+              </div>
+              <input type="text" class="form-control bg-transparent border-0 mt-2" placeholder="Search">
+            </div>
+          </form>
+        </div>
+        <ul class="navbar-nav navbar-nav-right">
+          <a href="/admin/products" class="text-light text-decoration-none"><button class="btn btn-primary">Go Back</button></a>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+          <span class="mdi mdi-menu"></span>
+        </button>
+      </div>
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_sidebar.html -->
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <ul class="nav">
+          <li class="nav-item nav-profile">
+            <a href="#" class="nav-link">
+              <div class="nav-profile-image">
+                <img src="/assets/images/faces/face1.jpg" alt="profile">
+                <span class="login-status online"></span>
+                <!--change to offline or busy as needed-->
+              </div>
+              <div class="nav-profile-text d-flex flex-column">
+                <span class="font-weight-bold mb-2">David Grey. H</span>
+                <span class="text-secondary text-small">Project Manager</span>
+              </div>
+              <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <span class="menu-title">Dashboard</span>
+              <i class="mdi mdi-home menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <span class="menu-title">Products</span>
+              <i class="menu-arrow"></i>
+              <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <span class="menu-title">Users</span>
+              <i class="mdi mdi-contacts menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <span class="menu-title">Orders</span>
+              <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <span class="menu-title">Categories</span>
+              <i class="mdi mdi-chart-bar menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <span class="menu-title">Brands</span>
+              <i class="mdi mdi-table-large menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <span class="menu-title">Coupons</span>
+              <i class="menu-arrow"></i>
+              <i class="mdi mdi-medical-bag menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <span class="menu-title">Banners</span>
+              <i class="menu-arrow"></i>
+              <i class="mdi mdi-medical-bag menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <span class="menu-title">Offers</span>
+              <i class="menu-arrow"></i>
+              <i class="mdi mdi-medical-bag menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <span class="menu-title">Logout</span>
+              <i class="menu-arrow"></i>
+              <i class="mdi mdi-medical-bag menu-icon"></i>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="page-header">
+            <h3 class="page-title">
+              <span class="page-title-icon bg-gradient-primary text-white mr-2">
+                <i class="mdi mdi-home"></i>
+              </span>Products <span class="text-small text-secondary">&gt; &nbsp;Edit Product</span>
+            </h3>
+          </div>
+          <form id="editProductForm" action="" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="productId" value="<%= product._id %>">
+            <div class="form group row mb-3">
+              <div class="col">
+                <label for="productName">Product Name:</label>
+                <input type="text" id="productName" class="form-control" name="productName" value="<%= product.productName %>" required>
+              </div>
+              <div class="col">
+                <label for="productCategory">Product Category:</label>
+                <select class="form-control" id="productCategory" name="productCategory" required>
+                    <% categories.forEach(category => { %>
+                        <option value="<%= category._id %>" <%= product.productCategory.equals(category._id) ? 'selected' : '' %>><%= category.categoryName %></option>
+                    <% }) %>
+                </select>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col">
+                <label for="productBrand">Product Brand:</label>
+                <select class="form-control" id="productBrand" name="productBrand" required>
+                  <% brands.forEach(brand => { %>
+                      <option value="<%= brand._id %>" <%= product.productBrand.equals(brand._id) ? 'selected' : '' %>><%= brand.brandName %></option>
+                  <% }) %>
+                </select>
+              </div>
+              <div class="col">
+                <label for="productGender">Gender:</label><br>
+                <div class="radio-group">
+                  <input type="radio" id="genderMale" name="productGender" value="Male" <%= product.productGender === 'Male' ? 'checked' : '' %>>
+                  <label for="genderMale">Male</label>
+                  
+                  <input type="radio" id="genderFemale" name="productGender" value="Female" <%= product.productGender === 'Female' ? 'checked' : '' %>>
+                  <label for="genderFemale">Female</label>
+                  
+                  <input type="radio" id="genderUnisex" name="productGender" value="Unisex" <%= product.productGender === 'Unisex' ? 'checked' : '' %>>
+                  <label for="genderUnisex">Unisex</label>
+                  <input type="radio" id="genderKids" name="productGender" value="Kids" <%= product.productGender === 'Kids' ? 'checked' : '' %>>
+                  <label for="genderKids">Kids</label>
+                </div>                
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="row">
+                <div class="col">
+                  <label for="frameMaterial">Frame Material:</label>
+                  <select class="form-control" name="frameMaterial">
+                      <option value="">Select Frame Material</option>
+                      <option value="Plastic Frames" <%= product.frameMaterial === 'Plastic Frames' ? 'selected' : '' %>>Plastic Frames</option>
+                      <option value="Metal Frames" <%= product.frameMaterial === 'Metal Frames' ? 'selected' : '' %>>Metal Frames</option>
+                      <option value="Titanium Frames" <%= product.frameMaterial === 'Titanium Frames' ? 'selected' : '' %>>Titanium Frames</option>
+                      <option value="Wooden Frames" <%= product.frameMaterial === 'Wooden Frames' ? 'selected' : '' %>>Wooden Frames</option>
+                      <option value="Acetate Frames" <%= product.frameMaterial === 'Acetate Frames' ? 'selected' : '' %>>Acetate Frames</option>
+                  </select>
+              </div>
+              <div class="col">
+                  <label for="frameShape">Frame Shape:</label>
+                  <select class="form-control" name="frameShape">
+                      <option value="">Select Frame Shape</option>
+                      <option value="Round" <%= product.frameShape === 'Round' ? 'selected' : '' %>>Round</option>
+                      <option value="Square" <%= product.frameShape === 'Square' ? 'selected' : '' %>>Square</option>
+                      <option value="Rectangular" <%= product.frameShape === 'Rectangular' ? 'selected' : '' %>>Rectangular</option>
+                      <option value="Oval" <%= product.frameShape === 'Oval' ? 'selected' : '' %>>Oval</option>
+                      <option value="Cat-Eye" <%= product.frameShape === 'Cat-Eye' ? 'selected' : '' %>>Cat-Eye</option>
+                      <option value="Browline" <%= product.frameShape === 'Browline' ? 'selected' : '' %>>Browline</option>
+                  </select>
+              </div>
+              <div class="col">
+                <label for="frameStyle">Frame Style:</label>
+                <select class="form-control" name="frameStyle">
+                    <option value="">Select Style</option>
+                    <option value="Classic" <%= product.frameStyle === 'Classic' ? 'selected' : '' %>>Classic</option>
+                    <option value="Modern" <%= product.frameStyle === 'Modern' ? 'selected' : '' %>>Modern</option>
+                    <option value="Vintage" <%= product.frameStyle === 'Vintage' ? 'selected' : '' %>>Vintage</option>
+                    <option value="Fashionable" <%= product.frameStyle === 'Fashionable' ? 'selected' : '' %>>Fashionable</option>
+                    <option value="Sporty" <%= product.frameStyle === 'Sporty' ? 'selected' : '' %>>Sporty</option>
+                </select>
+            </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="row">
+                <div class="col">
+                  <label for="lensType">Lens Type:</label>
+                  <select class="form-control" name="lensType">
+                      <option value="">Select Lens Type</option>
+                      <option value="Single Vision Lenses" <%= product.lensType === 'Single Vision Lenses' ? 'selected' : '' %>>Single Vision Lenses</option>
+                      <option value="Bifocal Lenses" <%= product.lensType === 'Bifocal Lenses' ? 'selected' : '' %>>Bifocal Lenses</option>
+                      <option value="Progressive Lenses" <%= product.lensType === 'Progressive Lenses' ? 'selected' : '' %>>Progressive Lenses</option>
+                      <option value="Photochromic Lenses" <%= product.lensType === 'Photochromic Lenses' ? 'selected' : '' %>>Photochromic Lenses</option>
+                      <option value="Polarized Lenses" <%= product.lensType === 'Polarized Lenses' ? 'selected' : '' %>>Polarized Lenses</option>
+                  </select>
+              </div>
+              <div class="col">
+                  <label for="specialFeatures">Special Features:</label>
+                  <select class="form-control" name="specialFeatures">
+                      <option value="">Select Special Features</option>
+                      <option value="Anti-Reflective Coating" <%= product.specialFeatures === 'Anti-Reflective Coating' ? 'selected' : '' %>>Anti-Reflective Coating</option>
+                      <option value="Blue Light Blocking" <%= product.specialFeatures === 'Blue Light Blocking' ? 'selected' : '' %>>Blue Light Blocking</option>
+                      <option value="Scratch Resistant" <%= product.specialFeatures === 'Scratch Resistant' ? 'selected' : '' %>>Scratch Resistant</option>
+                      <option value="UV Protection" <%= product.specialFeatures === 'UV Protection' ? 'selected' : '' %>>UV Protection</option>
+                  </select>
+              </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col">
+                  <label for="productDescription">Product Description:</label>
+                  <textarea id="productDescription" class="form-control" name="productDescription" required><%= product.productDescription %></textarea>
+              </div>
+            </div>
+            <input type="hidden" id="variantCount" name="variantCount" value="<%= product.variants.length %>">
+            <div id="variantsContainer">
+                <% product.variants.forEach((variant, variantIndex) => { %>
+                    <div class="variant">
+                        <h3>Variant <%= variantIndex + 1 %></h3>
+                        <div class="form-group row">
+                          <div class="col">
+                            <label for="variantColor-<%= variantIndex %>">Color:</label>
+                            <input type="text" class="form-control" id="variantColor-<%= variantIndex %>" name="variants[<%= variantIndex %>][color]" value="<%= variant.color %>" required>
+                          </div>
+                          <div class="col">
+                            <label for="variantPrice-<%= variantIndex %>">Price:</label>
+                            <input type="number" class="form-control" id="variantPrice-<%= variantIndex %>" name="variants[<%= variantIndex %>][price]" value="<%= variant.price %>" required>
+                          </div>
+                          <div class="col">
+                            <label for="variantDiscountPrice-<%= variantIndex %>">Discount Price:</label>
+                            <input type="number" class="form-control" id="variantDiscountPrice-<%= variantIndex %>" name="variants[<%= variantIndex %>][discountPrice]" value="<%= variant.discountPrice %>">
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <div class="col">
+                            <label for="variantImages-<%= variantIndex %>">Images:</label>
+                              <div class="form-group row">
+                                <% variant.images.forEach((image, imageIndex) => { %>
+                                  <div class="col">
+                                    <img src="/static/productImages/<%= image %>" alt="Variant Image" width="100">
+                                    <input type="hidden" name="variants[<%= variantIndex %>][existingImages][]" value="<%= image %>">
+                                    <button type="button" class="remove-image-button btn btn-danger" data-variant-index="<%= variantIndex %>" data-image-index="<%= imageIndex %>">X</button>
+                                  </div>
+                                <% }) %>
+                              </div>
+                            <input type="file" class="form-control w-25" id="variantImages-<%= variantIndex %>" name="variants[<%= variantIndex %>][newImages][]" multiple>
+                          </div>
+                        </div>
+                        <div class="subVariantsContainer">
+                            <% variant.subVariants.forEach((subVariant, subVariantIndex) => { %>
+                                <div class="subVariant">
+                                    <h4>Sub-Variant <%= subVariantIndex + 1 %></h4>
+                                    <div class="form-group row">
+                                      <div class="col">
+                                        <label for="subVariantSize-<%= variantIndex %>-<%= subVariantIndex %>">Size:</label>
+                                        <input type="text" class="form-control" id="subVariantSize-<%= variantIndex %>-<%= subVariantIndex %>" name="variants[<%= variantIndex %>][subVariants][<%= subVariantIndex %>][size]" value="<%= subVariant.size %>" required>
+                                      </div>
+                                      <div class="col">
+                                        <label for="subVariantQuantity-<%= variantIndex %>-<%= subVariantIndex %>">Quantity:</label>
+                                        <input type="number" class="form-control" id="subVariantQuantity-<%= variantIndex %>-<%= subVariantIndex %>" name="variants[<%= variantIndex %>][subVariants][<%= subVariantIndex %>][quantity]" value="<%= subVariant.quantity %>" required>
+                                      </div>
+                                      <div class="col">
+                                        <button type="button" class="remove-subvariant-button btn btn-danger mt-4" data-variant-index="<%= variantIndex %>" data-subvariant-index="<%= subVariantIndex %>">Remove Sub-Variant</button>
+                                      </div>
+                                    </div>
+                                </div>
+                            <% }) %>
+                            <button type="button" class="add-subvariant-button btn btn-secondary mb-2" data-variant-index="<%= variantIndex %>">Add Sub-Variant</button>
+                        </div>
+                        <button type="button" class="remove-variant-button btn btn-primary mb-2" data-variant-index="<%= variantIndex %>">Remove Variant</button>
+                    </div>
+                <% }) %>
+            </div>
+            <button class="btn text-light mb-2" style="background-color: blueviolet;" type="button" id="addVariantButton">Add Variant</button>
+            <div>
+                <button class="btn text-light" style="background-color: black;" type="button" onclick="submitEditProductForm()">Save Changes</button>
+            </div>
+        </form>
+        </div>
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+  <!-- Add a modal for cropping -->
+<div id="cropperModal" class="modal">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Crop Image</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="img-container">
+          <img id="sample_image" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cropButton" class="btn btn-primary">Crop</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <style>
+    .radio-group {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+
+      margin-bottom: 10px;
+    }
+
+    .radio-group input[type="radio"] {
+      display: none;
+    }
+
+    .radio-group label {
+      padding: 10px 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+      flex-grow: 1;
+      text-align: center;
+      margin: 0 5px;
+    }
+
+    .radio-group input[type="radio"]:checked+label {
+      background-color: rgb(123, 59, 187);
+      color: white;
+      border-color: rgb(123, 59, 187);
+    }
+  </style>
+  <!-- plugins:js -->
+  <script>
+    // Script to handle dynamic addition/removal of variants and sub-variants
+    document.addEventListener('DOMContentLoaded', () => {
+        const variantsContainer = document.getElementById('variantsContainer');
+        const addVariantButton = document.getElementById('addVariantButton');
+
+        addVariantButton.addEventListener('click', () => {
+            const variantIndex = document.querySelectorAll('.variant').length;
+            const variantHtml = `
+                <div class="variant">
+                    <h3>Variant ${variantIndex + 1}</h3>
+                    <div class="form-group row">
+                      <div class="col">
+                        <label for="variantColor-${variantIndex}">Color:</label>
+                        <input type="text" class="form-control" id="variantColor-${variantIndex}" name="variants[${variantIndex}][color]" required>
+                      </div>
+                      <div class="col">
+                        <label for="variantPrice-${variantIndex}">Price:</label>
+                        <input type="number" class="form-control" id="variantPrice-${variantIndex}" name="variants[${variantIndex}][price]" required>
+                      </div>
+                      <div class="col">
+                        <label for="variantDiscountPrice-${variantIndex}">Discount Price:</label>
+                        <input type="number" class="form-control" id="variantDiscountPrice-${variantIndex}" name="variants[${variantIndex}][discountPrice]">
+                      </div>
+                      <div class="col">
+                        <label for="variantImages-${variantIndex}">Images:</label>
+                        <input type="file" class="form-control" id="variantImages-${variantIndex}" name="variantImages-${variantIndex}[]" multiple>
+                      </div>
+                    </div>
+                    <div class="subVariantsContainer">
+                        <button type="button" class="add-subvariant-button btn mb-2" style="background-color : yellow;" data-variant-index="${variantIndex}">Add Sub-Variant</button>
+                    </div>
+                    <button type="button" class="remove-variant-button btn mb-2" style="background-color : pink;" data-variant-index="${variantIndex}">Remove Variant</button>
+                </div>
+            `;
+            variantsContainer.insertAdjacentHTML('beforeend', variantHtml);
+        });
+
+        variantsContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('add-subvariant-button')) {
+                const variantIndex = e.target.dataset.variantIndex;
+                const subVariantsContainer = e.target.parentElement;
+                const subVariantIndex = subVariantsContainer.querySelectorAll('.subVariant').length;
+                const subVariantHtml = `
+                    <div class="subVariant">
+                        <h4>Sub-Variant ${subVariantIndex + 1}</h4>
+                        <div class="form-group row">
+                          <div class="col">
+                            <label for="subVariantSize-${variantIndex}-${subVariantIndex}">Size:</label>
+                            <input type="text" id="subVariantSize-${variantIndex}-${subVariantIndex}" class="form-control" name="variants[${variantIndex}][subVariants][${subVariantIndex}][size]" required>
+                          </div>
+                          <div class="col">
+                            <label for="subVariantQuantity-${variantIndex}-${subVariantIndex}">Quantity:</label>
+                            <input type="number" id="subVariantQuantity-${variantIndex}-${subVariantIndex}" class="form-control" name="variants[${variantIndex}][subVariants][${subVariantIndex}][quantity]" required>
+                          </div>
+                          <div class="col">
+                            <button type="button" class="btn btn-danger mt-4 remove-subvariant-button" data-variant-index="${variantIndex}" data-subvariant-index="${subVariantIndex}">Remove Sub-Variant</button>
+                          </div>
+                        </div>
+                    </div>
+                `;
+                subVariantsContainer.insertAdjacentHTML('beforeend', subVariantHtml);
+            }
+
+            if (e.target.classList.contains('remove-variant-button')) {
+                const variantIndex = e.target.dataset.variantIndex;
+                const variantElement = e.target.closest('.variant');
+                variantElement.remove();
+            }
+
+            if (e.target.classList.contains('remove-subvariant-button')) {
+                const subVariantElement = e.target.closest('.subVariant');
+                subVariantElement.remove();
+            }
+        });
+
+        // Handle image removal
+        variantsContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-image-button')) {
+                const variantIndex = e.target.dataset.variantIndex;
+                const imageIndex = e.target.dataset.imageIndex;
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = `variants[${variantIndex}][removedImages][]`;
+                hiddenInput.value = imageIndex;
+                e.target.parentElement.appendChild(hiddenInput);
+                e.target.parentElement.remove();
+            }
+        });
+    });
+</script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <style>
+    .img-container {
+      width: 100%;
+      height: 400px;
+      max-height: 400px;
+    }
+  
+    .img-container img {
+      max-width: 100%;
+    }
+  </style>
+  <script>
+    async function submitEditProductForm() {
+        const form = document.getElementById('editProductForm');
+        
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch('/admin/products/edit_products', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: result.message,
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location.href = '/admin/products';
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: result.message
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An unexpected error occurred.'
+            });
+        }
+    }
+</script>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,706 @@
+<%- include('../partials/header') %>
+
+  <div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+        <a class="navbar-brand brand-logo" href="../admin/dashboard"><img src="/assets/images/logo.svg"
+            alt="logo" /></a>
+        <a class="navbar-brand brand-logo-mini" href="../admin/dashboard" src="/assets/images/logo-mini.svg"
+          alt="logo" /></a>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-stretch">
+        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+          <span class="mdi mdi-menu"></span>
+        </button>
+        <div class="search-field d-none d-md-block">
+          <form class="d-flex align-items-center h-100" action="#">
+            <div class="input-group">
+              <div class="input-group-prepend bg-transparent">
+                <i class="input-group-text border-0 mdi mdi-magnify"></i>
+              </div>
+              <input type="text" class="form-control bg-transparent border-0 mt-2" placeholder="Search">
+            </div>
+          </form>
+        </div>
+        <ul class="navbar-nav navbar-nav-right">
+          <a href="/admin/products" class="text-light text-decoration-none"><button class="btn btn-primary">Go
+              Back</button></a>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+          data-toggle="offcanvas">
+          <span class="mdi mdi-menu"></span>
+        </button>
+      </div>
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_sidebar.html -->
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <ul class="nav">
+          <li class="nav-item nav-profile">
+            <a href="#" class="nav-link">
+              <div class="nav-profile-image">
+                <img src="/assets/images/faces/face1.jpg" alt="profile">
+                <span class="login-status online"></span>
+                <!--change to offline or busy as needed-->
+              </div>
+              <div class="nav-profile-text d-flex flex-column">
+                <span class="font-weight-bold mb-2">David Grey. H</span>
+                <span class="text-secondary text-small">Project Manager</span>
+              </div>
+              <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <span class="menu-title">Dashboard</span>
+              <i class="mdi mdi-home menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <span class="menu-title">Products</span>
+              <i class="menu-arrow"></i>
+              <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <span class="menu-title">Users</span>
+              <i class="mdi mdi-contacts menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <span class="menu-title">Orders</span>
+              <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <span class="menu-title">Categories</span>
+              <i class="mdi mdi-chart-bar menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <span class="menu-title">Brands</span>
+              <i class="mdi mdi-table-large menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <span class="menu-title">Coupons</span>
+              <i class="menu-arrow"></i>
+              <i class="mdi mdi-medical-bag menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <span class="menu-title">Banners</span>
+              <i class="menu-arrow"></i>
+              <i class="mdi mdi-medical-bag menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <span class="menu-title">Offers</span>
+              <i class="menu-arrow"></i>
+              <i class="mdi mdi-medical-bag menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <span class="menu-title">Logout</span>
+              <i class="menu-arrow"></i>
+              <i class="mdi mdi-medical-bag menu-icon"></i>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="page-header">
+            <h3 class="page-title">
+              <span class="page-title-icon bg-gradient-primary text-white mr-2">
+                <i class="mdi mdi-home"></i>
+              </span>Products <span class="text-small text-secondary">&gt; &nbsp;Add Products</span>
+            </h3>
+          </div>
+          <form id="productForm" enctype="multipart/form-data">
+            <div id="mainError" class="text-warning fw-bold text-center"></div>
+            <div class="form-group mb-3">
+              <div class="row">
+                <div class="col">
+                  <label for="productName">Product Name</label>
+                  <input type="text" name="productName" class="form-control" placeholder="Enter Name" id="productName">
+                </div>
+                <div class="col">
+                  <label for="productCategory">Category</label>
+                  <select class="form-control" name="productCategory">
+                    <option value="">Select Category</option>
+                    <% categories.forEach(category=> { %>
+                      <option value="<%= category._id %>">
+                        <%= category.categoryName %>
+                      </option>
+                      <% }); %>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="row">
+                <div class="col">
+                  <label for="productBrand">Brand:</label>
+                  <select class="form-control" name="productBrand">
+                    <option value="">Select Brand</option>
+                    <% brands.forEach(brand=> { %>
+                      <option value="<%= brand._id %>">
+                        <%= brand.brandName %>
+                      </option>
+                      <% }); %>
+                  </select>
+                </div>
+                <div class="col">
+                  <label for="productGender">Gender:</label><br>
+                  <div class="radio-group">
+                    <input type="radio" id="genderMale" name="productGender" value="Male">
+                    <label for="genderMale">Male</label>
+                    <input type="radio" id="genderFemale" name="productGender" value="Female">
+                    <label for="genderFemale">Female</label>
+                    <input type="radio" id="genderUnisex" name="productGender" value="Unisex">
+                    <label for="genderUnisex">Unisex</label>
+                    <input type="radio" id="genderKids" name="productGender" value="Kids">
+                    <label for="genderKids">Kids</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="row">
+                <div class="col">
+                  <label for="frameMaterial">Frame Material:</label>
+                  <select class="form-control" name="frameMaterial">
+                      <option value="">Select Frame Material</option>
+                      <option value="Plastic Frames">Plastic Frames</option>
+                      <option value="Metal Frames">Metal Frames</option>
+                      <option value="Titanium Frames">Titanium Frames</option>
+                      <option value="Wooden Frames">Wooden Frames</option>
+                      <option value="Acetate Frames">Acetate Frames</option>
+                  </select>
+              </div>
+              <div class="col">
+                  <label for="frameShape">Frame Shape:</label>
+                  <select class="form-control" name="frameShape">
+                      <option value="">Select Frame Shape</option>
+                      <option value="Round">Round</option>
+                      <option value="Square">Square</option>
+                      <option value="Rectangular">Rectangular</option>
+                      <option value="Oval">Oval</option>
+                      <option value="Cat-Eye">Cat-Eye</option>
+                      <option value="Browline">Browline</option>
+                  </select>
+              </div>
+              <div class="col">
+                <label for="style">Style:</label>
+                <select class="form-control" name="frameStyle">
+                    <option value="">Select Style</option>
+                    <option value="Classic">Classic</option>
+                    <option value="Modern">Modern</option>
+                    <option value="Vintage">Vintage</option>
+                    <option value="Fashionable">Fashionable</option>
+                    <option value="Sporty">Sporty</option>
+                </select>
+            </div>
+          </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col">
+            <label for="lensType">Lens Type:</label>
+            <select class="form-control" name="lensType">
+                <option value="">Select Lens Type</option>
+                <option value="Single Vision Lenses">Single Vision Lenses</option>
+                <option value="Bifocal Lenses">Bifocal Lenses</option>
+                <option value="Progressive Lenses">Progressive Lenses</option>
+                <option value="Photochromic Lenses">Photochromic Lenses</option>
+                <option value="Polarized Lenses">Polarized Lenses</option>
+            </select>
+        </div>
+        <div class="col">
+            <label for="specialFeatures">Special Features:</label>
+            <select class="form-control" name="specialFeatures">
+                <option value="">Select Special Features</option>
+                <option value="Anti-Reflective Coating">Anti-Reflective Coating</option>
+                <option value="Blue Light Blocking">Blue Light Blocking</option>
+                <option value="Scratch Resistant">Scratch Resistant</option>
+                <option value="UV Protection">UV Protection</option>
+            </select>
+        </div>
+        </div>
+      </div>
+            <div class="form-group mb-3">
+              <div class="row">
+                <div class="col">
+                  <label for="productDescription">Description:</label>
+                  <textarea id="productDescription" class="form-control" name="productDescription"></textarea>
+                </div>
+              </div>
+            </div>
+            <h6 class="text-center">Add variants</h6>
+            <div id="variantError" class="text-warning fw-bold text-center"></div>
+            <div id="variantsContainer">
+              <!-- Variants will be added here -->
+            </div>
+            <div class="form-group">
+              <div class="row">
+                <div class="col">
+                  <button type="button" class="btn btn-primary me-3" onclick="addVariant()">Add Variant</button>
+                  <button class="btn btn-success" type="submit">Submit</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+  <div class="text-center" id="image-preview-container"></div>
+  <div id="modal-container"></div>
+  <style>
+.preview {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.preview img {
+    max-width: 100px;
+    margin: 5px;
+}
+
+.radio-group {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.radio-group input[type="radio"] {
+    display: none;
+}
+
+.radio-group label {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    flex-grow: 1;
+    text-align: center;
+    margin: 0 5px;
+}
+
+.radio-group input[type="radio"]:checked + label {
+    background-color: rgb(123, 59, 187);
+    color: white;
+    border-color: rgb(123, 59, 187);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 25%;
+    margin-top: 50px;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 60%;
+    max-width: 600px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.image-preview {
+    display: inline-block;
+    margin: 10px;
+    border: 1px solid #ddd;
+    padding: 5px;
+}
+
+.image-preview img {
+    max-width: 150px;
+    max-height: 150px;
+}
+
+.img-container {
+    width: 100%;
+    height: 400px;
+    max-height: 400px;
+}
+
+.img-container img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.modal-footer {
+    justify-content: center;
+}
+
+.btn {
+    margin-top: 10px;
+}
+
+  </style>
+  <!-- plugins:js -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    let variantCount = 0;
+
+    function addVariant() {
+      variantCount++;
+      const variantHTML = `
+        <div class="variant border rounded p-3 mb-3">
+          <h5>Variant ${variantCount}</h5>
+          <div id="subvariantError${variantCount}" class="text-warning fw-bold text-center"></div>
+          <div class="form-group">
+            <div class="row">
+            <div class="col">
+              <label for="color${variantCount}">Color:</label>
+              <input type="text" id="color${variantCount}" name="variants[${variantCount - 1}][color]" class="form-control">
+            </div>
+            <div class="col">
+              <label for="variantPrice${variantCount}">Price:</label>
+              <input type="number" id="variantPrice${variantCount}" name="variants[${variantCount - 1}][price]" class="form-control">
+            </div>
+            <div class="col">
+              <label for="variantDiscountPrice${variantCount}">Discount Price:</label>
+              <input type="number" id="variantDiscountPrice${variantCount}" name="variants[${variantCount - 1}][discountPrice]" class="form-control">
+            </div>
+            <div class="col">
+              <label for="variantImages${variantCount}">Images:</label>
+              <input type="file" id="variantImages${variantCount}" name="variantImages[${variantCount - 1}][]" class="file-input form-control" accept="image/*" multiple>
+            </div>
+            
+            <div id="dynamic-inputs">
+             
+            </div>
+          </div>
+          <h6>Sizes and Quantities</h6>
+          <div id="sizesContainer${variantCount}">
+            <!-- Sizes will be added here -->
+          </div>
+          <button type="button" class="btn btn-primary" onclick="addSize(${variantCount})">Add Size</button>
+          <button type="button" class="btn btn-danger" onclick="removeVariant(${variantCount})">Remove Variant</button>
+        </div>
+      `;
+      document.getElementById('variantsContainer').insertAdjacentHTML('beforeend', variantHTML);
+
+      document.querySelector(`#variantImages${variantCount}`).addEventListener('change', handleImageSelect);
+    }
+
+    function addSize(variantIndex) {
+      const sizeHTML = `
+        <div class="form-group row">
+          <div class="col">
+            <label for="size${variantIndex}">Size:</label>
+            <input type="text" id="size${variantIndex}" name="variants[${variantIndex - 1}][sizes][]" class="form-control">
+          </div>
+          <div class="col">
+            <label for="quantity${variantIndex}">Quantity:</label>
+            <input type="number" id="quantity${variantIndex}" name="variants[${variantIndex - 1}][quantities][]" class="form-control">
+          </div>
+          <div class="col">
+            <button type="button" class="btn btn-danger mt-4" onclick="removeSize(${variantIndex}, this.parentNode.parentNode.remove())">Remove Size</button>
+          </div>
+        </div>
+        
+      `;
+      document.getElementById(`sizesContainer${variantIndex}`).insertAdjacentHTML('beforeend', sizeHTML);
+    }
+
+    function removeVariant(variantIndex) {
+      const variantElement = document.querySelector(`#variantsContainer .variant:nth-child(${variantIndex})`);
+      if (variantElement) {
+        variantElement.remove();
+        variantCount--;
+      }
+    }
+
+    function removeSize(variantIndex, sizeIndex) {
+      const sizeElement = document.querySelector(`#sizesContainer${variantIndex} .form-group:nth-child(${sizeIndex})`);
+      if (sizeElement) {
+        sizeElement.remove();
+      }
+    }
+
+    let form = document.getElementById("productForm");
+    let mainError = document.getElementById("mainError");
+    let variantError = document.getElementById("variantError");
+    let subvariantError = document.getElementById("subvariantError");
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      let mainMessage = []; // Array to collect main form error messages
+      let variantMessage = []; // Array to collect variant error messages
+
+      // Validate Product Name
+      let productName = document.getElementById("productName").value.trim();
+      if (!productName) {
+        mainMessage.push("Product Name is required.");
+      }
+
+      // Validate Product Category
+      let productCategory = document.querySelector("[name='productCategory']").value;
+      if (!productCategory) {
+        mainMessage.push("Product Category is required.");
+      }
+
+      // Validate Product Brand
+      let productBrand = document.querySelector("[name='productBrand']").value;
+      if (!productBrand) {
+        mainMessage.push("Product Brand is required.");
+      }
+
+      // Validate Product Description
+      let productDescription = document.getElementById("productDescription").value.trim();
+      if (!productDescription) {
+        mainMessage.push("Product Description is required.");
+      }
+
+      // Validate Variants
+      let variants = document.querySelectorAll(".variant");
+      if (variants.length === 0) {
+        variantMessage.push("At least one variant is required.");
+      } else {
+        variants.forEach((variant, index) => {
+          // Validate Color
+          let color = variant.querySelector(`[name="variants[${index}][color]"]`).value.trim();
+          if (!color) {
+            variantMessage.push(`Color is required for Variant ${index + 1}.`);
+          }
+
+          // Validate Price
+          let price = variant.querySelector(`[name="variants[${index}][price]"]`).value.trim();
+          if (!price || isNaN(price) || Number(price) <= 0) {
+            variantMessage.push(`Valid Price is required for Variant ${index + 1}.`);
+          }
+
+          // Validate Sizes and Quantities
+          let sizes = variant.querySelectorAll(`[name="variants[${index}][sizes][]"]`);
+          let quantities = variant.querySelectorAll(`[name="variants[${index}][quantities][]"]`);
+          if (sizes.length === 0 || quantities.length === 0) {
+            let subvariantError = document.getElementById(`subvariantError${index + 1}`);
+            subvariantError.innerText = `At least one size and quantity is required for Variant ${index + 1}.`;
+            subvariantError.style.display = "block";
+          } else {
+            sizes.forEach((size, sizeIndex) => {
+              if (!size.value.trim()) {
+                let subvariantError = document.getElementById(`subvariantError${index + 1}`);
+                subvariantError.innerText = `Size ${sizeIndex + 1} is required for Variant ${index + 1}.`;
+                subvariantError.style.display = "block";
+              }
+            });
+            quantities.forEach((quantity, quantityIndex) => {
+              if (!quantity.value.trim() || isNaN(quantity.value) || Number(quantity.value) <= 0) {
+                let subvariantError = document.getElementById(`subvariantError${index + 1}`);
+                subvariantError.innerText = `Valid Quantity ${quantityIndex + 1} is required for Variant ${index + 1}.`;
+                subvariantError.style.display = "block";
+              }
+            });
+          }
+        });
+      }
+
+      // Show errors or proceed with form submission
+      if (mainMessage.length > 0 || variantMessage.length > 0) {
+        if (mainMessage.length > 0) {
+          mainError.innerText = mainMessage[0];
+          mainError.style.display = "block";
+        } else {
+          mainError.style.display = "none";
+        }
+        if (variantMessage.length > 0) {
+          variantError.innerText = variantMessage[0];
+          variantError.style.display = "block";
+        } else {
+          variantError.style.display = "none";
+        }
+      } else {
+        mainError.style.display = "none";
+        variantError.style.display = "none";
+        const formData = new FormData(this);
+
+        fetch('/admin/products/add_products', {
+          method: 'POST',
+          body: formData,
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              Swal.fire(
+                'Added',
+                'The product is added',
+                'success'
+              )
+              setTimeout(() => location.href = '/admin/products',1000)
+              
+            } else {
+              Swal.fire(
+                'Error!',
+                'Could not add product',
+                'error'
+              )
+            }
+          })
+          .catch(error => {
+            Swal.fire(
+                'Error!',
+                'Could not add product',
+                'error'
+              )
+          });
+      }
+    });
+  </script>
+<script>
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    document.body.addEventListener('change', function(event) {
+        if (event.target.classList.contains('file-input')) {
+            handleFileInput(event.target);
+        }
+    });
+
+    function handleFileInput(inputElement) {
+        const files = inputElement.files;
+        const previewContainer = document.getElementById('image-preview-container');
+        previewContainer.innerHTML = ''; // Clear previous previews
+        Array.from(files).forEach(file => {
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imgPreview = document.createElement('div');
+                    imgPreview.classList.add('image-preview');
+                    const imgElement = document.createElement('img');
+                    imgElement.src = e.target.result;
+                    imgElement.addEventListener('click', function() {
+                        showCropperModal(e.target.result, inputElement, file);
+                    });
+                    imgPreview.appendChild(imgElement);
+                    previewContainer.appendChild(imgPreview);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    function showCropperModal(imageSrc, inputElement, originalFile) {
+        const existingModal = document.querySelector('.modal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+
+        const modal = document.createElement('div');
+        modal.classList.add('modal');
+        modal.style.display = 'block';
+
+        const modalContent = document.createElement('div');
+        modalContent.classList.add('modal-content');
+
+        const closeButton = document.createElement('span');
+        closeButton.classList.add('close');
+        closeButton.innerHTML = '&times;';
+        closeButton.onclick = function() {
+            modal.remove();
+        };
+
+        const imgContainer = document.createElement('div');
+        imgContainer.classList.add('img-container');
+        const img = document.createElement('img');
+        img.src = imageSrc;
+        img.id = 'image-to-crop';
+        imgContainer.appendChild(img);
+
+        const cropButton = document.createElement('button');
+        cropButton.classList.add('btn', 'btn-primary');
+        cropButton.innerText = 'Crop';
+        cropButton.addEventListener('click', function() {
+            cropImage(img, inputElement, modal, originalFile);
+        });
+
+        modalContent.appendChild(closeButton);
+        modalContent.appendChild(imgContainer);
+        modalContent.appendChild(cropButton);
+        modal.appendChild(modalContent);
+        document.getElementById('modal-container').appendChild(modal);
+
+        img.onload = function() {
+            const cropper = new Cropper(img, {
+                aspectRatio: 1,
+                viewMode: 1,
+            });
+            img.cropperInstance = cropper;
+        };
+    }
+
+    function cropImage(img, inputElement, modal, originalFile) {
+        const cropper = img.cropperInstance;
+        const canvas = cropper.getCroppedCanvas();
+        canvas.toBlob((blob) => {
+            const newFile = new File([blob], 'cropped_' + originalFile.name, { type: originalFile.type });
+            const dataTransfer = new DataTransfer();
+
+            Array.from(inputElement.files).forEach(file => {
+                if (file !== originalFile) {
+                    dataTransfer.items.add(file);
+                }
+            });
+
+            dataTransfer.items.add(newFile);
+            inputElement.files = dataTransfer.files;
+
+            const previewContainer = document.getElementById('image-preview-container');
+            const imgElement = previewContainer.querySelector(`img[src="${img.src}"]`);
+            imgElement.src = URL.createObjectURL(blob);
+
+            modal.remove();
+        }, originalFile.type);
+    }
+});
+
+
+</script>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  
+
+  <%- include('../partials/footer') %>

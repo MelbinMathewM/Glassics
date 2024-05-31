@@ -1,0 +1,91 @@
+<%- include('../partials/header') %>
+
+<div class="container text-center pt-5 mt-5 border w-50">
+    <div class="header__logo">
+        <a href="/"><img src="" alt=""></a>
+    </div>
+    <h3 class="pt-3 pb-3">OTP Verification</h3>
+    <h5>Please enter the OTP below</h5>
+    <div class="otp-input pt-5">
+        <form id="otpForm" action="/otp_validation" method="POST">
+            <div class="form-group text-center mb-3">
+                <input class="form-control" type="text" pattern="[0-9]*" name="otp" minlength="6" maxlength="6" required>
+            </div>
+            <button class="btn btn-secondary" type="submit">Verify OTP</button>
+        </form>
+    </div>
+    <p id="message"></p>
+    <p>Not received the code? You can Resend code after 1 minute</p>
+    <div class="text-center mb-3">
+        <div class="d-flex justify-content-center">
+            <button id="resendOTPBtn" class="btn btn-primary me-3" style="display:none;">Resend OTP</button>
+            <span id="otp-timer" class="otp-timer text-danger btn btn-warning fw-bold">00:00</span>  
+        </div>
+    </div>
+</div>
+
+<script>
+    let otpDurationSeconds = 60; // 1 minute
+    const otpTimerElement = document.getElementById('otp-timer');
+    const otpForm = document.getElementById('otpForm');
+    const resendOTPBtn = document.getElementById('resendOTPBtn');
+
+    document.addEventListener("DOMContentLoaded", function() {
+        resendOTPBtn.addEventListener('click', resendOTP);
+        startOTPTimer();
+    });
+
+    function updateOTPTimer() {
+        const minutes = Math.floor(otpDurationSeconds / 60);
+        const seconds = otpDurationSeconds % 60;
+        const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        otpTimerElement.textContent = formattedTime;
+
+        // Decrement the timer
+        otpDurationSeconds--;
+
+        // Check if the timer has reached 0
+        if (otpDurationSeconds < 0) {
+            clearInterval(timerInterval); // Stop the timer
+            otpTimerElement.textContent = '00:00';
+            resendOTPBtn.style.display = 'block'; // Show the Resend OTP button
+            otpForm.reset(); // Reset the form
+        }
+    }
+
+    function startOTPTimer() {
+        updateOTPTimer();
+        timerInterval = setInterval(updateOTPTimer, 1000);
+    }
+
+    async function resendOTP() {
+        try {
+            const response = await fetch('/otp_resend', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                otpDurationSeconds = 60; // Reset the timer duration
+                startOTPTimer(); // Restart the timer
+                resendOTPBtn.style.display = 'none'; // Hide the Resend OTP button
+                alert('OTP resent successfully.');
+            } else {
+                console.error('Error resending OTP:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error resending OTP:', error);
+        }
+    }
+
+    // Function to submit the OTP form
+    otpForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        clearInterval(timerInterval); // Stop the timer
+        this.submit(); // Submit the form
+    });
+</script>
+
+<%- include('../partials/footer') %>

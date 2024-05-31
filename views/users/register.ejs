@@ -1,0 +1,145 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="text-center mt-5 mb-5">
+    <div class="container align-self- border regcon" style="max-width: 500px;">
+        <div class="header__logo">
+            <a href="./index.html"><img src="img/logo.png" alt=""></a>
+        </div>
+        <div class="title regtit">
+            <h2 class="pb-3 pt-3">Registration Form</h2>
+            <% if(locals.message) { %>
+                <span id="message" class="alert text-warning text-center message" role="alert"><%= message %></span>
+            <% } %>
+            <div id="error" class="text-warning fw-bold text-center"></div>
+            <form action="/register" method="post" enctype="multipart/form-data" id="form">
+                <div class="form-group mb-3">
+                    <input type="text" name="customerName" class="form-control" placeholder="Enter Name" id="customerName">
+                </div>
+                <div class="form-group mb-3">
+                    <input type="text" name="userName" class="form-control" placeholder="Enter Username" id="userName">
+                </div>
+                <div class="form-group mb-3">
+                    <input type="email" name="userEmail" class="form-control" placeholder="Enter Email" id="userEmail">
+                </div>
+                <div class="form-group mb-3">
+                    <input type="text" name="userMobile" class="form-control" placeholder="Enter Mobile Number" id="userMobile">
+                </div>
+                <div class="form-group mb-3">
+                    <input type="file" name="userImage" class="form-control" placeholder="Upload Image" id="userImage">
+                </div>
+                <div class="form-group mb-3">
+                    <input type="password" name="password" class="form-control" placeholder="Enter Password" id="password">
+                </div>
+                <div class="form-group mb-3">
+                    <input type="password" name="cpassword" class="form-control" placeholder="Confirm Password" id="cpassword">
+                </div>
+                <button type="submit" class="btn btn-secondary rounded-pill mb-2">Get OTP</button>
+                <hr>
+            </form>
+            <a href="/auth/google" class="w-75 btn btn-secondary rounded-pill mb-4">Continue with Google</a><br>
+            <span class="text-dark d-block">Already have an account? <a href="/login">Sign in!</a></span>
+            <div id="message"></div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    setTimeout(() => {
+        const messageDiv = document.getElementById('message');
+        if (messageDiv) {
+            messageDiv.remove();
+        }
+    }, 5000);
+</script>
+<script>
+    let form = document.getElementById("form");
+    let error = document.getElementById("error");
+    let message = [];
+    let name_reg = /^[a-zA-Z ]+$/;
+    let uname_reg = /^[A-Za-z][A-Za-z0-9_]*$/;
+    let mobile_reg = /^\d{10}$/;
+    let mob_zero = /^0{10}$/;
+    let password_reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    form.addEventListener("submit", (e) => {
+        message = [];
+        const customerName = document.getElementById("customerName").value.trim();
+        const userName = document.getElementById('userName').value.trim();
+        const userEmail = document.getElementById("userEmail").value.trim();
+        const userMobile = document.getElementById("userMobile").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const cpassword = document.getElementById('cpassword').value.trim();
+
+        if(customerName === ''){
+            message.push("Name is required");
+        }else if(!name_reg.test(customerName)) {
+            message.push("Enter a valid Name");
+        }
+
+        if(userName === ''){
+            message.push("Name is required");
+        }else if(!uname_reg.test(userName)) {
+            message.push("Enter a valid username. Username must start with an alphabet and can only include uppercase letters, lowercase letters, numbers, and underscores.");
+        }
+
+        if(userEmail === ''){
+            message.push("Email is required");
+        }else{
+            email_validate(userEmail);
+        }
+
+        if (!mobile_reg.test(userMobile)) {
+            message.push("Mobile Number should be 10 digit numbers");
+        } else if (mob_zero.test(userMobile)) {
+            message.push("Mobile number cannot be 10 consecutive zeros.");
+        }
+
+        let passwordErrors = validatePassword(password);
+        if (passwordErrors.length > 0) {
+            message.push(...passwordErrors);
+        }
+
+        if (cpassword === ''){
+            message.push("Please confirm password");
+        } else if (cpassword !== password) {
+            message.push("Passwords do not match.");
+        }
+
+        if (message.length > 0) {
+            e.preventDefault();
+            error.innerText = message[0];
+        }
+    });
+
+    function email_validate(email) {
+        let reg = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        let result = reg.test(email);
+        if (!result) {
+            message.push("Invalid Email");
+        }
+    }
+
+    function validatePassword(password) {
+        let errors = [];
+        if (password.length < 8) {
+            errors.push("Password must be at least 8 characters long.");
+        }
+        if (!/(?=.*[a-z])/.test(password)) {
+            errors.push("Password must contain at least one lowercase letter.");
+        }
+        if (!/(?=.*[A-Z])/.test(password)) {
+            errors.push("Password must contain at least one uppercase letter.");
+        }
+        if (!/(?=.*\d)/.test(password)) {
+            errors.push("Password must contain at least one number.");
+        }
+        if (!/(?=.*[@$!%*?&])/.test(password)) {
+            errors.push("Password must contain at least one special character.");
+        }
+        return errors;
+    }
+</script>
+
+<%- include('../partials/footer.ejs') %>
