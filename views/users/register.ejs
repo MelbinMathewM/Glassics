@@ -3,7 +3,7 @@
 <div class="text-center mt-5 mb-5">
     <div class="container align-self- border regcon" style="max-width: 500px;">
         <div class="header__logo">
-            <a href="./index.html"><img src="img/logo.png" alt=""></a>
+            <a class="text-decoration-none" href="/"><h1 class="fw-bold" style="font-style: italic;">Glassics</h1></a>
         </div>
         <div class="title regtit">
             <h2 class="pb-3 pt-3">Registration Form</h2>
@@ -59,7 +59,7 @@
     let message = [];
     let name_reg = /^[a-zA-Z ]+$/;
     let uname_reg = /^[A-Za-z][A-Za-z0-9_]*$/;
-    let mobile_reg = /^\d{10}$/;
+    let mobile_reg = /^[1-9][0-9]{9}$/;
     let mob_zero = /^0{10}$/;
     let password_reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -91,7 +91,7 @@
         }
 
         if (!mobile_reg.test(userMobile)) {
-            message.push("Mobile Number should be 10 digit numbers");
+            message.push("Mobile Number should be 10 digit numbers and first number cannot be zero");
         } else if (mob_zero.test(userMobile)) {
             message.push("Mobile number cannot be 10 consecutive zeros.");
         }

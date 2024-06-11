@@ -23,6 +23,18 @@ const Cart = new Schema({
         type: Number,
         required: true
     },
+    productDiscPrice : {
+        type : Number,
+        required : true
+    },
+    productColor : {
+        type : String,
+        required : true
+    },
+    productSize : {
+        type : String,
+        required : true
+    },
     productQuantity : {
         type : Number,
         required : true
@@ -30,6 +42,9 @@ const Cart = new Schema({
     cartPrice : {
         type : Number,
         required : true
+    },
+    availableQty : {
+        type : Number
     }
 });
 

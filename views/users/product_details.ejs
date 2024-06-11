@@ -1,50 +1,70 @@
 <%- include('../partials/header') %>
 
-	<!-- Header Section Begin -->
-	<header class="header">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-3 col-md-3">
-					<div class="header__logo">
-						<a href="./inex.html"><img src="/static/img/logo.png" alt=""></a>
-					</div>
-				</div>
-				<div class="col-lg-6 col-md-6">
-					<nav class="header__menu mobile-menu">
-						<ul>
-							<li><a class="text-decoration-none" href="/">Home</a></li>
-							<li class="active"><a class="text-decoration-none" href="/shop">Shop</a></li>
-							<% if (isAuthenticated) { %>
-								<li><a class="text-decoration-none"
-										href='/account/<%= user.userName %>/profile'>Account</a></li>
-								<% } else { %>
-									<li><a class="text-decoration-none" href="/login">Sign In</a></li>
-									<% } %>
-										<li><a class="text-decoration-none" href="./blog.html">Blog</a></li>
-										<li><a class="text-decoration-none" href="./contact.html">Contacts</a></li>
-						</ul>
-					</nav>
-				</div>
-				<div class="col-lg-3 col-md-3">
-					<div class="header__nav__option">
-						<a href="#" class="search-switch"><img src="/static/img/icon/search.png" alt=""></a>
-						<a href="#"><img src="/static/img/icon/heart.png" alt=""></a>
-						<a href="/cart"><img src="/static/img/icon/cart.png" alt=""> <span>0</span></a>
-					</div>
-				</div>
-			</div>
-			<div class="canvas__open"><i class="fa fa-bars"></i></div>
-		</div>
-	</header>
-	<!-- Header Section End -->
+	 <!-- Header Section Begin -->
+	 <header class="header border-bottom">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-3 col-md-3 col-6">
+                    <div class="header__logo">
+                        <a class="text-decoration-none" href="/">
+                            <h1 class="fw-bold" style="font-style: italic;">Glassics</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 d-none d-md-block">
+                    <nav class="header__menu mobile-menu">
+                        <ul>
+                            <li><a class="text-decoration-none" href="/">Home</a></li>
+                            <li class="active"><a class="text-decoration-none" href="/shop">Shop</a></li>
+                            <% if (isAuthenticated) { %>
+                                <li><a class="text-decoration-none" href='/account/profile'>Account</a></li>
+                            <% } else { %>
+                                <li><a class="text-decoration-none" href="/login">Sign In</a></li>
+                            <% } %>
+                            <li><a class="text-decoration-none" href="./blog.html">Blog</a></li>
+                            <li><a class="text-decoration-none" href="./contact.html">Contacts</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-lg-3 col-md-3 col-6 d-flex justify-content-end align-items-center">
+                    <div class="header__nav__option mb-3">
+                        <a href="#" class="search-switch"><img src="/static/img/icon/search.png" alt=""></a>
+                        <a href="#"><img src="/static/img/icon/heart.png" alt=""></a>
+                        <a href="/cart"><img src="/static/img/icon/cart.png" alt=""></a>
+                    </div>
+                    <button class="navbar-toggler d-md-none ml-auto mt-1 me-3" type="button" data-toggle="collapse"
+                        data-target="#navbarNav">
+                        <span class="navbar-toggler-icon fa fa-bars"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <nav class="navbar-nav">
+                    <ul class="navbar-nav">
+                        <li><a class="nav-link" href="/">Home</a></li>
+                        <li><a class="nav-link" href="/shop" style="color: red;">Shop</a></li>
+                        <% if (isAuthenticated) { %>
+                            <li><a class="text-decoration-none"
+                                    href='/account/profile'>Account</a></li>
+                        <% } else { %>
+                            <li><a class="text-decoration-none" href="/login">Sign In</a></li>
+                        <% } %>
+                        <li><a class="nav-link" href="./blog.html">Blog</a></li>
+                        <li><a class="nav-link" href="./contact.html">Contacts</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <!-- Header Section End -->
 
 	<!-- Shop Details Section Begin -->
-	<section class="shop-details">
-		<div class="product__details__pic">
+	<section class="shop-details mt-5 pt-4">
+		<div class="product__details__pic mt-4 pt-5">
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-12">
-						<div class="product__details mb-5">
+						<div class="product__details mb-5 mt-3">
 							<a href="/" class="text-black text-decoration-none">Home<span
 									class="text-secondary">&nbsp;></span></a>
 							<a href="/shop" class="text-black text-decoration-none">Shop<span
@@ -56,17 +76,17 @@
 			</div>
 			<% if(locals.message) { %>
 				<div class="alert text-warning text-center" id="message">
-					<%= message %>
+					<%= locals.message %>
 				</div>
 				<% } %>
-					<div class="section">
+					<div class="section" style="background-color: white;">
 						<!-- container -->
 						<div class="container">
 							<!-- row -->
 							<div class="row">
 								<!-- Product main img -->
 								<div class="col-md-6 col-md-pull-5">
-									<div id="product-carousel" class="carousel slide" data-ride="carousel">
+									<div id="product-carousel" class="carousel slide border" data-ride="carousel">
 										<div class="carousel-inner" id="carousel-inner">
 											<% product.variants.forEach((variant, variantIndex)=> { %>
 												<% variant.images.forEach((image, imageIndex)=> { %>
@@ -97,31 +117,33 @@
 								<!-- Zoom Result Container -->
 								<div id="zoom-result" class="zoom-result"></div>
 								<!-- Product details -->
-								<div class="col-md-6 border-left">
-									<div class="product-details">
+								<div class="col-md-6 border-left border-right">
+									<div class="product-details mt-5 pt-5">
 										<h2 class="product-name">
 											<%= product.productName %>
 										</h2>
-										<div>
-											<div class="product-rating">
+										<div class="row">
+											<div class="product-rating col">
 												<i class="fa fa-star"></i>
 												<i class="fa fa-star"></i>
 												<i class="fa fa-star"></i>
 												<i class="fa fa-star"></i>
 												<i class="fa fa-star"></i>
+											
+												<a class="review-link text-decoration-none ps-2" href="#">10 Review(s) | Add
+													your
+													review</a>
 											</div>
-											<a class="review-link text-decoration-none" href="#">10 Review(s) | Add your
-												review</a>
 										</div>
-										<div>
-											<h3 class="product-price">&#8377;<span id="discounted-price">
+										<div class="text-center">
+											<h3 class="product-price text-success">&#8377;<span id="discounted-price">
 													<%= product.variants[0].discountPrice ?? product.variants[0].price
 														%>
 												</span>&nbsp;<del class="product-old-price">&#8377;<span
 														id="original-price">
 														<%= product.variants[0].price %>
 													</span></del></h3>
-											<div class="product-available mb-2">
+											<div class="product-available mb-2 me-4">
 
 											</div>
 										</div>
@@ -135,15 +157,16 @@
 											<div class="col-md-6">
 												<label class="option-label">
 													Size
-													<div id="sizeOptions" class="scrollable-options">
+													<div id="sizeOptions" class="scrollable-options ms-3">
 														<% product.variants.forEach((variant, index)=> { %>
 															<% if (index===0) { %>
 																<% variant.subVariants.forEach((subVariant, subIndex)=>
 																	{ %>
 																	<input type="radio" name="size"
 																		id="size<%= subIndex %>"
-																		value="<%= subVariant.size %>" <%=subIndex===0
-																		? 'checked' : '' %>>
+																		value="<%= subVariant.size %>"
+																		data-available="<%= subVariant.quantity %>"
+																		<%=subIndex===0 ? 'checked' : '' %>>
 																	<label for="size<%= subIndex %>" class="size-label">
 																		<%= subVariant.size %>
 																	</label>
@@ -158,14 +181,14 @@
 											<div class="col-md-6">
 												<label class="option-label">
 													Color
-													<div id="colorOptions" class="scrollable-options">
+													<div id="colorOptions" class="scrollable-options ms-3">
 														<% product.variants.forEach((variant, index)=> { %>
 															<input type="radio" name="color" id="color<%= index %>"
-																value="<%= index %>"
+																value="<%= variant.color%>"
 																data-images='<%= JSON.stringify(variant.images) %>'
 																data-prices='<%= JSON.stringify(variant.price) %>'
 																data-subvariants='<%= JSON.stringify(variant.subVariants) %>'
-																data-variant='<%= JSON.stringify(variant) %>'
+																data-variant='<%= JSON.stringify({variant, productImage : variant.images, price : variant.price, discountPrice : variant.discountPrice, availableQuantity: variant.availableQuantity}) %>'
 																<%=index===0 ? 'checked' : '' %>>
 															<label for="color<%= index %>" class="color-label"
 																style="background-color: <%= variant.color %>"></label>
@@ -175,19 +198,11 @@
 											</div>
 										</div>
 										<div class="add-to-cart">
-											<div class="qty-label">
-												Qty
-												<div class="input-number">
-													<input type="number" name="quantityInput" id="quantityInput"
-														value="1">
-													<span class="qty-up">+</span>
-													<span class="qty-down">-</span>
-												</div>
-											</div>
-											<a href="/cart"><button class="add-to-cart-btn"><i
-														class="fa fa-shopping-cart"></i> Add to Cart</button></a>
-											<button class="buy-now-btn"><i class="fa fa-shopping-bag"></i> Buy
-												Now</button>
+											<button class="add-to-cart-btn mb-2"><i class="fa fa-shopping-cart"></i> Add
+												to Cart</button>
+											<button class="buy-now-btn">&nbsp;&nbsp;&nbsp;&nbsp;<i
+													class="fa fa-shopping-bag"></i> Buy
+												Now&nbsp;&nbsp;&nbsp;&nbsp;</button>
 										</div>
 
 										<ul class="product-btns">
@@ -261,6 +276,9 @@
 															</p>
 															<p><strong>Product Brand :</strong>
 																<%= product.productBrand %>
+															</p>
+															<p><strong>Product Gender :</strong>
+																<%= product.productGender %>
 															</p>
 															<p><strong>Frame material:</strong>
 																<%= product.frameMaterial %>
@@ -583,7 +601,9 @@
 				<div class="col-lg-3 col-md-6 col-sm-6">
 					<div class="footer__about">
 						<div class="footer__logo">
-							<a href="#"><img src="/static/img/footer-logo.png" alt=""></a>
+							<a class="text-decoration-none" href="/">
+								<h1 class="fw-bold" style="font-style: italic;color: white;">Glassics</h1>
+							</a>
 						</div>
 						<p>The customer is at the heart of our unique business model, which includes design.</p>
 						<a href="#"><img src="img/payment.png" alt=""></a>
@@ -618,7 +638,7 @@
 							<p>Be the first to know about new arrivals, look books, sales & promos!</p>
 							<form action="#">
 								<input type="text" placeholder="Your email">
-								<button type="submit"><span class="icon_mail_alt"></span></button>
+								<button type="submit"><span class="fa fa-envelope"></span></button>
 							</form>
 						</div>
 					</div>
@@ -633,23 +653,18 @@
 			white-space: nowrap;
 			-ms-overflow-style: none;
 			scrollbar-width: none;
-			/* Adjust margin as needed */
 		}
 
 		.related-product-item {
 			display: inline-block;
 			width: 250px;
-			/* Adjust the width of each product item as needed */
 			margin-right: 20px;
-			/* Adjust the right margin between product items as needed */
 		}
 
-		/* Ensure there's no space at the end of the row */
 		.related-products-inner::after {
 			content: '';
 			display: inline-block;
 			width: 20px;
-			/* Adjust the width to match the margin-right of product items */
 		}
 
 		.nav-tabs {
@@ -673,6 +688,11 @@
 			border-color: #dee2e6 #dee2e6 #fff;
 		}
 
+		.nav-link:hover {
+			background-color: #e0dddd;
+			color: white;
+		}
+
 		#product-imgs {
 			display: flex;
 			justify-content: center;
@@ -685,34 +705,25 @@
 
 		.product-preview.active {
 			border-color: #fc0505;
-			/* Change this to your desired active border color */
 		}
 
 		.product-preview img {
 			max-width: 80px;
-			/* Adjust size as needed */
 			max-height: 80px;
-			/* Adjust size as needed */
 		}
 
 		.scrollable-options {
 			display: flex;
 			flex-wrap: nowrap;
-			/* Ensure items stay in a single line */
 			max-height: 100px;
-			/* Adjust as needed */
 			overflow-x: auto;
-			/* Enable horizontal scrolling */
 			overflow-y: hidden;
-			/* Hide vertical overflow */
 			padding: 10px;
 			border-radius: 5px;
 			margin-top: 5px;
-			/* Add margin to position label above */
+
 			-ms-overflow-style: none;
-			/* Hide scrollbar in IE */
 			scrollbar-width: none;
-			/* Hide scrollbar in Firefox */
 		}
 
 		.scrollable-options::-webkit-scrollbar {
@@ -723,15 +734,12 @@
 		.size-option {
 			flex: 0 0 auto;
 			margin-right: 10px;
-			/* Adjust spacing between options as needed */
 		}
 
-		/* Hide radio buttons */
 		input[type="radio"] {
 			display: none;
 		}
 
-		/* Style size labels */
 		.size-label {
 			padding: 5px 15px;
 			margin-right: 5px;
@@ -753,7 +761,6 @@
 			border-color: white;
 		}
 
-		/* Style color labels */
 		.color-label {
 			padding: 15px 15px;
 			margin-right: 5px;
@@ -777,7 +784,6 @@
 			position: absolute;
 			top: 150px;
 			left: 800px;
-			/* Adjust this as per your layout */
 			background-repeat: no-repeat;
 			display: none;
 			z-index: 1;
@@ -790,314 +796,94 @@
 			display: none;
 			cursor: crosshair;
 		}
+		header {
+            position: fixed;
+            top:0;
+            width: 100%;
+            z-index: 999;
+        }
 	</style>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="/static/js/product_details.js"></script>
 	<script>
-		document.addEventListener('DOMContentLoaded', () => {
-			const mainCarousel = $('#product-carousel');
-			const subImages = document.querySelectorAll('.sub-image');
-			const modalImage = document.getElementById('modalImage');
-			const sizeOptions = document.getElementById('sizeOptions');
-
-			// Sub-image click event
-			subImages.forEach(subImage => {
-				subImage.addEventListener('click', function () {
-					const index = this.getAttribute('data-index');
-					mainCarousel.carousel(parseInt(index));
-					updateActiveSubImage(index);
-				});
-			});
-
-			// Update sub-image active border
-			function updateActiveSubImage(activeIndex) {
-				subImages.forEach((img, index) => {
-					img.parentElement.classList.toggle('active', index == activeIndex);
-				});
-			}
-
-			// Main image carousel slide event
-			mainCarousel.on('slide.bs.carousel', function (e) {
-				updateActiveSubImage(e.to);
-				initZoom();
-			});
-
-			// Main image click event to show modal
-			document.querySelectorAll('.main-image').forEach(image => {
-				image.addEventListener('click', function () {
-					modalImage.src = this.src;
-				});
-			});
-
-			// Initialize first sub-image as active
-			updateActiveSubImage(0);
-
-			// Color option change event
-			const colorOptions = document.querySelectorAll('input[name="color"]');
-			const carouselInner = document.getElementById('carousel-inner');
-			const productImgs = document.getElementById('product-imgs');
-
-			const zoomResult = document.getElementById('zoom-result');
-			const zoomLens = document.createElement('div');
-			zoomLens.setAttribute('class', 'zoom-lens');
-			document.body.appendChild(zoomLens);
-
-			function initZoom() {
-				const activeImage = document.querySelector('.carousel-item.active .main-image');
-				if (activeImage) {
-					activeImage.addEventListener('mouseover', showZoom);
-					activeImage.addEventListener('mousemove', moveLens);
-					activeImage.addEventListener('mouseout', hideZoom);
-				}
-			}
-
-			function showZoom(e) {
-				const image = e.target;
-				zoomLens.style.display = 'block';
-				zoomResult.style.display = 'block';
-				zoomResult.style.backgroundImage = `url(${image.src})`;
-			}
-
-			function moveLens(e) {
-				const image = e.target;
-				const pos = getCursorPos(e, image);
-				const lensWidth = zoomLens.offsetWidth / 2;
-				const lensHeight = zoomLens.offsetHeight / 2;
-				let x = pos.x - lensWidth;
-				let y = pos.y - lensHeight;
-
-				if (x > image.width - lensWidth) x = image.width - lensWidth;
-				if (x < 0) x = 0;
-				if (y > image.height - lensHeight) y = image.height - lensHeight;
-				if (y < 0) y = 0;
-
-				zoomLens.style.left = x + 'px';
-				zoomLens.style.top = y + 'px';
-
-				const cx = zoomResult.offsetWidth / zoomLens.offsetWidth;
-				const cy = zoomResult.offsetHeight / zoomLens.offsetHeight;
-
-				zoomResult.style.backgroundSize = `${image.width * cx}px ${image.height * cy}px`;
-				zoomResult.style.backgroundPosition = `-${x * cx}px -${y * cy}px`;
-			}
-
-			function hideZoom() {
-				zoomLens.style.display = 'none';
-				zoomResult.style.display = 'none';
-			}
-
-			function getCursorPos(e, image) {
-				const rect = image.getBoundingClientRect();
-				const x = e.pageX - rect.left - window.pageXOffset;
-				const y = e.pageY - rect.top - window.pageYOffset;
-				return { x: x, y: y };
-			}
-			// // Update size options based on selected color variant
-			function updateSizeOptions(subVariants) {
-				sizeOptions.innerHTML = '';
-				subVariants.forEach((subVariant, index) => {
-					const input = document.createElement('input');
-					input.type = 'radio';
-					input.name = 'size';
-					input.id = `size${index}`;
-					input.value = subVariant.size;
-					input.setAttribute('data-subvariant', JSON.stringify(subVariant));
-					input.checked = index === 0;
-					const label = document.createElement('label');
-					label.htmlFor = `size${index}`;
-					label.className = 'size-label';
-					label.textContent = subVariant.size;
-					input.addEventListener('change', function () {
-						updateQuantity();
-					});
-					sizeOptions.appendChild(input);
-					sizeOptions.appendChild(label);
-				});
-
-				const firstSizeOption = sizeOptions.querySelector('input[name="size"]:checked');
-				if (firstSizeOption) {
-					updateQuantity();
-				}
-			}
-
-			function updatePrices(price) {
-				const selectedColorRadio = document.querySelector('input[name="color"]:checked');
-				if (selectedColorRadio) {
-					const selectedVariantData = selectedColorRadio.getAttribute('data-variant');
-					const selectedVariant = JSON.parse(selectedVariantData);
-					if (selectedVariant) {
-						document.getElementById('discounted-price').textContent = selectedVariant.discountPrice ?? selectedVariant.price;
-						document.getElementById('original-price').textContent = selectedVariant.price;
-					}
-				}
-			}
-
-			colorOptions.forEach(option => {
-				option.addEventListener('change', function () {
-					const images = JSON.parse(this.getAttribute('data-images'));
-					const prices = JSON.parse(this.getAttribute('data-prices'));
-					const subVariants = JSON.parse(this.getAttribute('data-subvariants'));
-					updateCarousel(images);
-					updateSubImages(images);
-					updateSizeOptions(subVariants);
-					updatePrices(prices);
-					initZoom();
-					const firstSizeOption = document.querySelector('input[name="size"]:checked');
-					if (firstSizeOption) {
-						updateQuantity();
-					}
-				});
-			});
-
-
-
-
-			//update quantity function
-			function updateQuantity() {
-				const selectedSizeRadio = document.querySelector('input[name="size"]:checked');
-				if (selectedSizeRadio) {
-					const selectedSubVariantData = selectedSizeRadio.getAttribute('data-subvariant');
-					const selectedSubVariant = JSON.parse(selectedSubVariantData);
-					if (selectedSubVariant) {
-						const sizeAvailabilityDiv = document.querySelector('.product-available');
-						if (selectedSubVariant.quantity === 0) {
-							sizeAvailabilityDiv.innerHTML = '<span>Out of Stock</span>';
-						} else if (selectedSubVariant.quantity < 10) {
-							sizeAvailabilityDiv.innerHTML = `<span>Only ${selectedSubVariant.quantity} Items remaining!</span>`;
-						} else {
-							sizeAvailabilityDiv.innerHTML = '<span>In stock</span>';
-						}
-					}
-				}
-			}
-
-			function updatePrice(productId) {
-				const selectedVariant = document.querySelector(`input[name="color-${productId}"]:checked`);
-				if (selectedVariant) {
-					const newPrice = selectedVariant.dataset.price;
-					const newDiscPrice = selectedVariant.dataset.discPrice;
-
-					console.log(`Updating price for product ${productId} to ${newDiscPrice} and ${newPrice}`);
-
-					const priceElement = document.querySelector(`#product-price-${productId}`);
-					const discPriceElement = document.querySelector(`#product-disc-price-${productId}`);
-
-					if (priceElement && discPriceElement) {
-						discPriceElement.textContent = `₹${newDiscPrice}`;
-						priceElement.textContent = `₹${newPrice}`;
-					} else {
-						console.error(`Price elements not found for product ${productId}`);
-					}
-				} else {
-					console.error(`Selected variant not found for product ${productId}`);
-				}
-			}
-
-			document.querySelectorAll('input[type="radio"][name^="color-"]').forEach(radio => {
-				radio.addEventListener('change', (e) => {
-					const productId = e.target.name.split('-')[1];
-					updatePrice(productId);
-				});
-			});
-
-			document.querySelectorAll('input[type="radio"][name^="color-"]:checked').forEach(radio => {
-				const productId = radio.name.split('-')[1];
-				updatePrice(productId);
-			});
-
-			// Initialize the first variant and size on page load
-			const firstColorOption = document.querySelector('input[name="color"]:checked');
-			if (firstColorOption) {
-				firstColorOption.dispatchEvent(new Event('change'));
-			}
-
-
-			function updateCarousel(images) {
-				carouselInner.innerHTML = '';
-				images.forEach((image, index) => {
-					const itemDiv = document.createElement('div');
-					itemDiv.className = `carousel-item ${index === 0 ? 'active' : ''}`;
-					const img = document.createElement('img');
-					img.src = `/static/productImages/${image}`;
-					img.className = 'd-block w-100 h-100 main-image';
-					img.alt = 'Product Image';
-					img.dataset.toggle = 'modal';
-					img.dataset.target = '#imageModal';
-					img.width = 400;
-					img.height = 400;
-					itemDiv.appendChild(img);
-					carouselInner.appendChild(itemDiv);
-				});
-				initZoom();
-			}
-
-			function updateSubImages(images) {
-				productImgs.innerHTML = '';
-				images.forEach((image, index) => {
-					const div = document.createElement('div');
-					div.className = 'product-preview mx-1';
-					const img = document.createElement('img');
-					img.src = `/static/productImages/${image}`;
-					img.alt = 'Product Thumbnail';
-					img.className = 'sub-image';
-					img.dataset.index = index;
-					div.appendChild(img);
-					productImgs.appendChild(div);
-				});
-
-				// Re-add click event listeners to new sub-images
-				document.querySelectorAll('.sub-image').forEach(subImage => {
-					subImage.addEventListener('click', function () {
-						const index = this.getAttribute('data-index');
-						mainCarousel.carousel(parseInt(index));
-						updateActiveSubImage(index);
-					});
-				});
-			}
-			initZoom();
-		});
-
-		// Quantity control
-		const quantityInput = document.getElementById('quantityInput');
-
-		document.querySelector('.qty-up').addEventListener('click', () => {
-			const currentValue = parseInt(quantityInput.value);
-			if (!isNaN(currentValue)) {
-				quantityInput.value = currentValue + 1;
-			} else {
-				quantityInput.value = 1;
-			}
-		});
-
-		document.querySelector('.qty-down').addEventListener('click', () => {
-			const currentValue = parseInt(quantityInput.value);
-			if (!isNaN(currentValue) && currentValue > 1) {
-				quantityInput.value = currentValue - 1;
-			} else {
-				quantityInput.value = 1;
-			}
-		});
-
 		// Add to cart functionality
 		document.querySelector('.add-to-cart-btn').addEventListener('click', async () => {
 			try {
 				const productId = '<%= product._id %>';
-				const quantity = parseInt(document.getElementById('quantityInput').value);
-				const response = await fetch('/add_cart', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({ productId, quantity })
-				});
-				const data = await response.json();
-				alert(data.message);
-				location.reload();
+				const quantity = 1;
+				const selectedColorElement = document.querySelector('input[name="color"]:checked');
+				const selectedColor = selectedColorElement.value;
+				const selectedSize = document.querySelector('input[name="size"]:checked').value;
+				const variantData = JSON.parse(selectedColorElement.dataset.variant);
+				const selectedSizeRadio = document.querySelector('input[name="size"]:checked');
+				const selectedSubVariantData = selectedSizeRadio.getAttribute('data-subvariant');
+				const selectedSubVariant = JSON.parse(selectedSubVariantData);
+				const availableQuantity = selectedSubVariant.quantity
+
+				if (availableQuantity > 0) {
+					const response = await fetch('/add_cart', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({
+							productId,
+							quantity,
+							color: selectedColor,
+							size: selectedSize,
+							productImage: variantData.productImage[0],
+							productPrice: variantData.price,
+							productDiscPrice: variantData.discountPrice,
+						})
+					});
+
+					if (!response.ok) {
+						throw new Error('Failed to add item to cart');
+					}
+
+					const data = await response.json();
+					if (data && data.message) {
+						Swal.fire({
+							icon: 'success',
+							title: 'Added to Cart',
+							text: data.message,
+							showConfirmButton: true,
+							confirmButtonText: 'Go to Cart'
+						}).then((result) => {
+							if (result.isConfirmed) {
+								window.location.href = '/cart';
+							}
+						});
+					} else if (data && data.error) {
+						Swal.fire({
+							icon: 'error',
+							title: 'Error',
+							text: data.error
+						});
+					} else {
+						throw new Error('Invalid response format');
+					}
+				} else {
+					Swal.fire({
+						icon: 'error',
+						title: 'Error',
+						text: 'Product is out of stock'
+					})
+				}
 			} catch (error) {
-				console.error('Error adding to cart:', error);
+				Swal.fire({
+					icon: 'error',
+					title: 'Error',
+					text: error.message
+				});
 			}
 		});
 	</script>
+	
 	<!-- Js Plugins -->
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 	<!-- Include Bootstrap JS -->
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 

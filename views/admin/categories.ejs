@@ -4,10 +4,9 @@
         <!-- partial:partials/_navbar.html -->
         <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
             <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-                <a class="navbar-brand brand-logo" href="../admin/dashboard"><img src="assets/images/logo.svg"
-                        alt="logo" /></a>
-                <a class="navbar-brand brand-logo-mini" href="../admin/dashboard" src="assets/images/logo-mini.svg"
-                    alt="logo" /></a>
+                <a class="text-decoration-none" href="/">
+                    <h1 class="fw-bold" style="font-style: italic;">Glassics</h1>
+                </a>
             </div>
             <div class="navbar-menu-wrapper d-flex align-items-stretch">
                 <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -156,27 +155,34 @@
                                                 <button id="openEditModalBtn_<%= category._id %>"
                                                     class="btn btn-primary">Edit</button>
                                                 <!-- edit category modal -->
-<div id="categoryEditModal_<%= category._id %>" class="modal">
-    <div class="modal-content">
-        <span class="close text-end">&times;</span>
-        <h3 class="mb-3 text-center">Edit Category</h3>
-        <div id="messagerContainer_<%= category._id %>" class="message-container"></div>
-        <form id="categoryEditForm_<%= category._id %>" action="/admin/categories/edit" method="post">
-            <div class="form-group mb-3">
-                <div class="row">
-                    <div class="col">
-                        <label for="categoryName">Category Name<span style="color: red;">*</span></label>
-                        <input type="text" id="editCategoryName" value="<%= category.categoryName %>" class="form-control" name="categoryName">
-                    </div>
-                </div>
-            </div>
-            <input type="hidden" value="<%= category._id %>" name="categoryId" class="form-control">
-            <div class="text-center">
-                <button class="btn btn-primary" type="submit">Submit</button>
-            </div>
-        </form>
-    </div>
-</div>
+                                                <div id="categoryEditModal_<%= category._id %>" class="modal">
+                                                    <div class="modal-content">
+                                                        <span class="close text-end">&times;</span>
+                                                        <h3 class="mb-3 text-center">Edit Category</h3>
+                                                        <div id="messagerContainer_<%= category._id %>"
+                                                            class="message-container"></div>
+                                                        <form id="categoryEditForm_<%= category._id %>"
+                                                            action="/admin/categories/edit" method="post">
+                                                            <div class="form-group mb-3">
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <label for="categoryName">Category Name<span
+                                                                                style="color: red;">*</span></label>
+                                                                        <input type="text" id="editCategoryName"
+                                                                            value="<%= category.categoryName %>"
+                                                                            class="form-control" name="categoryName">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <input type="hidden" value="<%= category._id %>"
+                                                                name="categoryId" class="form-control">
+                                                            <div class="text-center">
+                                                                <button class="btn btn-primary"
+                                                                    type="submit">Submit</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
 
                                                 <a href="#" class="btn btn-danger"
                                                     onclick="confirmDelete('<%= category._id %>')">Delete</a>
@@ -366,7 +372,7 @@
 
                 if (response.ok) {
                     messageContainer.innerHTML = `<div class="alert alert-success">${data.message}</div>`;
-                    setTimeout(() => location.reload(),1000)
+                    setTimeout(() => location.reload(), 1000)
                 } else {
                     messageContainer.innerHTML = `<div class="alert alert-danger">${data.message}</div>`;
                 }
@@ -378,42 +384,42 @@
         });
 
         document.querySelectorAll('form[id^="categoryEditForm_"]').forEach(form => {
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault();
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
 
-        const formData = new FormData(event.target);
-        try {
-            const response = await fetch('/admin/categories/edit', {
-                method: 'POST',
-                body: new URLSearchParams(formData)
+                const formData = new FormData(event.target);
+                try {
+                    const response = await fetch('/admin/categories/edit', {
+                        method: 'POST',
+                        body: new URLSearchParams(formData)
+                    });
+                    const data = await response.json();
+                    const messagerContainer = document.getElementById('messagerContainer_' + event.target.id.split('_')[1]);
+
+                    if (response.ok) {
+                        Swal.fire(
+                            'Edited',
+                            'Editing the category was successful',
+                            'success'
+                        ).then(() => {
+                            setTimeout(() => location.reload(), 1000)
+                            // Optionally, close the modal here if needed
+                            const modal = document.getElementById('categoryEditModal_' + event.target.id.split('_')[1]);
+                            modal.style.display = 'none';
+                        });
+                    } else {
+                        messagerContainer.innerHTML = `<div class="alert alert-danger">${data.message}</div>`;
+                    }
+                } catch (error) {
+                    console.error("Network error:", error);
+                    const messagerContainer = document.getElementById('messagerContainer_' + event.target.id.split('_')[1]);
+                    messagerContainer.innerHTML = `<div class="alert alert-danger">Network error occurred. Please try again.</div>`;
+                }
             });
-            const data = await response.json();
-            const messagerContainer = document.getElementById('messagerContainer_' + event.target.id.split('_')[1]);
-
-            if (response.ok) {
-                Swal.fire(
-                    'Edited',
-                    'Editing the category was successful',
-                    'success'
-                ).then(() => {
-                    setTimeout(() => location.reload(),1000)
-                    // Optionally, close the modal here if needed
-                    const modal = document.getElementById('categoryEditModal_' + event.target.id.split('_')[1]);
-                    modal.style.display = 'none'; 
-                });
-            } else {
-                messagerContainer.innerHTML = `<div class="alert alert-danger">${data.message}</div>`;
-            }
-        } catch (error) {
-            console.error("Network error:", error);
-            const messagerContainer = document.getElementById('messagerContainer_' + event.target.id.split('_')[1]);
-            messagerContainer.innerHTML = `<div class="alert alert-danger">Network error occurred. Please try again.</div>`;
-        }
-    });
-});
+        });
 
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <%- include('../partials/footer') %>
+<%- include('../partials/footer') %>

@@ -1,58 +1,62 @@
 <%- include('../partials/header') %>
 
     <div class="container-scroller">
-        <header>
+        <header class="header border-bottom">
             <div class="container">
-                <div class="row">
-                    <div class="col-lg-3 col-md-3">
+                <div class="row align-items-center">
+                    <div class="col-lg-3 col-md-3 col-6">
                         <div class="header__logo">
-                            <a href="./index.html"><img src="img/logo.png" alt=""></a>
+                            <a class="text-decoration-none" href="/">
+                                <h1 class="fw-bold" style="font-style: italic;">Glassics</h1>
+                            </a>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6">
+                    <div class="col-lg-6 col-md-6 d-none d-md-block">
                         <nav class="header__menu mobile-menu">
                             <ul>
-                                <li><a href="/">Home</a></li>
-                                <li><a href="/shop">Shop</a></li>
-                                <li class="active"><a href="/account/profile">Account</a></li>
-                                <li><a href="./blog.html">Blog</a></li>
-                                <li><a href="./contact.html">Contacts</a></li>
+                                <li><a class="text-decoration-none" href="/">Home</a></li>
+                                <li><a class="text-decoration-none" href="/shop">Shop</a></li>
+                                <li class="active"><a class="text-decoration-none" href="/account/profile">Account</a></li>
+                                <li><a class="text-decoration-none" href="./blog.html">Blog</a></li>
+                                <li><a class="text-decoration-none" href="./contact.html">Contacts</a></li>
                             </ul>
                         </nav>
                     </div>
-                    <div class="col-lg-3 col-md-3">
-                        <div class="header__nav__option">
-                            <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
-                            <a href="#"><img src="img/icon/heart.png" alt=""></a>
-                            <a href="/cart"><img src="img/icon/cart.png" alt=""> <span>0</span></a>
-                            <div class="price">$0.00</div>
+                    <div class="col-lg-3 col-md-3 col-6 d-flex justify-content-end align-items-center">
+                        <div class="header__nav__option mb-3">
+                            <a href="#" class="search-switch"><img src="/static/img/icon/search.png" alt=""></a>
+                            <a href="#"><img src="/static/img/icon/heart.png" alt=""></a>
+                            <a href="/cart"><img src="/static/img/icon/cart.png" alt=""></a>
                         </div>
+                        <button class="navbar-toggler d-md-none ml-auto mt-1" type="button" data-toggle="collapse"
+                            data-target="#navbarNav">
+                            <span class="navbar-toggler-icon fa fa-bars"></span>
+                        </button>
+                        <button class="navbar-toggler navbar-toggler-right d-md-none mb-2" type="button"
+                            data-toggle="offcanvas"><span class="fa fa-chevron-down"></span></button>
                     </div>
                 </div>
-                <div class="canvas__open"><i class="fa fa-bars"></i></div>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <nav class="navbar-nav active">
+                        <ul class="navbar-nav">
+                            <li><a class="nav-link" href="/">Home</a></li>
+                            <li><a class="nav-link" href="/shop">Shop</a></li>
+                            <li class="active"><a class="nav-link"
+                                    href="/account/profile" style="color: red;">Account</a></li>
+                            <li><a class="nav-link" href="./blog.html">Blog</a></li>
+                            <li><a class="nav-link" href="./contact.html">Contacts</a></li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </header>
         <!-- partial -->
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper ps-0 pe-0">
             <!-- partial:partials/_sidebar.html -->
-            <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <nav class="sidebar sidebar-offcanvas border" id="sidebar">
                 <ul class="nav">
-                    <li class="nav-item nav-profile">
-                        <a href="#" class="nav-link">
-                            <div class="nav-profile-image">
-                                <img src="assets/images/faces/face1.jpg" alt="profile">
-                                <span class="login-status online"></span>
-                                <!--change to offline or busy as needed-->
-                            </div>
-                            <div class="nav-profile-text d-flex flex-column">
-                                <span class="font-weight-bold mb-2">David Grey. H</span>
-                                <span class="text-secondary text-small">Project Manager</span>
-                            </div>
-                            <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
-                        </a>
-                    </li>
-                    <li class="nav-item active bg-gradient-danger">
-                        <a class="nav-link" href="/account/<%= user.userName %>/profile">
+                    <li class="nav-item active bg-gradient-info">
+                        <a class="nav-link" href="/account/profile">
                             <span class="menu-title font-weight-bold text-white">Profile</span>
                             <i class="mdi mdi-home menu-icon"></i>
                         </a>
@@ -71,7 +75,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/account/<%= user.userName %>/address">
+                        <a class="nav-link" href="/account/address">
                             <span class="menu-title">Address</span>
                             <i class="mdi mdi-chart-bar menu-icon"></i>
                         </a>
@@ -112,19 +116,121 @@
                     </li>
                 </ul>
             </nav>
-            <div class="main-panel">
-                <div class="content-wrapper">
-                  <h1><%= user.userName %></h1>
+            <div class="main-panel mt-5 w-100">
+                <!-- Breadcrumb Section Begin -->
+                <section class="breadcrumb-option mt-5" style="background-color: rgb(232, 243, 250);">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="breadcrumb__text ps-4">
+                                    <h4>Profile</h4>
+                                    <div>
+                                        <a class="text-decoration-none text-dark fw-bold"
+                                            href="/">Home&nbsp;&gt;&nbsp;</a>
+                                        <a class="text-decoration-none text-dark fw-bold"
+                                            href="/account/profile">Account</a>
+                                        <span>&nbsp;&gt;&nbsp;Profile</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Breadcrumb Section End -->
+                <div class="content-wrapper d-flex justify-content-center " style="background-color: white;">
+                    <section class="shopping-cart pb-4 prodiv w-50">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <!-- User Profile Section -->
+                                    <div class="user-profile-section">
+                                        <div class="row text-center">
+                                                <div class="text-center">
+                                                    <img src="/static/userImages/<%= user.userImage %>" alt="User Image"
+                                                    class="img-fluid rounded-circle" style="max-width: 150px;">
+                                                </div>
+                                                <!-- User Details -->
+                                                <h3 class="mt-2">
+                                                    <%= user.userName %>
+                                                </h3>
+                                                <p class="mb-1"><strong>Email : </strong>
+                                                    <%= user.userEmail %>
+                                                </p>
+                                                <p class="mb-1"><strong>Mobile : </strong>
+                                                    <%= user.userMobile %>
+                                                </p>                                            
+                                        </div>
+                                    </div>
+                                    <!-- End of User Profile Section -->
+                                </div>
+                            </div>
+                            <div class="row mt-3 text-center">
+                                <div class="col">
+                                    <a href="/account/profile/edit_password" class="editref text-decoration-none">
+                                        <span class="pe-5">Edit Password</span>
+                                    </a>
+                                    <a href="/account/profile/edit_details" class="editref text-decoration-none">
+                                        <span>Edit Details</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 </div>
                 <!-- content-wrapper ends -->
                 <!-- partial:partials/_footer.html -->
                 <!-- partial -->
             </div>
-              <!-- main-panel ends -->
+            <!-- main-panel ends -->
         </div>
         <!-- page-body-wrapper ends -->
     </div>
     <!-- container-scroller -->
+    <style>
+        header {
+            position: relative;
+            position: fixed;
+            width: 100vw;
+            z-index: 999;
+        }
+
+        .sidebar {
+            position: relative;
+            position: absolute;
+            position: fixed;
+            z-index: 999;
+            top: 104px;
+        }
+
+        @media (min-width : 992px) {
+            .main-panel {
+                margin-left: 250px;
+                
+            }
+
+            .sidebar {
+                margin-top: 12.3px;
+            }
+        }
+        .prodiv {
+            box-shadow: 5px 5px 40px rgb(61, 147, 245);
+            border-radius: 6%;
+        }
+        .editref:hover {
+            color: red;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="offcanvas"]').click(function () {
+                $('.sidebar-offcanvas').toggleClass('active');
+            });
+        });
+    </script>
+
     <!-- plugins:js -->
     <script src="assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->

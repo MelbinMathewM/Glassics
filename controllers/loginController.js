@@ -22,7 +22,6 @@ const transporter = nodemailer.createTransport({
 });
 
 function generateOTP() {
-    const otpLength = 6;
     const otp = Math.floor(100000 + Math.random() * 900000);
     return otp.toString();
 };
@@ -153,7 +152,6 @@ const verifyUser = async (req,res) => {
             if(passwordMatch){
                 if(userData.is_blocked === 0){
                     req.session.user_id = userData._id;
-                    console.log(req.session.user_id);
                     res.redirect('/');
                 }else{
                     res.render('login',{message : "User blocked"});

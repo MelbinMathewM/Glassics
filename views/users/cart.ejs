@@ -1,319 +1,396 @@
 <%- include('../partials/header') %>
 
-<div class="container">
-    <div class="row">
-        <div class="col-lg-3 col-md-3">
-            <div class="header__logo">
-                <a href="./index.html"><img src="img/logo.png" alt=""></a>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-3">
+                <div class="header__logo">
+                    <a class="text-decoration-none" href="/">
+                        <h1 class="fw-bold" style="font-style: italic;">Glassics</h1>
+                    </a>
+                </div>
             </div>
-        </div>
-        <div class="col-lg-6 col-md-6">
-            <nav class="header__menu mobile-menu">
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/shop">Shop</a></li>
-                    <% if (isAuthenticated) { %>
+            <div class="col-lg-6 col-md-6">
+                <nav class="header__menu mobile-menu">
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/shop">Shop</a></li>
                         <li><a href='/account/<%= user.userName %>/profile'>Account</a></li>
-                    <% } else { %>
-                        <li><a href="/login">Sign In</a></li>
-                    <% } %>
-                    <li><a href="./blog.html">Blog</a></li>
-                    <li><a href="./contact.html">Contacts</a></li>
-                </ul>
-            </nav>
-        </div>
-        <div class="col-lg-3 col-md-3">
-            <div class="header__nav__option">
-                <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
-                <a href="#"><img src="img/icon/heart.png" alt=""></a>
-                <a href="/cart" class="active"><img src="img/icon/cart.png" alt=""> <span>0</span></a>
+                        <li><a href="./blog.html">Blog</a></li>
+                        <li><a href="./contact.html">Contacts</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <div class="header__nav__option">
+                    <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
+                    <a href="#"><img src="img/icon/heart.png" alt=""></a>
+                    <a href="/cart" class="active"><img src="img/icon/cart.png" alt=""> <span>0</span></a>
+                </div>
             </div>
         </div>
+        <div class="canvas__open"><i class="fa fa-bars"></i></div>
     </div>
-    <div class="canvas__open"><i class="fa fa-bars"></i></div>
-</div>
-<!-- Header Section End -->
+    <!-- Header Section End -->
 
-<!-- Breadcrumb Section Begin -->
-<section class="breadcrumb-option">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb__text">
-                    <h4>Shopping Cart</h4>
-                    <div class="breadcrumb__links">
-                        <a href="./index.html">Home</a>
-                        <a href="./shop.html">Shop</a>
-                        <span>Shopping Cart</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- Breadcrumb Section End -->
-<% if(locals.message) { %>
-    <div class="alert text-warning text-center" id="message">
-        <%= message %>
-    </div>
-<% } %>
-<!-- Shopping Cart Section Begin -->
-<section class="shopping-cart spad">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="shopping__cart__table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th>Quantity</th>
-                                <th>Total</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% if(cart.length > 0){ %>
-                                <% cart.forEach((carte) => { %>
-                                    <tr>
-                                        <td class="product__cart__item">
-                                            <div class="product__cart__item__pic">
-                                                <img src="/static/productImages/<%= carte.productImage[0] %>" alt="" height="100px" width="100px">
-                                            </div>
-                                            <div class="product__cart__item__text">
-                                                <h5><%= carte.productName %></h5>
-                                                <h6>&#8377;<%= carte.productPrice %></h6>
-                                            </div>
-                                        </td>
-                                        <td class="quantity__item">
-                                            <div class="quantity">
-                                                <div class="pro-qty-2">
-                                                    <button class="qty-down" data-cart-id="<%= carte._id %>">&lt;</button>
-                                                    <input type="text" id="quantityUpdate-<%= carte._id %>" value="<%= carte.productQuantity %>" data-cart-id="<%= carte._id %>">
-                                                    <button class="qty-up" data-cart-id="<%= carte._id %>">&gt;</button>
-                                                </div>
-                                            </div>
-                                        </td>                                        
-                                        <td class="cart__price">&#8377;<%= carte.cartPrice %></td>
-                                        <td class="cart__close"><button class="btn"><i class="mdi mdi-close" style="background-color: transparent;"></i></button></td>
-                                    </tr>
-                                <% }) %>
-                            <% } else{ %>
-                               <tr class="text-center">
-                                <td>Cart is empty!</td>
-                               </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-6">
-                        <div class="continue_btn">
-                            <a href="/shop"><button class="btn" style="background-color: rebeccapurple; color: white;">Continue Shopping</button></a>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6">
-                        <div class="continue__btn update__btn">
-                            <button class="btn btn-dark" id="updateCartBtn"><i class="fa fa-spinner"></i> Update cart</button>
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__text">
+                        <h4>Shopping Cart</h4>
+                        <div class="breadcrumb__links">
+                            <a href="./index.html">Home</a>
+                            <a href="./shop.html">Shop</a>
+                            <span>Shopping Cart</span>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
-                <div class="cart__discount">
-                    <h6>Discount codes</h6>
-                    <form action="#">
-                        <input type="text" placeholder="Coupon code">
-                        <button type="submit">Apply</button>
-                    </form>
-                </div>
-                <div class="cart__total">
-                    <h6>Cart total</h6>
-                    <ul>
-                        <li>Subtotal <span>$ 169.50</span></li>
-                        <li>Total <span>$ 169.50</span></li>
-                    </ul>
-                    <a href="#" class="primary-btn">Proceed to checkout</a>
-                </div>
-            </div>
         </div>
-    </div>
-</section>
-<!-- Shopping Cart Section End -->
-
-<!-- Footer Section Begin -->
-<footer class="footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="footer__about">
-                    <div class="footer__logo">
-                        <a href="#"><img src="img/footer-logo.png" alt=""></a>
+    </section>
+    <!-- Breadcrumb Section End -->
+    <% if(locals.message) { %>
+        <div class="alert text-warning text-center" id="message">
+            <%= message %>
+        </div>
+        <% } %>
+            <!-- Shopping Cart Section Begin -->
+            <section class="shopping-cart spad">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="shopping__cart__table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Quantity</th>
+                                            <th>Total</th>
+                                            <th>Remove</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% if(cart.length> 0){ %>
+                                            <% cart.forEach((carte)=> { %>
+                                                <tr>
+                                                    <td class="product__cart__item">
+                                                        <a href="/product_details/<%= carte.productId %>">
+                                                            <div class="product__cart__item__pic">
+                                                                <img src="/static/productImages/<%= carte.productImage %>"
+                                                                    alt="" height="100px" width="100px">
+                                                            </div>
+                                                        </a>
+                                                        <div class="product__cart__item__text">
+                                                            <h5>
+                                                                <%= carte.productName %>
+                                                            </h5>
+                                                            <h6 class="product-price">
+                                                                <span id="product-disc-price-<%= carte._id %>">
+                                                                    <strong class="text-success">&#8377;<%=
+                                                                            carte.productDiscPrice %></strong>
+                                                                </span>
+                                                                &nbsp;<del
+                                                                    class="product-old-price text-small text-muted"
+                                                                    id="product-price-<%= carte._id %>"
+                                                                    data-unit-rprice="<%= carte.productPrice %>">
+                                                                    &#8377;<%= carte.productPrice %>
+                                                                </del>
+                                                            </h6>
+                                                            <p>
+                                                                <%= carte.productColor %>
+                                                                    &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<%=
+                                                                        carte.productSize %>
+                                                            </p>
+                                                        </div>
+                                                    </td>
+                                                    <td class="quantity__item">
+                                                        <div class="quantity">
+                                                            <div class="pro-qty-2">
+                                                                <button class="qty-down" data-cart-id="<%= carte._id %>">-</button>
+                                                                <input type="text" id="quantityUpdate-<%= carte._id %>" data-cart-id="<%= carte._id %>" value="<%= carte.productQuantity %>" data-available-quantity="<%= carte.availableQuantity %>">
+                                                                <button class="qty-up" data-cart-id="<%= carte._id %>">+</button>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="cart__price" id="priceUpdate-<%= carte._id %>" data-unit-price="<%= carte.productDiscPrice %>">
+                                                        &#8377;<%= carte.cartPrice.toFixed(2) %>
+                                                    </td>
+                                                    </td>
+                                                    <td class="cart__close">
+                                                        <button class="btn" onclick="deleteCart('<%= carte._id %>')">
+                                                            <i class="mdi mdi-close" style="background-color: transparent;"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <% }) %>
+                                                    <% } else{ %>
+                                                        <tr class="text-center">
+                                                            <td>Cart is empty!</td>
+                                                        </tr>
+                                                        <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="cart__total">
+                                <h6>Cart total</h6>
+                                <ul id="cart-items">
+                                    <li>Price (<%= cart.length %>) <span id="subtotal"></span></li>
+                                    <li>Discount <span id="discount" class="text-success"></span></li>
+                                    <li>Total <span id="total"></span></li>
+                                </ul>
+                                <div class="text-center ps-4">
+                                    <a href="/checkout" class="text-decoration-none"><button
+                                            class="primary-btn checkbtn" id="checkout-btn">Proceed to
+                                            checkout</button></a>
+                                </div>
+                            </div>
+                            <div class="continue_btn text-center mt-5">
+                                <a href="/shop"><button class="btn"
+                                        style="background-color: rebeccapurple; color: white;">Continue
+                                        Shopping</button></a>
+                            </div>
+                        </div>
                     </div>
-                    <p>The customer is at the heart of our unique business model, which includes design.</p>
-                    <a href="#"><img src="img/payment.png" alt=""></a>
                 </div>
-            </div>
-            <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
-                <div class="footer__widget">
-                    <h6>Shopping</h6>
-                    <ul>
-                        <li><a href="#">Clothing Store</a></li>
-                        <li><a href="#">Trending Shoes</a></li>
-                        <li><a href="#">Accessories</a></li>
-                        <li><a href="#">Sale</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-3 col-sm-6">
-                <div class="footer__widget">
-                    <h6>Shopping</h6>
-                    <ul>
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">Payment Methods</a></li>
-                        <li><a href="#">Delivary</a></li>
-                        <li><a href="#">Return & Exchanges</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
-                <div class="footer__widget">
-                    <h6>NewLetter</h6>
-                    <div class="footer__newslatter">
-                        <p>Be the first to know about new arrivals, look books, sales & promos!</p>
-                        <form action="#">
-                            <input type="text" placeholder="Your email">
-                            <button type="submit"><span class="icon_mail_alt"></span></button>
-                        </form>
+            </section>
+            <!-- Shopping Cart Section End -->
+
+            <!-- Footer Section Begin -->
+            <footer class="footer">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="footer__about">
+                                <div class="footer__logo">
+                                    <a href="#"><img src="img/footer-logo.png" alt=""></a>
+                                </div>
+                                <p>The customer is at the heart of our unique business model, which includes design.</p>
+                                <a href="#"><img src="img/payment.png" alt=""></a>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
+                            <div class="footer__widget">
+                                <h6>Shopping</h6>
+                                <ul>
+                                    <li><a href="#">Clothing Store</a></li>
+                                    <li><a href="#">Trending Shoes</a></li>
+                                    <li><a href="#">Accessories</a></li>
+                                    <li><a href="#">Sale</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-sm-6">
+                            <div class="footer__widget">
+                                <h6>Shopping</h6>
+                                <ul>
+                                    <li><a href="#">Contact Us</a></li>
+                                    <li><a href="#">Payment Methods</a></li>
+                                    <li><a href="#">Delivary</a></li>
+                                    <li><a href="#">Return & Exchanges</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
+                            <div class="footer__widget">
+                                <h6>NewLetter</h6>
+                                <div class="footer__newslatter">
+                                    <p>Be the first to know about new arrivals, look books, sales & promos!</p>
+                                    <form action="#">
+                                        <input type="text" placeholder="Your email">
+                                        <button type="submit"><span class="icon_mail_alt"></span></button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <div class="footer__copyright__text">
-                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                    <p>Copyright ©
-                        <script>
-                            document.write(new Date().getFullYear());
-                        </script>2020
-                        All rights reserved | This template is made with <i class="fa fa-heart-o"
-                            aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                    </p>
-                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
-<!-- Footer Section End -->
+            </footer>
+            <!-- Footer Section End -->
 
-<!-- Search Begin -->
-<div class="search-model">
-    <div class="h-100 d-flex align-items-center justify-content-center">
-        <div class="search-close-switch">+</div>
-        <form class="search-model-form">
-            <input type="text" id="search-input" placeholder="Search here.....">
-        </form>
-    </div>
-</div>
-<!-- Search End -->
+            <style>
+                .checkbtn {
+                    border: 2px solid #e53637;
+                }
 
-<style>
-.pro-qty-2 {
-    display: flex;
-    align-items: center;
-}
+                .checkbtn:hover {
+                    border: 2px solid #e53637;
+                    background-color: white;
+                    color: #e53637;
+                }
 
-.pro-qty-2 input {
-    width: 50px;
-    text-align: center;
-    border: 1px solid #ddd;
-    border-left: none;
-    border-right: none;
-    height: 30px;
-}
+                .pro-qty-2 {
+                    display: flex;
+                    align-items: center;
+                }
 
-.pro-qty-2 button {
-    background-color:transparent;
-    border: 0;
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
-    text-align: center;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-}
+                .pro-qty-2 input {
+                    width: 50px;
+                    text-align: center;
+                    border: 1px solid #ddd;
+                    border-left: none;
+                    border-right: none;
+                    height: 30px;
+                }
 
-.pro-qty-2 button:hover {
-    color: blueviolet;
-}
-</style>
-<script>
-   document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.qty-up').forEach(button => {
-        button.addEventListener('click', () => {
+                .pro-qty-2 button {
+                    background-color: transparent;
+                    border: 0;
+                    width: 30px;
+                    height: 30px;
+                    line-height: 30px;
+                    text-align: center;
+                    cursor: pointer;
+                    font-size: 16px;
+                    font-weight: bold;
+                }
+
+                .pro-qty-2 button:hover {
+                    color: blueviolet;
+                }
+            </style>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+     document.addEventListener('DOMContentLoaded', () => {
+        const updateQuantity = async (cartId, newQuantity, priceElement, unitPrice) => {
+            const quantities = {};
+            quantities[cartId] = newQuantity;
+    
+            try {
+                const response = await fetch('/update_cart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ quantities })
+                });
+    
+                const data = await response.json();
+                if (response.ok) {
+                    // Update the price on the client side
+                    const newTotalPrice = unitPrice * newQuantity;
+                    priceElement.textContent = `₹${newTotalPrice.toFixed(2)}`;
+                    console.log('Cart updated successfully:', data);
+                    // Update subtotal, discount, and total
+                    updateCartPrices();
+                } else {
+                    alert('Cart update failed');
+                }
+            } catch (error) {
+                console.error('Error updating cart:', error);
+                alert('Error updating cart');
+            }
+        };
+    
+        const handleQuantityChange = async (button, increment) => {
             const cartId = button.getAttribute('data-cart-id');
             const quantityInput = document.getElementById(`quantityUpdate-${cartId}`);
+            const priceElement = document.getElementById(`priceUpdate-${cartId}`);
+            const unitPrice = parseFloat(priceElement.getAttribute('data-unit-price'));
+            const availableQuantity = parseInt(quantityInput.getAttribute('data-available-quantity'));
             let currentValue = parseInt(quantityInput.value);
             if (!isNaN(currentValue)) {
-                quantityInput.value = currentValue + 1;
+                const newQuantity = currentValue + increment;
+                if (newQuantity >= 1 && newQuantity <= 10) {
+                    quantityInput.value = newQuantity;
+                    await updateQuantity(cartId, newQuantity, priceElement, unitPrice);
+                }
             }
-        });
-    });
-
-    document.querySelectorAll('.qty-down').forEach(button => {
-        button.addEventListener('click', () => {
-            const cartId = button.getAttribute('data-cart-id');
-            const quantityInput = document.getElementById(`quantityUpdate-${cartId}`);
-            let currentValue = parseInt(quantityInput.value);
-            if (!isNaN(currentValue) && currentValue > 1) {
-                quantityInput.value = currentValue - 1;
-            }
-        });
-    });
-
-    document.getElementById('updateCartBtn').addEventListener('click', async () => {
-        const quantities = {};
-        document.querySelectorAll('input[id^="quantityUpdate-"]').forEach(input => {
-            const cartId = input.getAttribute('data-cart-id');
-            quantities[cartId] = parseInt(input.value);
-        });
-
-        try {
-            const response = await fetch('/update_cart', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ quantities })
+        };
+    
+        document.querySelectorAll('.qty-up').forEach(button => {
+            button.addEventListener('click', async () => {
+                await handleQuantityChange(button, 1);
             });
-
-            const data = await response.json();
-            if (response.ok) {
-                location.reload();
-            } else {
-                alert("Cart updation failed");
-            }
-        } catch (error) {
-            alert("Error updating cart");
+        });
+    
+        document.querySelectorAll('.qty-down').forEach(button => {
+            button.addEventListener('click', async () => {
+                await handleQuantityChange(button, -1);
+            });
+        });
+    
+        // Function to format price as currency
+        function formatPrice(price) {
+            return `₹${price.toFixed(2)}`;
         }
+    
+        // Function to calculate subtotal, discount, and total
+        function calculatePrices() {
+            let subtotal = 0;
+            let discount = 0;
+            let total = 0;
+            document.querySelectorAll('input[id^="quantityUpdate-"]').forEach(input => {
+                const cartId = input.getAttribute('data-cart-id');
+                const quantity = parseInt(input.value);
+                const priceElement = document.getElementById(`priceUpdate-${cartId}`);
+                const realPriceElement = document.getElementById(`product-price-${cartId}`);
+                const unitPrice = parseFloat(priceElement.getAttribute('data-unit-price'));
+                const DiscPrice = parseFloat(realPriceElement.getAttribute('data-unit-rprice'));
+                subtotal += DiscPrice * quantity;
+                total += unitPrice * quantity; // Assuming there's no discount applied
+            });
+            discount = total - subtotal; // Calculate discount as the difference between subtotal and total
+            return { subtotal, total, discount };
+        }
+    
+        // Function to update subtotal, discount, and total in the HTML
+        function updateCartPrices() {
+            const prices = calculatePrices();
+            document.getElementById('subtotal').innerHTML = formatPrice(prices.subtotal);
+            document.getElementById('discount').innerHTML = `-${formatPrice(prices.discount)}`;
+            document.getElementById('total').innerHTML = formatPrice(prices.total);
+        }
+    
+        // Initial calculation on page load
+        updateCartPrices();
     });
-});
+</script>    
 
+<script>
+    function deleteCart(cartId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'This action cannot be undone.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/cart/delete_cart?id=${cartId}`, {
+                    method: 'GET'
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message === 'Cart deleted successfully') {
+                            Swal.fire(
+                                'Deleted!',
+                                'Your item has been deleted.',
+                                'success'
+                            ).then(() => {
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire(
+                                'Error!',
+                                data.message || 'There was a problem deleting the item.',
+                                'error'
+                            );
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire(
+                            'Error!',
+                            'There was a problem deleting your item.',
+                            'error'
+                        );
+                    });
+            }
+        });
+    }
 </script>
-
-<!-- Js Plugins -->
-<script src="js/jquery-3.3.1.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/jquery.nice-select.min.js"></script>
-<script src="js/jquery.nicescroll.min.js"></script>
-<script src="js/jquery.magnific-popup.min.js"></script>
-<script src="js/jquery.countdown.min.js"></script>
-<script src="js/jquery.slicknav.js"></script>
-<script src="js/mixitup.min.js"></script>
-<script src="js/owl.carousel.min.js"></script>
-<script src="js/main.js"></script>
-
 <%- include('../partials/footer') %>

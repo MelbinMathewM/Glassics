@@ -1,0 +1,88 @@
+<%- include('../partials/header') %>
+
+<div class="text-center mt-5 mb-5">
+    <div class="container align-self- border regcon" style="max-width: 500px;">
+        <div class="header__logo">
+            <a class="text-decoration-none" href="/"><h1 class="fw-bold" style="font-style: italic;">Glassics</h1></a>
+        </div>
+        <div class="title regtit mb-2">
+            <h2 class="pb-3 pt-3">Edit Details</h2>
+            <% if(locals.message) { %>
+                <span id="message" class="alert text-warning text-center message" role="alert"><%= message %></span>
+            <% } %>
+            <div id="error" class="text-warning fw-bold text-center"></div>
+            <form action="" method="post" id="form">
+                <div class="mb-3">
+                    <input type="text" name="customerName" class="form-control" placeholder="Enter new Name" id="customerName">
+                </div>
+                <div class="mb-3">
+                    <input type="text" name="userName" class="form-control" placeholder="Enter new Username" id="userName">
+                </div>
+                <div class="mb-3">
+                    <input type="text" name="userMobile" class="form-control" placeholder="Enter the Mobile Number" id="userMobile">
+                </div>
+                <div class="mb-3">
+                    <input type="password" name="password" class="form-control" placeholder="Enter your password" id="password">
+                </div>
+                <button type="submit" class="btn btn-primary mb-4">Submit</button>
+            </form>
+            <span class="text-dark mb-2"><a class="text-decoration-none" href="/account/profile">Go Back</a></span><br>
+        </div>
+    </div>
+</div>
+
+<script>
+    setTimeout(()=>{
+        const messageDiv = document.getElementById('message');
+    if(messageDiv){
+        messageDiv.remove()
+    }
+    },5000);
+</script>
+<script>
+    let form = document.getElementById('form');
+    let error = document.getElementById('error');
+    let message = [];
+    let name_reg = /^[a-zA-Z ]+$/;
+    let uname_reg = /^[A-Za-z][A-Za-z0-9_]*$/;
+    let mobile_reg = /^[1-9][0-9]{9}$/;
+    let mob_zero = /^0{10}$/;
+
+    form.addEventListener('submit',(e) => {
+        message = [];
+        let customerName = document.getElementById('customerName').value.trim();
+        let userName = document.getElementById('userName').value.trim();
+        let userMobile = document.getElementById('userMobile').value.trim();
+        let password = document.getElementById('password').value.trim();
+
+        if(!customerName){
+            message.push('Name is required');
+        }else if(!name_reg.test(customerName)) {
+            message.push("Enter a valid Name");
+        };
+
+        if(!userName){
+            message.push('Username is required');
+        }else if(!uname_reg.test(userName)) {
+            message.push("Enter a valid Username");
+        };
+
+        if(!userMobile){
+            message.push('Mobile Number is required');
+        } else if (!mobile_reg.test(userMobile)) {
+            message.push("Mobile Number should be 10 digit numbers and first number cannot be zero");
+        } else if (mob_zero.test(userMobile)) {
+            message.push("Mobile number cannot be 10 consecutive zeros.");
+        };
+
+        if(!password){
+            message.push('Password is required for verifying your request')
+        };
+
+        if(message.length > 0){
+            e.preventDefault();
+            error.innerText = message[0];
+        }
+    });
+</script>
+<%- include('../partials/footer') %>

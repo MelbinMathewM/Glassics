@@ -4,10 +4,7 @@
     <!-- partial:partials/_navbar.html -->
     <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <a class="navbar-brand brand-logo" href="../admin/dashboard"><img src="/assets/images/logo.svg"
-            alt="logo" /></a>
-        <a class="navbar-brand brand-logo-mini" href="../admin/dashboard" src="/assets/images/logo-mini.svg"
-          alt="logo" /></a>
+        <a class="text-decoration-none" href="/"><h1 class="fw-bold" style="font-style: italic;">Glassics</h1></a>
       </div>
       <div class="navbar-menu-wrapper d-flex align-items-stretch">
         <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -139,7 +136,7 @@
                 </div>
                 <div class="col">
                   <label for="productCategory">Category</label>
-                  <select class="form-control" name="productCategory">
+                  <select class="form-control text-black" name="productCategory">
                     <option value="">Select Category</option>
                     <% categories.forEach(category=> { %>
                       <option value="<%= category._id %>">
@@ -154,7 +151,7 @@
               <div class="row">
                 <div class="col">
                   <label for="productBrand">Brand:</label>
-                  <select class="form-control" name="productBrand">
+                  <select class="form-control text-black" name="productBrand">
                     <option value="">Select Brand</option>
                     <% brands.forEach(brand=> { %>
                       <option value="<%= brand._id %>">
@@ -163,7 +160,7 @@
                       <% }); %>
                   </select>
                 </div>
-                <div class="col">
+                <div class="col mt-1">
                   <label for="productGender">Gender:</label><br>
                   <div class="radio-group">
                     <input type="radio" id="genderMale" name="productGender" value="Male">
@@ -182,7 +179,7 @@
               <div class="row">
                 <div class="col">
                   <label for="frameMaterial">Frame Material:</label>
-                  <select class="form-control" name="frameMaterial">
+                  <select class="form-control text-black" name="frameMaterial">
                       <option value="">Select Frame Material</option>
                       <option value="Plastic Frames">Plastic Frames</option>
                       <option value="Metal Frames">Metal Frames</option>
@@ -193,7 +190,7 @@
               </div>
               <div class="col">
                   <label for="frameShape">Frame Shape:</label>
-                  <select class="form-control" name="frameShape">
+                  <select class="form-control text-black" name="frameShape">
                       <option value="">Select Frame Shape</option>
                       <option value="Round">Round</option>
                       <option value="Square">Square</option>
@@ -205,7 +202,7 @@
               </div>
               <div class="col">
                 <label for="style">Style:</label>
-                <select class="form-control" name="frameStyle">
+                <select class="form-control text-black" name="frameStyle">
                     <option value="">Select Style</option>
                     <option value="Classic">Classic</option>
                     <option value="Modern">Modern</option>
@@ -220,7 +217,7 @@
         <div class="row">
           <div class="col">
             <label for="lensType">Lens Type:</label>
-            <select class="form-control" name="lensType">
+            <select class="form-control text-black" name="lensType">
                 <option value="">Select Lens Type</option>
                 <option value="Single Vision Lenses">Single Vision Lenses</option>
                 <option value="Bifocal Lenses">Bifocal Lenses</option>
@@ -231,7 +228,7 @@
         </div>
         <div class="col">
             <label for="specialFeatures">Special Features:</label>
-            <select class="form-control" name="specialFeatures">
+            <select class="form-control text-black" name="specialFeatures">
                 <option value="">Select Special Features</option>
                 <option value="Anti-Reflective Coating">Anti-Reflective Coating</option>
                 <option value="Blue Light Blocking">Blue Light Blocking</option>
@@ -318,6 +315,7 @@
     left: 0;
     top: 25%;
     margin-top: 50px;
+    margin-bottom: 50px;
     width: 100%;
     height: 100%;
     overflow: auto;
@@ -391,28 +389,26 @@
           <div id="subvariantError${variantCount}" class="text-warning fw-bold text-center"></div>
           <div class="form-group">
             <div class="row">
-            <div class="col">
+            <div class="col-6 col-md-3 mb-3">
               <label for="color${variantCount}">Color:</label>
               <input type="text" id="color${variantCount}" name="variants[${variantCount - 1}][color]" class="form-control">
             </div>
-            <div class="col">
+            <div class="col-6 col-md-3 mb-3">
               <label for="variantPrice${variantCount}">Price:</label>
               <input type="number" id="variantPrice${variantCount}" name="variants[${variantCount - 1}][price]" class="form-control">
             </div>
-            <div class="col">
+            <div class="col-6 col-md-3">
               <label for="variantDiscountPrice${variantCount}">Discount Price:</label>
               <input type="number" id="variantDiscountPrice${variantCount}" name="variants[${variantCount - 1}][discountPrice]" class="form-control">
             </div>
-            <div class="col">
+            <div class="col-6 col-md-3">
               <label for="variantImages${variantCount}">Images:</label>
               <input type="file" id="variantImages${variantCount}" name="variantImages[${variantCount - 1}][]" class="file-input form-control" accept="image/*" multiple>
-            </div>
-            
-            <div id="dynamic-inputs">
-             
+            </div>           
+            <div id="dynamic-inputs">            
             </div>
           </div>
-          <h6>Sizes and Quantities</h6>
+          <h6 class="mt-3">Sizes and Quantities</h6>
           <div id="sizesContainer${variantCount}">
             <!-- Sizes will be added here -->
           </div>
@@ -421,26 +417,24 @@
         </div>
       `;
       document.getElementById('variantsContainer').insertAdjacentHTML('beforeend', variantHTML);
-
       document.querySelector(`#variantImages${variantCount}`).addEventListener('change', handleImageSelect);
     }
 
     function addSize(variantIndex) {
       const sizeHTML = `
         <div class="form-group row">
-          <div class="col">
+          <div class="col mt-2">
             <label for="size${variantIndex}">Size:</label>
             <input type="text" id="size${variantIndex}" name="variants[${variantIndex - 1}][sizes][]" class="form-control">
           </div>
-          <div class="col">
+          <div class="col mt-2">
             <label for="quantity${variantIndex}">Quantity:</label>
             <input type="number" id="quantity${variantIndex}" name="variants[${variantIndex - 1}][quantities][]" class="form-control">
           </div>
-          <div class="col">
-            <button type="button" class="btn btn-danger mt-4" onclick="removeSize(${variantIndex}, this.parentNode.parentNode.remove())">Remove Size</button>
+          <div class="col mt-2">
+            <button type="button" class="btn btn-danger btn-small mt-4" onclick="removeSize(${variantIndex}, this.parentNode.parentNode.remove())">Remove</button>
           </div>
-        </div>
-        
+        </div>        
       `;
       document.getElementById(`sizesContainer${variantIndex}`).insertAdjacentHTML('beforeend', sizeHTML);
     }

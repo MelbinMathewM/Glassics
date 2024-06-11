@@ -58,7 +58,7 @@ a_route.get('/dashboard',adminAuth.checkAdminSession,adminController.loadDashboa
 a_route.get('/products',adminAuth.checkAdminSession,productController.loadProducts);
 a_route.get('/products/add_products',adminAuth.checkAdminSession,productController.loadAddProducts);
 a_route.post('/products/add_products',cpUpload,productController.insertProduct);
-a_route.get('/products/detail_products',adminAuth.checkAdminSession,productController.loadDetailProduct)
+a_route.get('/products/detail_products',adminAuth.checkAdminSession,productController.loadDetailProduct);
 a_route.get('/products/edit_products',adminAuth.checkAdminSession,productController.loadEditProduct);
 a_route.post('/products/edit_products',upload.any(),productController.updateProduct);
 a_route.get('/products/delete_products',adminAuth.checkAdminSession,productController.deleteProduct);

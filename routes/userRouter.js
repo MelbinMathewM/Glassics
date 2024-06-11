@@ -8,9 +8,11 @@ const config = require('../config/config');
 const userController = require('../controllers/userController');
 const accountController = require('../controllers/accountController');
 const loginController = require('../controllers/loginController');
+const orderController = require('../controllers/orderController');
 const userAuth = require('../middleWare/userAuth');
 const passport = require('passport');
 const multer = require('multer');
+const nocache = require('nocache');
 const path = require('path');
 
 //session handling
@@ -22,6 +24,7 @@ u_route.use(session({
 }));
 
 u_route.use(userAuth.authMiddleware)
+u_route.use(nocache());
 
 //googleAuth
 u_route.use(passport.initialize());
@@ -63,6 +66,12 @@ u_route.get('/product_details/:productId',userController.loadProductDetail);
 u_route.get('/cart',userAuth.isLogin,userController.loadCart);
 u_route.post('/add_cart',userController.insertCart);
 u_route.post('/update_cart',userController.updateCart);
+u_route.get('/cart/delete_cart',userController.deleteCart);
+
+//checkout routes
+u_route.get('/checkout',userController.loadCheckout);
+u_route.post('/checkout',userController.addCheckout);
+u_route.post('/checkout/add_address',userController.checkoutAddAdress);
 
 //wishlist routes
 u_route.get('/account/wishlist',userAuth.isLogin,userController.loadWishlist);
@@ -86,14 +95,24 @@ u_route.get('/login',userAuth.isLogout,loginController.loadLogin);
 u_route.post('/login',loginController.verifyUser);
 
 //profile routes
-u_route.get('/account/:userName/profile',userAuth.isLogin,accountController.loadProfile);
+u_route.get('/account/profile',userAuth.isLogin,accountController.loadProfile);
+u_route.get('/account/profile/edit_password',userAuth.isLogin,userAuth.isLogin,accountController.loadEditPassword);
+u_route.post('/account/profile/edit_password',accountController.updatePassword);
+u_route.get('/account/profile/edit_details',userAuth.isLogin,userAuth.isLogin,accountController.loadEditDetail);
+u_route.post('/account/profile/edit_details',accountController.updateDetail);
+
+//order routes
+u_route.get('/account/orders',orderController.loadOrder);
+u_route.get('/account/orders/order_details',orderController.loadOrderDetail);
+u_route.post('/account/orders/order_details/delete_order',orderController.cancelOrder);
 
 //address routes
-u_route.get('/account/:userName/address',userAuth.isLogin,accountController.loadAddress);
-u_route.get('/account/:userName/address/add_address',userAuth.isLogin,accountController.loadAddAddress);
-u_route.post('/account/:userName/address/add_address',accountController.insertAddress);
-u_route.get('/account/:uerName/address/edit_address',userAuth.isLogin,accountController.loadEditAddress);
-u_route.post('/account/:userName/address/edit_address',accountController.updateAddress);
+u_route.get('/account/address',userAuth.isLogin,accountController.loadAddress);
+u_route.get('/account/address/add_address',userAuth.isLogin,accountController.loadAddAddress);
+u_route.post('/account/address/add_address',accountController.insertAddress);
+u_route.get('/account/address/edit_address',userAuth.isLogin,accountController.loadEditAddress);
+u_route.post('/account/address/edit_address',accountController.updateAddress);
+u_route.get('/account/address/delete_address',accountController.deleteAddress);
 
 //logout routes
 u_route.get('/logout',userAuth.isLogin,loginController.logoutUser);

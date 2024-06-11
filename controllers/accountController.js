@@ -1,44 +1,131 @@
 const Address = require('../model/addressModel');
 const Product = require('../model/productModel');
 const User = require('../model/userModel');
+const bcrypt = require('bcrypt');
 
-const loadProfile = async (req,res) => {
-    try{
-        const userName = req.params.userName;
+const securePassword = async (password) => {
+    try {
+        const hashPassword = await bcrypt.hash(password, 10);
+        return hashPassword;
+    } catch (error) {
+        res.send(error);
+    }
+};
+
+const loadProfile = async (req, res) => {
+    try {
+        const userId = req.session.user_id;
         const products = await Product.find();
-        const user = await User.findOne({ userName : userName})
-        res.render(`profile`,{products : products, user : user});
-    }catch(error){
+        const user = await User.findById(userId)
+        res.render(`profile`, { products: products, user: user });
+    } catch (error) {
         res.send(error)
     }
 };
 
-const loadAddress = async (req,res) => {
-    try{
-        const userName = req.params.userName
-        const user = await User.findOne({userName : userName})
-        const addresses = await Address.find({user_id : user._id});
-        res.render('address',{user : user, addresses : addresses});
-    }catch(error){
+const loadEditPassword = async (req, res) => {
+    try {
+        const userId = req.session.user_id;
+        const user = await User.findById(userId);
+        res.render('edit_password', { user: user })
+    } catch (error) {
         res.send(error);
     }
 };
 
-const loadAddAddress = async (req,res) => {
-    try{
+const updatePassword = async (req, res) => {
+    try {
+        const { password } = req.body;
+        const userId = req.session.user_id;
+        const npassword = await securePassword(password)
+        const uData = await User.findById(userId);
+        if (!uData) {
+            return res.render('edit_password', { message: "User not found" });
+        }
+        const userData = await User.findByIdAndUpdate(userId, {
+            $set: {
+                password: npassword
+            }
+        }, { new: true });
+        if (userData) {
+            res.redirect(`/account/profile`);
+        } else {
+            res.render('edit_password', { message: "Couldn't update password" });
+        }
+    } catch (error) {
+        res.send(error);
+    }
+};
+
+const loadEditDetail = async (req, res) => {
+    try {
+        const userId = req.session.user_id
+        const user = await User.findById(userId);
+        res.render('edit_details', { user: user })
+    } catch (error) {
+        res.send(error);
+    }
+};
+
+const updateDetail = async (req, res) => {
+    try {
+        const { customerName, userName, userMobile, password } = req.body;
+        const userId = req.session.user_id;
+        const existingUserName = await User.findOne({ userName: userName });
+        if (existingUserName) {
+            return res.render('edit_details', { message: "Username already exists" })
+        }
+        const uData = await User.findById(userId);
+        if (!uData) {
+            return res.render('edit_details', { message: "User not found" });
+        }
+        const passwordMatch = await bcrypt.compare(password, uData.password);
+        if (passwordMatch) {
+            const userData = await User.findByIdAndUpdate(userId, {
+                $set: {
+                    customerName: customerName,
+                    userName: userName,
+                    userMobile: userMobile
+                }
+            }, { new: true });
+            if (userData) {
+                res.redirect(`/account/profile`);
+            } else {
+                return res.redirect(`/account/profile/edit_details`);
+            }
+        } else {
+            return res.render('edit_details',{ message : "Incorrect Password!"});
+        }
+    } catch (error) {
+        res.send(error);
+    }
+};
+
+const loadAddress = async (req, res) => {
+    try {
+        const userId = req.session.user_id
+        const user = await User.findById(userId);
+        const addresses = await Address.find({ user_id: user._id });
+        res.render('address', { user: user, addresses: addresses });
+    } catch (error) {
+        res.send(error);
+    }
+};
+
+const loadAddAddress = async (req, res) => {
+    try {
         res.render('add_address');
-    }catch(error){
+    } catch (error) {
         res.send(error);
     }
 };
 
-const insertAddress = async (req,res) => {
-    try{
-        const userName = req.params.userName
+const insertAddress = async (req, res) => {
+    try {
         const { addressName, addressEmail, addressMobile, addressHouse, addressStreet, addressPost, addressMark, addressCity, addressDistrict, addressState, addressPin } = req.body;
         const userId = req.session.user_id;
         const address = new Address({
-            user_id : userId,
+            user_id: userId,
             addressName,
             addressEmail,
             addressMobile,
@@ -52,64 +139,82 @@ const insertAddress = async (req,res) => {
             addressPin
         });
         const addressData = await address.save();
-        if(addressData){
-            return res.redirect(`/account/${userName}/address`);
-        }else{
-            return res.render('address',{ message : "Couldn't insert Address!"})
+        if (addressData) {
+            return res.redirect(`/account/address`);
+        } else {
+            return res.render('address', { message: "Couldn't insert Address!" })
         }
-    }catch(error){
+    } catch (error) {
         res.send(error);
     }
 };
 
-const loadEditAddress = async (req,res) => {
-    try{
+const loadEditAddress = async (req, res) => {
+    try {
         const id = req.query.id;
-        const addressData = await Address.findById({_id : id});
-        if(addressData){
-            res.render('edit_address',{address : addressData})
-        }else{
+        const addressData = await Address.findById({ _id: id });
+        if (addressData) {
+            res.render('edit_address', { address: addressData })
+        } else {
             res.render('address');
         }
-    }catch(error){
+    } catch (error) {
         res.send(error);
     }
 };
 
-const updateAddress = async (req,res) => {
-    try{
+const updateAddress = async (req, res) => {
+    try {
         const id = req.query.id;
-        const userName = req.params.userName;
-        const addressData = await Address.findByIdAndUpdate({ _id : id },{
-            $set : {
-                addressName : req.body.addressName,
-                addressEmail : req.body.addressEmail,
-                addressMobile : req.body.addressMobile,
-                addressHouse : req.body.addressHouse,
-                addressStreet : req.body.addressStreet,
-                addressPost : req.body.addressPost,
-                addressMark : req.body.addressMark,
-                addressCity : req.body.addressCity,
-                addressDistrict : req.body.addressDistrict,
-                addressState : req.body.addressState,
-                addressPin : req.body.addressPin
+        const addressData = await Address.findByIdAndUpdate({ _id: id }, {
+            $set: {
+                addressName: req.body.addressName,
+                addressEmail: req.body.addressEmail,
+                addressMobile: req.body.addressMobile,
+                addressHouse: req.body.addressHouse,
+                addressStreet: req.body.addressStreet,
+                addressPost: req.body.addressPost,
+                addressMark: req.body.addressMark,
+                addressCity: req.body.addressCity,
+                addressDistrict: req.body.addressDistrict,
+                addressState: req.body.addressState,
+                addressPin: req.body.addressPin
             }
         });
-        if(addressData){
-            return res.redirect(`/account/${userName}/address`);
-        }else{
-            return res.render('edit_address',{ message : "Couldn't update address"});
+        if (addressData) {
+            return res.redirect(`/account/address`);
+        } else {
+            return res.render('edit_address', { message: "Couldn't update address" });
         }
-    }catch(error){
+    } catch (error) {
         res.send(error);
+    }
+};
+
+const deleteAddress = async (req, res) => {
+    try {
+        const addressId = req.query.id;
+        const addressData = await Address.findByIdAndDelete(addressId);
+
+        if (!addressData) {
+            return res.status(404).json({ message: 'Address not found' });
+        }
+        res.status(200).json({ message: 'Address deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'There was a problem deleting the address', error: error.message });
     }
 };
 
 module.exports = {
     loadProfile,
+    loadEditPassword,
+    updatePassword,
+    loadEditDetail,
+    updateDetail,
     loadAddress,
     loadAddAddress,
     insertAddress,
     loadEditAddress,
-    updateAddress
+    updateAddress,
+    deleteAddress
 }

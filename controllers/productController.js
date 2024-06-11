@@ -37,6 +37,7 @@ const insertProduct = async (req, res) => {
     try {
         const { productName, productGender, productDescription, productCategory, productBrand, frameMaterial, frameShape, frameStyle, lensType, specialFeatures } = req.body;
 
+        console.log(productCategory);
         if (!mongoose.Types.ObjectId.isValid(productCategory)) {
             return res.status(400).send('Invalid category ID.');
         }
@@ -231,7 +232,7 @@ const deleteProduct = async (req, res) => {
 
 const loadUnlistedProduct = async (req, res) => {
     try {
-        const productData = await Product.find({ is_delete: true }).populate({ path: 'productCategory', select: 'categoryName' });
+        const productData = await Product.find({ is_delete: true }).populate('productCategory').populate('productBrand');
         const transformedProductData = productData.map(product => {
             const { _id, productName, productGender, productDescription, productImage,frameMaterial, frameShape, frameStyle, lensType, specialFeatures, variants, is_delete } = product;
             const productCategory = product.productCategory ? product.productCategory.categoryName : null;
@@ -269,8 +270,6 @@ const loadCategory = async (req, res) => {
 const insertCategory = async (req, res) => {
     try {
         const { categoryName } = req.body;
-
-        console.log(categoryName);
         if (!categoryName) {
             return res.status(400).json({ message: "Category name is required" });
         }
