@@ -60,16 +60,16 @@ u_route.use(userAuth.checkUserStatus);
 //main user routes
 u_route.get('/',userAuth.authMiddleware,userController.loadHome);
 u_route.get('/shop',userAuth.authMiddleware,userController.loadShop);
-u_route.get('/product_details/:productId',userController.loadProductDetail);
+u_route.get('/product_details/:productId',userAuth.authMiddleware,userController.loadProductDetail);
 
 //cart routes
 u_route.get('/cart',userAuth.isLogin,userController.loadCart);
 u_route.post('/add_cart',userController.insertCart);
 u_route.post('/update_cart',userController.updateCart);
-u_route.get('/cart/delete_cart',userController.deleteCart);
+u_route.get('/cart/delete_cart',userAuth.isLogin,userController.deleteCart);
 
 //checkout routes
-u_route.get('/checkout',userController.loadCheckout);
+u_route.get('/checkout',userAuth.isLogin,userController.loadCheckout);
 u_route.post('/checkout',userController.addCheckout);
 u_route.post('/checkout/add_address',userController.checkoutAddAdress);
 
@@ -102,17 +102,17 @@ u_route.get('/account/profile/edit_details',userAuth.isLogin,userAuth.isLogin,ac
 u_route.post('/account/profile/edit_details',accountController.updateDetail);
 
 //order routes
-u_route.get('/account/orders',orderController.loadOrder);
-u_route.get('/account/orders/order_details',orderController.loadOrderDetail);
-u_route.post('/account/orders/order_details/delete_order',orderController.cancelOrder);
+u_route.get('/account/orders',userAuth.isLogin,orderController.loadOrder);
+u_route.get('/account/orders/order_details',userAuth.isLogin,orderController.loadOrderDetail);
+u_route.post('/account/orders/order_details/cancel_order',orderController.cancelOrder);
 
 //address routes
 u_route.get('/account/address',userAuth.isLogin,accountController.loadAddress);
-u_route.get('/account/address/add_address',userAuth.isLogin,accountController.loadAddAddress);
+u_route.get('/account/address/add_address',userAuth.isLogin,userAuth.isLogin,accountController.loadAddAddress);
 u_route.post('/account/address/add_address',accountController.insertAddress);
-u_route.get('/account/address/edit_address',userAuth.isLogin,accountController.loadEditAddress);
+u_route.get('/account/address/edit_address',userAuth.isLogin,userAuth.isLogin,accountController.loadEditAddress);
 u_route.post('/account/address/edit_address',accountController.updateAddress);
-u_route.get('/account/address/delete_address',accountController.deleteAddress);
+u_route.get('/account/address/delete_address',userAuth.isLogin,accountController.deleteAddress);
 
 //logout routes
 u_route.get('/logout',userAuth.isLogin,loginController.logoutUser);

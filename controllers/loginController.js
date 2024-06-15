@@ -214,6 +214,9 @@ const googleSuccess = async (req, res, next) => {
         if (!req.user) {
             return res.redirect('/login');
         }
+        if (req.user.is_blocked) {
+            return res.render('login',{ message : 'User blocked'});
+        }
         req.session.user_id = req.user._id;
         res.redirect('/');
     } catch (error) {

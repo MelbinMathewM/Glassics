@@ -143,7 +143,7 @@
                             <div class="col-lg-12 col-md-12">
                                 <% if (order) { %>
                                     <div class="order-summary">
-                                        <div class="card mb-4 ms-3">
+                                        <div class="card mb-4 ms-3 me-3">
                                             <div class="card-body">
                                                 <h2 class="card-title mt-3">Order Details</h2>
                                                 <p class="card-text">
@@ -153,7 +153,7 @@
                                                 </p>
                                             </div>
                                         </div>                           
-                                        <div class="card mb-3 ms-3">
+                                        <div class="card mb-3 ms-3 me-3">
                                             <div class="card-body">
                                                 <h5 class="card-title mt-3">Delivery Address</h5>
                                                 <p class="card-text">
@@ -179,32 +179,32 @@
                                                                         <a href="/product_details/<%= item.product_id._id %>">
                                                                             <img src="/static/productImages/<%= item.productImage %>" alt="<%= item.product_id.name %>" class="img-fluid">
                                                                         </a>
-                                                                        <h5><%= item.product_id.name %></h5>
+                                                                        <h5><%= item.product_id.productName %></h5>
                                                                         <p>Color: <%= item.productColor %></p>
                                                                         <p>Size: <%= item.productSize %></p>
-                                                                        <div class="status-line">
-                                                                            <div class="status-ball <%= item.orderStatus === 'Pending' || item.orderStatus === 'Delivered' || item.orderStatus === 'Dispatched' || item.orderStatus === 'Canceled' ? 'active' : '' %>"></div>
-                                                                            <div class="status-line-connector <%= item.orderStatus === 'Processing' || item.orderStatus === 'Delivered' || item.orderStatus === 'Pending' ? 'active' : '' %>"></div>
-                                                                            <div class="status-ball <%= item.orderStatus === 'Processing' || item.orderStatus === 'Delivered' || item.orderStatus === 'Dispatched' ? 'active' : '' %>"></div>
-                                                                            <div class="status-line-connector <%= item.orderStatus === 'Delivered' ? 'active' : '' %>"></div>
-                                                                            <div class="status-ball <%= item.orderStatus === 'Delivered' ? 'active' : item.orderStatus === 'Canceled' ? 'canceled' : '' %>">
-                                                                                <% if (item.orderStatus === 'Delivered') { %>
-                                                                                    <i class="fa fa-check"></i>
-                                                                                <% } else if (item.orderStatus === 'Canceled') { %>
-                                                                                    <i class="fa fa-times"></i>
-                                                                                <% } %>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-6">
                                                                         <p>Quantity: <%= item.quantity %></p>
-                                                                        <p>Price: &#8377;<%= item.productPrice.toFixed(2) %></p>
-                                                                        <p>Total: &#8377;<%= (item.productPrice * item.quantity).toFixed(2) %></p>
-                                                                        <% if (item.orderStatus !== 'Canceled') { %>
-                                                                            <p>Delivery Date: <%= new Date(item.deliveryDate).toLocaleDateString() %></p>
-                                                                        <% } %>
-                                                                        <p>Status: <%= item.orderStatus %></p>
-                                                                        <% if (item.orderStatus === 'Pending' || item.orderStatus === 'Processing') { %>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <p>Price: &#8377;<%= item.productPrice.toFixed(2) %></p>
+                                                                            <p>Total: &#8377;<%= (item.productPrice * item.quantity).toFixed(2) %></p>
+                                                                            <% if (item.orderStatus !== 'Canceled') { %>
+                                                                                <p>Delivery Date: <%= new Date(item.deliveryDate).toLocaleDateString() %></p>
+                                                                                <% } %>
+                                                                                <p>Status: <%= item.orderStatus %></p>
+                                                                                <% if (item.orderStatus === 'Pending' || item.orderStatus === 'Processing') { %>
+                                                                                    <div class="status-line pb-2">
+                                                                                        <div class="status-ball <%= item.orderStatus === 'Pending' || item.orderStatus === 'Delivered' || item.orderStatus === 'Dispatched' || item.orderStatus === 'Canceled' ? 'active' : '' %>"></div>
+                                                                                        <div class="status-line-connector <%= item.orderStatus === 'Processing' || item.orderStatus === 'Delivered' || item.orderStatus === 'Pending' ? 'active' : '' %>"></div>
+                                                                                        <div class="status-ball <%= item.orderStatus === 'Processing' || item.orderStatus === 'Delivered' || item.orderStatus === 'Dispatched' ? 'active' : '' %>"></div>
+                                                                                        <div class="status-line-connector <%= item.orderStatus === 'Delivered' ? 'active' : '' %>"></div>
+                                                                                        <div class="status-ball <%= item.orderStatus === 'Delivered' ? 'active' : item.orderStatus === 'Canceled' ? 'canceled' : '' %>">
+                                                                                            <% if (item.orderStatus === 'Delivered') { %>
+                                                                                                <i class="fa fa-check"></i>
+                                                                                            <% } else if (item.orderStatus === 'Canceled') { %>
+                                                                                                <i class="fa fa-times"></i>
+                                                                                            <% } %>
+                                                                                        </div>
+                                                                                    </div>
                                                                             <button class="btn btn-danger btn-sm" onclick="cancelOrder('<%= item._id %>')">Cancel</button>
                                                                         <% } else if (item.orderStatus === 'Delivered') { %>
                                                                             <button class="btn btn-warning btn-sm" onclick="returnOrder('<%= item._id %>')">Return</button>
@@ -331,7 +331,7 @@
                 confirmButtonText: 'Yes, cancel it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    fetch(`/account/orders/order_details/delete_order`, {
+                    fetch(`/account/orders/order_details/cancel_order`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'

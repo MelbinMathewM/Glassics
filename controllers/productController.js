@@ -171,25 +171,24 @@ const updateProduct = async (req, res) => {
         product.frameStyle = req.body.frameStyle;
         product.lensType = req.body.lensType;
         product.specialFeatures = req.body.specialFeatures;
-        
-
 
         // Update variants and handle new and removed images
         const variants = req.body.variants || [];
-        const updatedVariants = req.body.variants.map((variant, variantIndex) => {
+        const updatedVariants = variants.map((variant, variantIndex) => {
             const updatedVariant = {
                 color: variant.color,
                 price: variant.price,
                 discountPrice: variant.discountPrice,
-                images: variant.existingImages ? Array.isArray(variant.existingImages) ? variant.existingImages : [variant.existingImages] : [],
-                subVariants: variant.subVariants.map(subVariant => ({
+                images: variant.existingImages ? (Array.isArray(variant.existingImages) ? variant.existingImages : [variant.existingImages]) : [],
+                subVariants: variant.subVariants ? variant.subVariants.map(subVariant => ({
                     size: subVariant.size,
                     quantity: subVariant.quantity
-                }))
+                })) : []
             };
+            console.log(updatedVariant);
            
             // Add newly uploaded images
-            const uploadedImages = req.files.filter(file => file.fieldname === `variants[${variantIndex}][newImages][]`);
+            const uploadedImages = req.files.filter(file => file.fieldname.startsWith(`variants[${variantIndex}][newImages]`));
             if (uploadedImages && uploadedImages.length > 0) {
                 uploadedImages.forEach(file => {
                     updatedVariant.images.push(file.filename);
@@ -209,6 +208,8 @@ const updateProduct = async (req, res) => {
             }
             return updatedVariant;
         });
+
+        // Update product variants
         product.variants = updatedVariants;
 
         // Save the updated product
@@ -219,6 +220,7 @@ const updateProduct = async (req, res) => {
         res.status(500).json({ success: false, message: "Error updating product." });
     }
 };
+
 
 const deleteProduct = async (req, res) => {
     try {

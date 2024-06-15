@@ -1,5 +1,7 @@
 const Admin = require('../model/adminModel');
 const User = require('../model/userModel');
+const Order = require('../model/orderModel');
+const Product = require('../model/productModel');
 const bcrypt = require('bcrypt');
 
 const securePassword = async ( req,res) => {
@@ -85,6 +87,74 @@ const unblockUser = async (req,res) => {
     }
 };
 
+const loadOrder = async (req,res) => {
+    try{
+        const orders = await Order.find().populate('address_id').populate('items.product_id').populate('customer_id');
+        res.render('orders', { orders : orders})
+    }catch(error){
+        res.send(error);
+    }
+};
+
+const loadOrderDetail = async (req,res) => {
+    try{
+        const orderId = req.query.id;
+        const order = await Order.findById(orderId).populate('address_id').populate('items.product_id').populate('customer_id');
+        res.render('order_details',{ order : order});
+    }catch(error){
+        res.send(error);
+    }
+};
+
+const cancelOrder = async (req,res) => {
+    try{
+        const { itemId, newStatus } = req.body;
+
+        const validStatuses = ['Pending', 'Processing', 'Dispatched', 'Delivered', 'Canceled'];
+
+        // Check if the new status is valid
+        if (!validStatuses.includes(newStatus)) {
+            return res.status(400).json({ success: false, message: 'Invalid status' });
+        }
+
+        const order = await Order.findOne({'items._id' : itemId});
+        if(!order){
+            return res.json({ success : false , message : 'Could not find order' });
+        }
+        const item = order.items.id(itemId);
+        if(!item){
+            return res.json({ success : false, message : 'Could not find item'});
+        }
+         // If canceling the order, update product inventory
+         if (newStatus === 'Canceled') {
+            const product = await Product.findById(item.product_id);
+            if (!product) {
+                return res.json({ success: false, message: 'Could not find product' });
+            }
+
+            const variant = product.variants.find(v => v.color === item.productColor);
+            if (!variant) {
+                return res.json({ success: false, message: 'Could not find variant' });
+            }
+
+            const subvariant = variant.subVariants.find(s => s.size === item.productSize);
+            if (!subvariant) {
+                return res.json({ success: false, message: 'Could not find subvariant' });
+            }
+
+            subvariant.quantity += item.quantity;
+            await product.save();
+        }
+
+        item.orderStatus = newStatus;
+        await order.save();
+
+        res.json({ success: true, message: 'Order status updated successfully.', newStatus });
+    }catch(error){
+        res.status(500).json({ success: false, message: 'Failed to update the order status.' });
+    }
+};
+
 const logoutAdmin = async (req,res) => {
     try{
         req.session.destroy();
@@ -102,5 +172,8 @@ module.exports = {
     loadUser,
     blockUser,
     unblockUser,
+    loadOrder,
+    cancelOrder,
+    loadOrderDetail,
     logoutAdmin
 }

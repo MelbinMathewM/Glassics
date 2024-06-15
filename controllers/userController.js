@@ -282,12 +282,12 @@ const checkoutAddAdress = async (req,res) => {
         if(!addressData){
             res.json({ success: false, message : 'Could not add address' });
         }else{
-            res.json({ success: true, address: newAddress });
+            res.status(201).json({ success: true, newAddress: addressData });
         }
     }catch(error){
         res.json({ success: false, message: 'Error adding address', error });
     }
-}
+};
 
 const generateUniqueOrderID = async () => {
     let orderID;
@@ -325,7 +325,7 @@ const addCheckout = async (req, res) => {
             productPrice: item.productDiscPrice,
             productSize: item.productSize,
             quantity: item.productQuantity,
-            deliveryDate: new Date(),
+            deliveryDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
             orderStatus: 'Pending'
         }));
 

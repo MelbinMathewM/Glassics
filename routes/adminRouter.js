@@ -32,16 +32,20 @@ a_route.use(express.urlencoded({extended : true}));
 
 a_route.use(nocache());
 
+const fs = require('fs');
 const multer = require('multer');
 const path = require('path');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, '../public/productImages'));
+        const uploadPath = path.join(__dirname, '../public/productImages/');
+        if (!fs.existsSync(uploadPath)) {
+            fs.mkdirSync(uploadPath, { recursive: true });
+        }
+        cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + '-' + file.originalname);
+        cb(null, Date.now() + '-' + file.originalname);
     }
 });
 
@@ -59,7 +63,7 @@ a_route.get('/products',adminAuth.checkAdminSession,productController.loadProduc
 a_route.get('/products/add_products',adminAuth.checkAdminSession,productController.loadAddProducts);
 a_route.post('/products/add_products',cpUpload,productController.insertProduct);
 a_route.get('/products/detail_products',adminAuth.checkAdminSession,productController.loadDetailProduct);
-a_route.get('/products/edit_products',adminAuth.checkAdminSession,productController.loadEditProduct);
+a_route.get('/products/edit_products',productController.loadEditProduct);
 a_route.post('/products/edit_products',upload.any(),productController.updateProduct);
 a_route.get('/products/delete_products',adminAuth.checkAdminSession,productController.deleteProduct);
 a_route.get('/products/unlisted_products',adminAuth.checkAdminSession,productController.loadUnlistedProduct);
@@ -69,6 +73,11 @@ a_route.get('/products/reAdd_products',adminAuth.checkAdminSession,productContro
 a_route.get('/users',adminAuth.checkAdminSession,adminController.loadUser);
 a_route.get('/users/block_user',adminAuth.checkAdminSession,adminController.blockUser);
 a_route.get('/users/unblock_user',adminAuth.checkAdminSession,adminController.unblockUser);
+
+//order management
+a_route.get('/orders',adminAuth.checkAdminSession,adminController.loadOrder);
+a_route.get('/orders/order_details',adminAuth.checkAdminSession,adminController.loadOrderDetail);
+a_route.post('/orders/order_details/change_status',adminController.cancelOrder);
 
 //category management
 a_route.get('/categories',adminAuth.checkAdminSession,productController.loadCategory);
