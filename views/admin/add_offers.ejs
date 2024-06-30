@@ -1,0 +1,231 @@
+<%- include('../partials/header') %>
+
+    <div class="container-scroller">
+        <!-- partial:partials/_navbar.html -->
+        <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+            <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+                <a class="text-decoration-none" href="/">
+                    <h1 class="fw-bold" style="font-style: italic;">Glassics</h1>
+                </a>
+            </div>
+            <div class="navbar-menu-wrapper d-flex align-items-stretch">
+                <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                    <span class="mdi mdi-menu"></span>
+                </button>
+                <div class="search-field d-none d-md-block">
+                    <form class="d-flex align-items-center h-100" action="#">
+                        <div class="input-group">
+                            <div class="input-group-prepend bg-transparent">
+                                <i class="input-group-text border-0 mdi mdi-magnify"></i>
+                            </div>
+                            <input type="text" class="form-control bg-transparent border-0 mt-2" placeholder="Search">
+                        </div>
+                    </form>
+                </div>
+                <ul class="navbar-nav navbar-nav-right">
+                    <a href="/admin/products" class="text-light text-decoration-none"><button class="btn btn-primary">Go
+                            Back</button></a>
+                </ul>
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                    data-toggle="offcanvas">
+                    <span class="mdi mdi-menu"></span>
+                </button>
+            </div>
+        </nav>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_sidebar.html -->
+            <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                <ul class="nav">
+                    <li class="nav-item nav-profile">
+                        <a href="#" class="nav-link">
+                            <div class="nav-profile-image">
+                                <img src="/assets/images/faces/face1.jpg" alt="profile">
+                                <span class="login-status online"></span>
+                                <!--change to offline or busy as needed-->
+                            </div>
+                            <div class="nav-profile-text d-flex flex-column">
+                                <span class="font-weight-bold mb-2">David Grey. H</span>
+                                <span class="text-secondary text-small">Project Manager</span>
+                            </div>
+                            <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">
+                            <span class="menu-title">Dashboard</span>
+                            <i class="mdi mdi-home menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">
+                            <span class="menu-title">Products</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">
+                            <span class="menu-title">Users</span>
+                            <i class="mdi mdi-contacts menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">
+                            <span class="menu-title">Orders</span>
+                            <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">
+                            <span class="menu-title">Categories</span>
+                            <i class="mdi mdi-chart-bar menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">
+                            <span class="menu-title">Brands</span>
+                            <i class="mdi mdi-table-large menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">
+                            <span class="menu-title">Coupons</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">
+                            <span class="menu-title">Banners</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">
+                            <span class="menu-title">Offers</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">
+                            <span class="menu-title">Logout</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="page-header">
+                        <h3 class="page-title">
+                            <span class="page-title-icon bg-gradient-primary text-white mr-2">
+                                <i class="mdi mdi-home"></i>
+                            </span>Products <span class="text-small text-secondary">&gt; &nbsp;Add Products</span>
+                        </h3>
+                    </div>
+                    <form id="offerForm" action="/admin/offers/add_offers" method="POST">
+                        <div id="mainError" class="text-warning fw-bold text-center"></div>
+                        <div class="form-group mb-3">
+                            <div class="row">
+                                <div class="col">
+                                    <label for="offerName">Offer Name</label>
+                                    <input type="text" name="offerName" class="form-control" placeholder="Enter Name" id="offerName" required>
+                                </div>
+                                <div class="col">
+                                    <label for="offerDescription">Description:</label>
+                                    <textarea id="offerDescription" class="form-control" name="offerDescription"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col">
+                                    <label for="discountPercentage">Discount Percentage:</label>
+                                    <input type="number" id="discountPercentage" class="form-control" name="discountPercentage" required>
+                                </div>
+                                <div class="col mt-1">
+                                    <label for="offerType">Offer Type:</label>
+                                    <select id="offerType" class="form-control" name="offerType" onchange="handleOfferTypeChange()" required>
+                                        <option value="">Select Offer Type</option>
+                                        <option value="productOffer">Product Offer</option>
+                                        <option value="categoryOffer">Category Offer</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <label for="typeName">Type Name:</label>
+                                    <input type="text" id="typeName" class="form-control" name="typeName" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col" id="categorySection" style="display:none;">
+                                    <label for="categoryId">Category</label>
+                                    <select class="form-control text-black" name="categoryId">
+                                        <option value="">Select Category</option>
+                                        <% categories.forEach(category=> { %>
+                                        <option value="<%= category._id %>"><%= category.categoryName %></option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                                <div class="col" id="productSection" style="display:none;">
+                                    <label for="productId">Product</label>
+                                    <select class="form-control text-black" name="productId">
+                                        <option value="">Select Product</option>
+                                        <% products.forEach(product=> { %>
+                                        <option value="<%= product._id %>"><%= product.productName %></option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col">
+                                    <label for="isActive">Active:</label>
+                                    <input type="checkbox" id="isActive" class="form-data" name="isActive" checked>
+                                </div>
+                                <div class="col">
+                                    <label for="expiryDate">Expiry Date:</label>
+                                    <input type="date" id="expiryDate" class="form-control" name="expiryDate" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col">
+                                    <button class="btn btn-success" type="submit">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- main-panel ends -->
+        </div>
+    </div>
+
+    <script>
+        function handleOfferTypeChange() {
+            const offerType = document.getElementById('offerType').value;
+            const categorySection = document.getElementById('categorySection');
+            const productSection = document.getElementById('productSection');
+    
+            if (offerType === 'categoryOffer') {
+                categorySection.style.display = 'block';
+                productSection.style.display = 'none';
+            } else if (offerType === 'productOffer') {
+                categorySection.style.display = 'none';
+                productSection.style.display = 'block';
+            } else {
+                categorySection.style.display = 'none';
+                productSection.style.display = 'none';
+            }
+        }
+    </script>
+<%- include('../partials/footer') %>

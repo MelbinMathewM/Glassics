@@ -3,6 +3,7 @@ const Product = require('../model/productModel');
 const User = require('../model/userModel');
 const Category = require('../model/categoryModel');
 const Brand = require('../model/brandModel');
+const Offer = require('../model/offerModel');
 const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Types;
 const path = require('path');
@@ -16,7 +17,6 @@ const loadProducts = async (req, res) => {
             const productBrand = product.productBrand ? product.productBrand.brandName : null;
             return { _id, productName, productGender, productDescription, productCategory, productBrand, productImage,frameMaterial, frameShape, frameStyle, lensType, specialFeatures, variants, is_delete };
         });
-
         res.render('products', { products: transformedProductData });
     } catch (error) {
         res.send(error);
@@ -27,7 +27,8 @@ const loadAddProducts = async (req, res) => {
     try {
         const categories = await Category.find();
         const brands = await Brand.find();
-        res.render('add_products', { categories: categories, brands: brands });
+        const offers = await Offer.find();
+        res.render('add_products', { categories: categories, brands: brands, offers : offers });
     } catch (error) {
         res.send(error);
     }
@@ -36,40 +37,31 @@ const loadAddProducts = async (req, res) => {
 const insertProduct = async (req, res) => {
     try {
         const { productName, productGender, productDescription, productCategory, productBrand, frameMaterial, frameShape, frameStyle, lensType, specialFeatures } = req.body;
-
-        console.log(productCategory);
         if (!mongoose.Types.ObjectId.isValid(productCategory)) {
             return res.status(400).send('Invalid category ID.');
         }
-
         if (!mongoose.Types.ObjectId.isValid(productBrand)) {
             return res.status(400).send('Invalid brand ID.');
         }
-
         const category = await Category.findById(productCategory);
         if (!category) {
             return res.status(404).send({ success: false, message: 'Category not found.' });
         }
-
         const brand = await Brand.findById(productBrand);
         if (!brand) {
             return res.status(404).send({ success: false, message: 'Brand not found.' });
         }
-
         // Handle variant fields
         const variantColors = req.body.variants.map(variant => variant.color);
         const variantPrices = req.body.variants.map(variant => variant.price);
-        const variantDiscountPrices = req.body.variants.map(variant => variant.discountPrice);
         const variantSizes = req.body.variants.map(variant => variant.sizes);
         const variantQuantities = req.body.variants.map(variant => variant.quantities);
-
         // Validate variant data arrays
         if (!Array.isArray(variantColors) || !Array.isArray(variantPrices) || !Array.isArray(variantSizes) ||
             !Array.isArray(variantQuantities)) {
             console.error('Variant data is invalid');
             return res.status(400).send({ success: false, message: 'Variant data is invalid.' });
         }
-
         // Group subvariants by color
         const variants = [];
         variantColors.forEach((color, colorIndex) => {
@@ -78,16 +70,16 @@ const insertProduct = async (req, res) => {
                 size: size,
                 quantity: variantQuantities[colorIndex][sizeIndex]
             }));
-
+            const price = variantPrices[colorIndex];
+            const discountPrice = Math.floor(price - (price * 0.05));
             variants.push({
                 color,
+                price,
+                discountPrice,
                 images: colorImages,
-                price: variantPrices[colorIndex],
-                discountPrice: variantDiscountPrices[colorIndex] || null,
                 subVariants
             });
         });
-
         const product = new Product({
             productName,
             productCategory: category._id,
@@ -102,7 +94,6 @@ const insertProduct = async (req, res) => {
             variants,
             is_delete: false
         });
-
         const productData = await product.save();
         res.status(201).json({ success: true, message: 'Product created successfully', product: productData });
     } catch (error) {
@@ -113,21 +104,15 @@ const insertProduct = async (req, res) => {
 const loadDetailProduct = async (req,res) => {
     try{
         const productId = req.query.id
-
         const productData = await Product.findById(productId).populate('productCategory').populate('productBrand');
-        
-        // Check if productData is null or undefined
         if (!productData) {
             return res.status(404).send("Product not found");
         }
-
         // Transform the product data
         const { _id, productName, productGender, productDescription, productImage, frameMaterial, frameShape, frameStyle, lensType, specialFeatures, variants, is_delete } = productData;
         const productCategory = productData.productCategory ? productData.productCategory.categoryName : null;
         const productBrand = productData.productBrand ? productData.productBrand.brandName : null;
-        
-        const transformedProductData = { _id, productName, productGender, productDescription, productCategory, productBrand, productImage, frameMaterial, frameShape, frameStyle, lensType, specialFeatures, variants, is_delete };
-        
+        const transformedProductData = { _id, productName, productGender, productDescription, productCategory, productBrand, productImage, frameMaterial, frameShape, frameStyle, lensType, specialFeatures, variants, is_delete };   
         res.render('detail_products', { product: transformedProductData });
     }catch(error){
         res.send(error);
@@ -152,15 +137,11 @@ const loadEditProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
     const productId = req.body.productId;
-
     try {
-        // Find the product by ID
         const product = await Product.findById(productId);
         if (!product) {
             return res.status(404).json({ success: false, message: "Product not found." });
         }
-
-        // Update product fields
         product.productName = req.body.productName;
         product.productCategory = req.body.productCategory;
         product.productBrand = req.body.productBrand;
@@ -171,22 +152,19 @@ const updateProduct = async (req, res) => {
         product.frameStyle = req.body.frameStyle;
         product.lensType = req.body.lensType;
         product.specialFeatures = req.body.specialFeatures;
-
-        // Update variants and handle new and removed images
         const variants = req.body.variants || [];
+        //update variants
         const updatedVariants = variants.map((variant, variantIndex) => {
             const updatedVariant = {
                 color: variant.color,
                 price: variant.price,
-                discountPrice: variant.discountPrice,
+                discountPrice: Math.floor(variant.price - (variant.price * 0.05)),
                 images: variant.existingImages ? (Array.isArray(variant.existingImages) ? variant.existingImages : [variant.existingImages]) : [],
                 subVariants: variant.subVariants ? variant.subVariants.map(subVariant => ({
                     size: subVariant.size,
                     quantity: subVariant.quantity
                 })) : []
             };
-            console.log(updatedVariant);
-           
             // Add newly uploaded images
             const uploadedImages = req.files.filter(file => file.fieldname.startsWith(`variants[${variantIndex}][newImages]`));
             if (uploadedImages && uploadedImages.length > 0) {
@@ -194,7 +172,6 @@ const updateProduct = async (req, res) => {
                     updatedVariant.images.push(file.filename);
                 });
             }
-
             // Remove images if specified
             if (variant.removedImages) {
                 const removedImages = Array.isArray(variant.removedImages) ? variant.removedImages : [variant.removedImages];
@@ -208,11 +185,7 @@ const updateProduct = async (req, res) => {
             }
             return updatedVariant;
         });
-
-        // Update product variants
         product.variants = updatedVariants;
-
-        // Save the updated product
         await product.save();
         res.json({ success: true, message: "Product updated successfully." });
     } catch (err) {
@@ -220,7 +193,6 @@ const updateProduct = async (req, res) => {
         res.status(500).json({ success: false, message: "Error updating product." });
     }
 };
-
 
 const deleteProduct = async (req, res) => {
     try {
@@ -275,8 +247,7 @@ const insertCategory = async (req, res) => {
         if (!categoryName) {
             return res.status(400).json({ message: "Category name is required" });
         }
-
-        const existingCategory = await Category.findOne({ categoryName });
+        const existingCategory = await Category.findOne({ categoryName }).collation({ locale: "en", strength: 2 });
 
         if (existingCategory) {
             const categories = await Category.find();

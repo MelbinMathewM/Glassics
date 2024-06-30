@@ -1,0 +1,431 @@
+<%- include('../partials/header') %>
+
+    <div class="container-scroller">
+        <!-- partial:partials/_navbar.html -->
+        <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+            <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+                <a class="text-decoration-none" href="/">
+                    <h1 class="fw-bold" style="font-style: italic;">Glassics</h1>
+                </a>
+            </div>
+            <div class="navbar-menu-wrapper d-flex align-items-stretch">
+                <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                    <span class="mdi mdi-menu"></span>
+                </button>
+                <div class="search-field d-none d-md-block">
+                    <form class="d-flex align-items-center h-100" action="#">
+                        <div class="input-group">
+                            <div class="input-group-prepend bg-transparent">
+                                <i class="input-group-text border-0 mdi mdi-magnify"></i>
+                            </div>
+                            <input type="text" class="form-control bg-transparent border-0 mt-2" placeholder="Search">
+                        </div>
+                    </form>
+                </div>
+                <ul class="navbar-nav navbar-nav-right">
+                    <button id="openAddModalBtn" class="btn btn-success">Add Categories</button>
+                </ul>
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                    data-toggle="offcanvas">
+                    <span class="mdi mdi-menu"></span>
+                </button>
+            </div>
+        </nav>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_sidebar.html -->
+            <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                <ul class="nav">
+                    <li class="nav-item nav-profile">
+                        <a href="#" class="nav-link">
+                            <div class="nav-profile-image">
+                                <img src="assets/images/faces/face1.jpg" alt="profile">
+                                <span class="login-status online"></span>
+                                <!--change to offline or busy as needed-->
+                            </div>
+                            <div class="nav-profile-text d-flex flex-column">
+                                <span class="font-weight-bold mb-2">David Grey. H</span>
+                                <span class="text-secondary text-small">Project Manager</span>
+                            </div>
+                            <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/dashboard">
+                            <span class="menu-title">Dashboard</span>
+                            <i class="mdi mdi-home menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/products">
+                            <span class="menu-title">Products</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/users">
+                            <span class="menu-title">Users</span>
+                            <i class="mdi mdi-contacts menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/orders">
+                            <span class="menu-title">Orders</span>
+                            <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/categories">
+                            <span class="menu-title">Categories</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/brands">
+                            <span class="menu-title">Brands</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-table-large menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/admin/coupons">
+                            <span class="menu-title">Coupons</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/banners">
+                            <span class="menu-title">Banners</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/offers">
+                            <span class="menu-title">Offers</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/logout">
+                            <span class="menu-title">Logout</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="page-header">
+                        <h3 class="page-title">
+                            <span class="page-title-icon bg-gradient-primary text-white mr-2">
+                                <i class="mdi mdi-medical-bag"></i>
+                            </span> Coupons
+                        </h3>
+                    </div>
+                    <% if(locals.message){ %>
+                        <div class="message text-center text-danger">
+                            <%= locals.message %>
+                        </div>
+                        <% } %>
+                            <div class="container">
+                                <div class="card-grid">
+                                    <% coupons.forEach((coupon)=> { %>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title font-weight-bold mb-4 text-center">
+                                                    <%= coupon.code %>
+                                                </h5>
+                                                <p class="text-center"><%= coupon.discount %>% off <br> - Expires on - <br> <%= coupon.expirationDate.toDateString() %></p>
+                                                <p class="text-center">Min pay : <%= coupon.minPurchase %></p>
+                                                <p class="text-center">Max usage : <%= coupon.usageLimit %></p>
+                                                <div class="text-center">
+                                                    <button id="openEditModalBtn_<%= coupon._id %>"
+                                                        class="btn btn-primary">Edit</button>
+                                                    <button class="btn btn-danger"
+                                                        onclick="confirmDelete('<%= coupon._id %>')">Delete</button>
+                                                </div>
+                                                <!-- edit category modal -->
+                                                <div id="couponEditModal_<%= coupon._id %>" class="modal">
+                                                    <div class="modal-content">
+                                                        <span class="close text-end">&times;</span>
+                                                        <h3 class="mb-3 text-center">Edit Coupon</h3>
+                                                        <div id="messagerContainer_<%= coupon._id %>"
+                                                            class="message-container"></div>
+                                                            <form id="couponEditForm_<%= coupon._id %>" action="/edit_coupons" method="POST">
+                                                                <label for="code">Code:</label>
+                                                                <p class="form-control" name="code" id="code"><%= coupon.code %></p>
+                                                                <br>
+                                                                <label for="discount">Discount (%):</label>
+                                                                <input type="number" class="form-control" value="<%= coupon.discount %>" name="discount" id="discount" required>
+                                                                <br>
+                                                                <label for="minPurchase">Min purchase:</label>
+                                                                <input type="number" class="form-control" value="<%= coupon.minPurchase %>" name="minPurchase" id="minPurchase" required>
+                                                                <br>
+                                                                <label for="expirationDate">Expiration Date:</label>
+                                                                <input type="date" class="form-control" value="<%= coupon.expirationDate.toISOString().split('T')[0] %>" name="expirationDate" id="expirationDate_<%= coupon._id %>" required>
+                                                                <br>
+                                                                <label for="usageLimit">Usage Limit:</label>
+                                                                <input type="number" class="form-control" value="<%= coupon.usageLimit %>" name="usageLimit" id="usageLimit" required>
+                                                                <br>
+                                                                <input type="hidden" value="<%= coupon._id %>" name="couponId" class="form-control">
+                                                                <div class="text-center">
+                                                                    <button class="btn btn-primary" type="submit">Edit Coupon</button>
+                                                                </div>
+                                                              </form>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <% }) %>
+                                </div>
+                            </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- add category modal -->
+    <div id="couponAddModal" class="modal">
+        <div class="modal-content">
+            <span class="close text-end">&times;</span>
+            <h3 class="mb-3 text-center">Add Category</h3>
+            <div id="messageContainer" class="message-container"></div>
+            <form id="couponAddForm" action="/add_coupons" method="POST">
+                <label for="code">Code:</label>
+                <input type="text" name="code" class="form-control" id="code" required>
+                <br>
+                <label for="discount">Discount (%):</label>
+                <input type="number" name="discount" class="form-control" id="discount" required>
+                <br>
+                <label for="minPurchase">Min purchase:</label>
+                <input type="number" class="form-control" name="minPurchase" id="minPurchase" required>
+                <br>
+                <label for="expirationDate">Expiration Date:</label>
+                <input type="date" name="expirationDate" class="form-control" id="expirationDate" required>
+                <br>
+                <label for="usageLimit">Usage Limit:</label>
+                <input type="number" name="usageLimit" class="form-control" id="usageLimit" required>
+                <br>
+                <div class="text-center">
+                    <button class="btn btn-primary text-cente" type="submit">Create Coupon</button>
+                </div>
+              </form>
+        </div>
+    </div>
+
+    <!-- container-scroller -->
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .card img {
+            height: 200px;
+            /* Adjust the height as needed */
+            object-fit: cover;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const aModal = document.getElementById('couponAddModal');
+            const eModals = document.querySelectorAll('[id^=couponEditModal]');
+            const aBtn = document.getElementById('openAddModalBtn');
+            const eBtns = document.querySelectorAll('[id^=openEditModalBtn]');
+            const aCloseBtn = aModal.querySelector('.close');
+            const eCloseBtns = document.querySelectorAll('[id^=couponEditModal] .close');
+            const sidebar = document.getElementById('sidebar');
+
+            aBtn.onclick = () => aModal.style.display = 'block';
+
+            eBtns.forEach((btn, index) => {
+                btn.onclick = () => eModals[index].style.display = 'block';
+            });
+
+            aCloseBtn.onclick = () => aModal.style.display = 'none';
+
+            eCloseBtns.forEach((btn) => {
+                btn.onclick = () => btn.closest('.modal').style.display = 'none';
+            });
+
+            window.onclick = (event) => {
+                if (event.target == aModal) {
+                    aModal.style.display = 'none';
+                }
+                eModals.forEach((modal) => {
+                    if (event.target == modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            }
+
+            sidebar.onclick = () => {
+                aModal.style.display = 'none';
+                eModals.forEach(modal => modal.style.display = 'none');
+            }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function confirmDelete(couponId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'This action cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/admin/coupons/delete?id=${couponId}`, {
+                        method: 'GET'
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.message === 'Coupon deleted successfully') {
+                                Swal.fire(
+                                    'Deleted!',
+                                    'Your coupon has been deleted.',
+                                    'success'
+                                ).then(() => {
+                                    window.location.reload();
+                                });
+                            } else {
+                                Swal.fire(
+                                    'Error!',
+                                    'There was a problem deleting the coupon.',
+                                    'error'
+                                ).then(() => {
+                                    window.location.reload();
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            Swal.fire(
+                                'Error!',
+                                'There was a problem deleting your coupon.',
+                                'error'
+                            );
+                        });
+                }
+            });
+        }
+
+        document.getElementById('couponAddForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            try {
+                const response = await fetch('/admin/coupons/add', {
+                    method: 'POST',
+                    body: new URLSearchParams(formData)
+                });
+
+                const data = await response.json();
+                const messageContainer = document.getElementById('messageContainer');
+
+                if (response.ok) {
+                    messageContainer.innerHTML = `<div class="alert alert-success">${data.message}</div>`;
+                    setTimeout(() => location.reload(), 1000)
+                } else {
+                    messageContainer.innerHTML = `<div class="alert alert-danger">${data.message}</div>`;
+                }
+            } catch (error) {
+                console.error("Network error:", error);
+                const messageContainer = document.getElementById('messageContainer');
+                messageContainer.innerHTML = `<div class="alert alert-danger">Network error occurred. Please try again.</div>`;
+            }
+        });
+
+        document.querySelectorAll('form[id^="couponEditForm_"]').forEach(form => {
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const formData = new FormData(event.target);
+                try {
+                    const response = await fetch('/admin/coupons/edit', {
+                        method: 'POST',
+                        body: new URLSearchParams(formData)
+                    });
+                    const data = await response.json();
+                    const messagerContainer = document.getElementById('messagerContainer_' + event.target.id.split('_')[1]);
+
+                    if (response.ok) {
+                        Swal.fire(
+                            'Edited',
+                            'Editing the coupon was successful',
+                            'success'
+                        ).then(() => {
+                            setTimeout(() => location.reload(), 1000)
+                            // Optionally, close the modal here if needed
+                            const modal = document.getElementById('couponEditModal_' + event.target.id.split('_')[1]);
+                            modal.style.display = 'none';
+                        });
+                    } else {
+                        messagerContainer.innerHTML = `<div class="alert alert-danger">${data.message}</div>`;
+                    }
+                } catch (error) {
+                    console.error("Network error:", error);
+                    const messagerContainer = document.getElementById('messagerContainer_' + event.target.id.split('_')[1]);
+                    messagerContainer.innerHTML = `<div class="alert alert-danger">Network error occurred. Please try again.</div>`;
+                }
+            });
+        });
+
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<%- include('../partials/footer') %>

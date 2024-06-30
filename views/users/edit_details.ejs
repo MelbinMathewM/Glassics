@@ -13,13 +13,13 @@
             <div id="error" class="text-warning fw-bold text-center"></div>
             <form action="" method="post" id="form">
                 <div class="mb-3">
-                    <input type="text" name="customerName" class="form-control" placeholder="Enter new Name" id="customerName">
+                    <input type="text" name="customerName" value="<%= user.customerName %>" class="form-control" placeholder="Enter new Name" id="customerName">
                 </div>
                 <div class="mb-3">
-                    <input type="text" name="userName" class="form-control" placeholder="Enter new Username" id="userName">
+                    <input type="text" name="userName" value="<%= user.userName %>" class="form-control" placeholder="Enter new Username" id="userName">
                 </div>
                 <div class="mb-3">
-                    <input type="text" name="userMobile" class="form-control" placeholder="Enter the Mobile Number" id="userMobile">
+                    <input type="text" name="userMobile" value="<%= user.userMobile %>" class="form-control" placeholder="Enter the Mobile Number" id="userMobile">
                 </div>
                 <div class="mb-3">
                     <input type="password" name="password" class="form-control" placeholder="Enter your password" id="password">

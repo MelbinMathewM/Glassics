@@ -1,0 +1,299 @@
+<%- include('../partials/header') %>
+
+    <div class="container-scroller">
+        <!-- partial:partials/_navbar.html -->
+        <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+            <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+                <a class="text-decoration-none" href="/">
+                    <h1 class="fw-bold" style="font-style: italic;">Glassics</h1>
+                </a>
+            </div>
+            <div class="navbar-menu-wrapper d-flex align-items-stretch">
+                <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                    <span class="mdi mdi-menu"></span>
+                </button>
+                <div class="search-field d-none d-md-block">
+                    <form class="d-flex align-items-center h-100" action="#">
+                        <div class="input-group">
+                            <div class="input-group-prepend bg-transparent">
+                                <i class="input-group-text border-0 mdi mdi-magnify"></i>
+                            </div>
+                            <input type="text" class="form-control bg-transparent border-0 mt-2" placeholder="Search">
+                        </div>
+                    </form>
+                </div>
+                <ul class="navbar-nav navbar-nav-right">
+                    <button id="downloadButton" class="btn btn-secondary">Download PDF Report</button>
+                </ul>
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                    data-toggle="offcanvas">
+                    <span class="mdi mdi-menu"></span>
+                </button>
+            </div>
+        </nav>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_sidebar.html -->
+            <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                <ul class="nav">
+                    <li class="nav-item nav-profile">
+                        <a href="#" class="nav-link">
+                            <div class="nav-profile-image">
+                                <img src="assets/images/faces/face1.jpg" alt="profile">
+                                <span class="login-status online"></span>
+                                <!--change to offline or busy as needed-->
+                            </div>
+                            <div class="nav-profile-text d-flex flex-column">
+                                <span class="font-weight-bold mb-2">David Grey. H</span>
+                                <span class="text-secondary text-small">Project Manager</span>
+                            </div>
+                            <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/dashboard">
+                            <span class="menu-title">Dashboard</span>
+                            <i class="mdi mdi-home menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/products">
+                            <span class="menu-title">Products</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/users">
+                            <span class="menu-title">Users</span>
+                            <i class="mdi mdi-contacts menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/orders">
+                            <span class="menu-title">Orders</span>
+                            <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/categories">
+                            <span class="menu-title">Categories</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/brands">
+                            <span class="menu-title">Brands</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-table-large menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/admin/coupons">
+                            <span class="menu-title">Coupons</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/banners">
+                            <span class="menu-title">Banners</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/offers">
+                            <span class="menu-title">Offers</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/logout">
+                            <span class="menu-title">Logout</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="page-header">
+                        <h3 class="page-title">
+                            <span class="page-title-icon bg-gradient-primary text-white mr-2">
+                                <i class="mdi mdi-medical-bag"></i>
+                            </span> Sales Report
+                        </h3>
+                    </div>
+                    <% if(locals.message){ %>
+                        <div class="alert alert-danger text-center">
+                            <%= locals.message %>
+                        </div>
+                    <% } %>
+                    <div class="container mt-5">
+                        <div class="row mb-4">
+                            <div class="col">
+                                <form id="filterForm" class="form-inline bg-light p-3 rounded shadow-sm text-center" action="/admin/dashboard/sales_report" method="get">
+                                    <div class="form-group mr-3 me-2">
+                                        <label for="startDate" class="mr-2">Start Date:</label>
+                                        <input type="date" id="startDate" name="startDate" class="form-control" value="<%= startDate %>" onclick="resetPeriod()">
+                                    </div>
+                                    
+                                    <div class="form-group mr-3">
+                                        <label for="endDate" class="mr-2">End Date:</label>
+                                        <input type="date" id="endDate" name="endDate" class="form-control" value="<%= endDate %>" onclick="resetPeriod()">
+                                    </div>
+            
+                                    <div class="form-group mr-3">
+                                        <label for="period" class="mr-2">Period:</label>
+                                        <select id="period" name="period" class="form-control text-black" onchange="resetDate()">
+                                            <option value="select" <%= period === 'select' ? 'selected' : '' %>>Select period</option>
+                                            <option value="daily" <%= period === 'daily' ? 'selected' : '' %>>Daily</option>
+                                            <option value="weekly" <%= period === 'weekly' ? 'selected' : '' %>>Weekly</option>
+                                            <option value="monthly" <%= period === 'monthly' ? 'selected' : '' %>>Monthly</option>
+                                            <option value="yearly" <%= period === 'yearly' ? 'selected' : '' %>>Yearly</option>
+                                        </select>
+                                    </div>
+            
+                                    <button type="submit" class="btn btn-secondary">Filter</button>
+                                </form>
+                            </div>
+                        </div>
+                        <p id="downloadMessage"></p>
+                        <div class="row mb-4">
+                            <div class="col">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Overall Sales Summary</h5>
+                                        <p class="card-text">Overall Sales: &#8377;<%= overallReport.totalSales.toFixed(2) %></p>
+                                        <p class="card-text">Overall Discount: &#8377;<%= overallReport.totalDiscount.toFixed(2) %></p>
+                                        <p class="card-text">Overall Coupons Deduction: &#8377;<%= overallReport.totalCoupons.toFixed(2) %></p>
+                                        <p class="card-text">Overall Orders: <%= overallReport.totalOrders %></p>
+                                        <p class="card-text">Overall Quantity: <%= overallReport.totalQuantity %></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover text-center shadow-sm">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Year</th>
+                                        <% if(period === 'weekly'){ %>
+                                            <th>Week</th>
+                                        <% } else if(period !== 'yearly') { %>
+                                            <th>Month</th>
+                                        <% } %>
+                                        <% if(period === 'daily') { %>
+                                            <th>Day</th>
+                                        <% } %>
+                                        <th>Product</th>
+                                        <th>Total Quantity</th>
+                                        <th>Total Sales</th>
+                                        <th>Total Discount</th>
+                                        <th>Total Coupons</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% salesReport.forEach(report => { %>
+                                        <tr>
+                                            <td><%= report.year %></td>
+                                            <% if(period === 'weekly'){ %>
+                                                <td><%= report.week %></td>
+                                            <% } else if(period !== 'yearly') { %>
+                                                <td><%= report.month %></td>
+                                            <% } %>
+                                            <% if(period === 'daily') { %>
+                                                <td><%= report.day %></td>
+                                            <% } %>
+                                            <td><%= report.product %></td>
+                                            <td><%= report.totalQuantity %></td>
+                                            <td>&#8377;<%= report.totalSales.toFixed(2) %></td>
+                                            <td>&#8377;<%= report.totalDiscount.toFixed(2) %></td>
+                                            <td>&#8377;<%= report.totalCoupons.toFixed(2) %></td>
+                                        </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+
+    <!-- container-scroller -->
+
+    <script>
+        function resetDate() {
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+        }
+        function resetPeriod() {
+            document.getElementById('period').value = 'select';
+        }
+    </script>
+    <!-- sales_report.ejs or your main script file -->
+  
+    <script>
+        document.getElementById('downloadButton').addEventListener('click', async () => {
+            try {
+                // Retrieve form input values
+                const startDate = document.getElementById('startDate').value.trim();
+                const endDate = document.getElementById('endDate').value.trim();
+                const period = document.getElementById('period').value;
+        
+                console.log('startDate:', startDate);
+                console.log('endDate:', endDate);
+                console.log('period:', period);
+        
+                const url = `/admin/dashboard/sales_report/pdf?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&period=${encodeURIComponent(period)}`;
+        
+                // Fetch request to download PDF
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+        
+                // Check if fetch was successful
+                if (response.ok) {
+                    // Convert response to blob
+                    const blob = await response.blob();
+        
+                    // Create a temporary URL for the blob
+                    const blobUrl = window.URL.createObjectURL(blob);
+        
+                    // Create a hidden <a> element to trigger download
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = blobUrl;
+                    a.download = 'sales_report.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+        
+                    // Clean up after download
+                    window.URL.revokeObjectURL(blobUrl);
+                    document.body.removeChild(a);
+                } else {
+                    console.error('Failed to download PDF');
+                }
+            } catch (error) {
+                console.error('Error downloading PDF:', error);
+            }
+        });
+        </script>
+        
+    
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <%- include('../partials/footer') %>

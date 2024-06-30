@@ -4,7 +4,9 @@
     <!-- partial:partials/_navbar.html -->
     <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <a class="text-decoration-none" href="/"><h1 class="fw-bold" style="font-style: italic;">Glassics</h1></a>
+        <a class="text-decoration-none" href="/">
+          <h1 class="fw-bold" style="font-style: italic;">Glassics</h1>
+        </a>
       </div>
       <div class="navbar-menu-wrapper d-flex align-items-stretch">
         <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -180,64 +182,64 @@
                 <div class="col">
                   <label for="frameMaterial">Frame Material:</label>
                   <select class="form-control text-black" name="frameMaterial">
-                      <option value="">Select Frame Material</option>
-                      <option value="Plastic Frames">Plastic Frames</option>
-                      <option value="Metal Frames">Metal Frames</option>
-                      <option value="Titanium Frames">Titanium Frames</option>
-                      <option value="Wooden Frames">Wooden Frames</option>
-                      <option value="Acetate Frames">Acetate Frames</option>
+                    <option value="">Select Frame Material</option>
+                    <option value="Plastic Frames">Plastic Frames</option>
+                    <option value="Metal Frames">Metal Frames</option>
+                    <option value="Titanium Frames">Titanium Frames</option>
+                    <option value="Wooden Frames">Wooden Frames</option>
+                    <option value="Acetate Frames">Acetate Frames</option>
                   </select>
-              </div>
-              <div class="col">
+                </div>
+                <div class="col">
                   <label for="frameShape">Frame Shape:</label>
                   <select class="form-control text-black" name="frameShape">
-                      <option value="">Select Frame Shape</option>
-                      <option value="Round">Round</option>
-                      <option value="Square">Square</option>
-                      <option value="Rectangular">Rectangular</option>
-                      <option value="Oval">Oval</option>
-                      <option value="Cat-Eye">Cat-Eye</option>
-                      <option value="Browline">Browline</option>
+                    <option value="">Select Frame Shape</option>
+                    <option value="Round">Round</option>
+                    <option value="Square">Square</option>
+                    <option value="Rectangular">Rectangular</option>
+                    <option value="Oval">Oval</option>
+                    <option value="Cat-Eye">Cat-Eye</option>
+                    <option value="Browline">Browline</option>
                   </select>
-              </div>
-              <div class="col">
-                <label for="style">Style:</label>
-                <select class="form-control text-black" name="frameStyle">
+                </div>
+                <div class="col">
+                  <label for="style">Style:</label>
+                  <select class="form-control text-black" name="frameStyle">
                     <option value="">Select Style</option>
                     <option value="Classic">Classic</option>
                     <option value="Modern">Modern</option>
                     <option value="Vintage">Vintage</option>
                     <option value="Fashionable">Fashionable</option>
                     <option value="Sporty">Sporty</option>
-                </select>
+                  </select>
+                </div>
+              </div>
             </div>
-          </div>
-      </div>
-      <div class="form-group">
-        <div class="row">
-          <div class="col">
-            <label for="lensType">Lens Type:</label>
-            <select class="form-control text-black" name="lensType">
-                <option value="">Select Lens Type</option>
-                <option value="Single Vision Lenses">Single Vision Lenses</option>
-                <option value="Bifocal Lenses">Bifocal Lenses</option>
-                <option value="Progressive Lenses">Progressive Lenses</option>
-                <option value="Photochromic Lenses">Photochromic Lenses</option>
-                <option value="Polarized Lenses">Polarized Lenses</option>
-            </select>
-        </div>
-        <div class="col">
-            <label for="specialFeatures">Special Features:</label>
-            <select class="form-control text-black" name="specialFeatures">
-                <option value="">Select Special Features</option>
-                <option value="Anti-Reflective Coating">Anti-Reflective Coating</option>
-                <option value="Blue Light Blocking">Blue Light Blocking</option>
-                <option value="Scratch Resistant">Scratch Resistant</option>
-                <option value="UV Protection">UV Protection</option>
-            </select>
-        </div>
-        </div>
-      </div>
+            <div class="form-group">
+              <div class="row">
+                <div class="col">
+                  <label for="lensType">Lens Type:</label>
+                  <select class="form-control text-black" name="lensType">
+                    <option value="">Select Lens Type</option>
+                    <option value="Single Vision Lenses">Single Vision Lenses</option>
+                    <option value="Bifocal Lenses">Bifocal Lenses</option>
+                    <option value="Progressive Lenses">Progressive Lenses</option>
+                    <option value="Photochromic Lenses">Photochromic Lenses</option>
+                    <option value="Polarized Lenses">Polarized Lenses</option>
+                  </select>
+                </div>
+                <div class="col">
+                  <label for="specialFeatures">Special Features:</label>
+                  <select class="form-control text-black" name="specialFeatures">
+                    <option value="">Select Special Features</option>
+                    <option value="Anti-Reflective Coating">Anti-Reflective Coating</option>
+                    <option value="Blue Light Blocking">Blue Light Blocking</option>
+                    <option value="Scratch Resistant">Scratch Resistant</option>
+                    <option value="UV Protection">UV Protection</option>
+                  </select>
+                </div>
+              </div>
+            </div>
             <div class="form-group mb-3">
               <div class="row">
                 <div class="col">
@@ -270,111 +272,110 @@
   <div class="text-center" id="image-preview-container"></div>
   <div id="modal-container"></div>
   <style>
-.preview {
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: 20px;
-}
+    .preview {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
 
-.preview img {
-    max-width: 100px;
-    margin: 5px;
-}
+    .preview img {
+      max-width: 100px;
+      margin: 5px;
+    }
 
-.radio-group {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin-bottom: 10px;
-}
+    .radio-group {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 10px;
+    }
 
-.radio-group input[type="radio"] {
-    display: none;
-}
+    .radio-group input[type="radio"] {
+      display: none;
+    }
 
-.radio-group label {
-    padding: 10px 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    cursor: pointer;
-    flex-grow: 1;
-    text-align: center;
-    margin: 0 5px;
-}
+    .radio-group label {
+      padding: 10px 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+      flex-grow: 1;
+      text-align: center;
+      margin: 0 5px;
+    }
 
-.radio-group input[type="radio"]:checked + label {
-    background-color: rgb(123, 59, 187);
-    color: white;
-    border-color: rgb(123, 59, 187);
-}
+    .radio-group input[type="radio"]:checked+label {
+      background-color: rgb(123, 59, 187);
+      color: white;
+      border-color: rgb(123, 59, 187);
+    }
 
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1050;
-    left: 0;
-    top: 25%;
-    margin-top: 50px;
-    margin-bottom: 50px;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-}
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1050;
+      left: 0;
+      top: 25%;
+      margin-top: 50px;
+      margin-bottom: 50px;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+    }
 
-.modal-content {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 60%;
-    max-width: 600px;
-}
+    .modal-content {
+      background-color: #fefefe;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 60%;
+      max-width: 600px;
+    }
 
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
 
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
 
-.image-preview {
-    display: inline-block;
-    margin: 10px;
-    border: 1px solid #ddd;
-    padding: 5px;
-}
+    .image-preview {
+      display: inline-block;
+      margin: 10px;
+      border: 1px solid #ddd;
+      padding: 5px;
+    }
 
-.image-preview img {
-    max-width: 150px;
-    max-height: 150px;
-}
+    .image-preview img {
+      max-width: 150px;
+      max-height: 150px;
+    }
 
-.img-container {
-    width: 100%;
-    height: 400px;
-    max-height: 400px;
-}
+    .img-container {
+      width: 100%;
+      height: 400px;
+      max-height: 400px;
+    }
 
-.img-container img {
-    max-width: 100%;
-    max-height: 100%;
-}
+    .img-container img {
+      max-width: 100%;
+      max-height: 100%;
+    }
 
-.modal-footer {
-    justify-content: center;
-}
+    .modal-footer {
+      justify-content: center;
+    }
 
-.btn {
-    margin-top: 10px;
-}
-
+    .btn {
+      margin-top: 10px;
+    }
   </style>
   <!-- plugins:js -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -389,22 +390,18 @@
           <div id="subvariantError${variantCount}" class="text-warning fw-bold text-center"></div>
           <div class="form-group">
             <div class="row">
-            <div class="col-6 col-md-3 mb-3">
+            <div class="col-6 col-md-4 mb-3">
               <label for="color${variantCount}">Color:</label>
               <input type="text" id="color${variantCount}" name="variants[${variantCount - 1}][color]" class="form-control">
             </div>
-            <div class="col-6 col-md-3 mb-3">
+            <div class="col-6 col-md-4 mb-3">
               <label for="variantPrice${variantCount}">Price:</label>
               <input type="number" id="variantPrice${variantCount}" name="variants[${variantCount - 1}][price]" class="form-control">
             </div>
-            <div class="col-6 col-md-3">
-              <label for="variantDiscountPrice${variantCount}">Discount Price:</label>
-              <input type="number" id="variantDiscountPrice${variantCount}" name="variants[${variantCount - 1}][discountPrice]" class="form-control">
-            </div>
-            <div class="col-6 col-md-3">
+            <div class="col-6 col-md-4">
               <label for="variantImages${variantCount}">Images:</label>
               <input type="file" id="variantImages${variantCount}" name="variantImages[${variantCount - 1}][]" class="file-input form-control" accept="image/*" multiple>
-            </div>           
+            </div>   
             <div id="dynamic-inputs">            
             </div>
           </div>
@@ -502,11 +499,8 @@
 
           // Validate Price
           let price = variant.querySelector(`[name="variants[${index}][price]"]`).value.trim();
-          let dPrice = variant.querySelector(`[name="variants[${index}][discountPrice]"]`).value.trim();
           if (!price || isNaN(price) || Number(price) <= 0) {
             variantMessage.push(`Valid Price is required for Variant ${index + 1}.`);
-          } else if (dPrice > price){
-            variantMessage.push(`Discount price could not be greater than actual price.`);
           }
 
           // Validate Sizes and Quantities
@@ -566,8 +560,8 @@
                 'The product is added',
                 'success'
               )
-              setTimeout(() => location.href = '/admin/products',1000)
-              
+              setTimeout(() => location.href = '/admin/products', 1000)
+
             } else {
               Swal.fire(
                 'Error!',
@@ -578,50 +572,50 @@
           })
           .catch(error => {
             Swal.fire(
-                'Error!',
-                'Could not add product',
-                'error'
-              )
+              'Error!',
+              'Could not add product',
+              'error'
+            )
           });
       }
     });
   </script>
-<script>
+  <script>
 
-document.addEventListener('DOMContentLoaded', (event) => {
-    document.body.addEventListener('change', function(event) {
+    document.addEventListener('DOMContentLoaded', (event) => {
+      document.body.addEventListener('change', function (event) {
         if (event.target.classList.contains('file-input')) {
-            handleFileInput(event.target);
+          handleFileInput(event.target);
         }
-    });
+      });
 
-    function handleFileInput(inputElement) {
+      function handleFileInput(inputElement) {
         const files = inputElement.files;
         const previewContainer = document.getElementById('image-preview-container');
         previewContainer.innerHTML = ''; // Clear previous previews
         Array.from(files).forEach(file => {
-            if (file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const imgPreview = document.createElement('div');
-                    imgPreview.classList.add('image-preview');
-                    const imgElement = document.createElement('img');
-                    imgElement.src = e.target.result;
-                    imgElement.addEventListener('click', function() {
-                        showCropperModal(e.target.result, inputElement, file);
-                    });
-                    imgPreview.appendChild(imgElement);
-                    previewContainer.appendChild(imgPreview);
-                }
-                reader.readAsDataURL(file);
+          if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              const imgPreview = document.createElement('div');
+              imgPreview.classList.add('image-preview');
+              const imgElement = document.createElement('img');
+              imgElement.src = e.target.result;
+              imgElement.addEventListener('click', function () {
+                showCropperModal(e.target.result, inputElement, file);
+              });
+              imgPreview.appendChild(imgElement);
+              previewContainer.appendChild(imgPreview);
             }
+            reader.readAsDataURL(file);
+          }
         });
-    }
+      }
 
-    function showCropperModal(imageSrc, inputElement, originalFile) {
+      function showCropperModal(imageSrc, inputElement, originalFile) {
         const existingModal = document.querySelector('.modal');
         if (existingModal) {
-            existingModal.remove();
+          existingModal.remove();
         }
 
         const modal = document.createElement('div');
@@ -634,8 +628,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
         const closeButton = document.createElement('span');
         closeButton.classList.add('close');
         closeButton.innerHTML = '&times;';
-        closeButton.onclick = function() {
-            modal.remove();
+        closeButton.onclick = function () {
+          modal.remove();
         };
 
         const imgContainer = document.createElement('div');
@@ -648,8 +642,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
         const cropButton = document.createElement('button');
         cropButton.classList.add('btn', 'btn-primary');
         cropButton.innerText = 'Crop';
-        cropButton.addEventListener('click', function() {
-            cropImage(img, inputElement, modal, originalFile);
+        cropButton.addEventListener('click', function () {
+          cropImage(img, inputElement, modal, originalFile);
         });
 
         modalContent.appendChild(closeButton);
@@ -658,46 +652,46 @@ document.addEventListener('DOMContentLoaded', (event) => {
         modal.appendChild(modalContent);
         document.getElementById('modal-container').appendChild(modal);
 
-        img.onload = function() {
-            const cropper = new Cropper(img, {
-                aspectRatio: 1,
-                viewMode: 1,
-            });
-            img.cropperInstance = cropper;
+        img.onload = function () {
+          const cropper = new Cropper(img, {
+            aspectRatio: 1,
+            viewMode: 1,
+          });
+          img.cropperInstance = cropper;
         };
-    }
+      }
 
-    function cropImage(img, inputElement, modal, originalFile) {
+      function cropImage(img, inputElement, modal, originalFile) {
         const cropper = img.cropperInstance;
         const canvas = cropper.getCroppedCanvas();
         canvas.toBlob((blob) => {
-            const newFile = new File([blob], 'cropped_' + originalFile.name, { type: originalFile.type });
-            const dataTransfer = new DataTransfer();
+          const newFile = new File([blob], 'cropped_' + originalFile.name, { type: originalFile.type });
+          const dataTransfer = new DataTransfer();
 
-            Array.from(inputElement.files).forEach(file => {
-                if (file !== originalFile) {
-                    dataTransfer.items.add(file);
-                }
-            });
+          Array.from(inputElement.files).forEach(file => {
+            if (file !== originalFile) {
+              dataTransfer.items.add(file);
+            }
+          });
 
-            dataTransfer.items.add(newFile);
-            inputElement.files = dataTransfer.files;
+          dataTransfer.items.add(newFile);
+          inputElement.files = dataTransfer.files;
 
-            const previewContainer = document.getElementById('image-preview-container');
-            const imgElement = previewContainer.querySelector(`img[src="${img.src}"]`);
-            imgElement.src = URL.createObjectURL(blob);
+          const previewContainer = document.getElementById('image-preview-container');
+          const imgElement = previewContainer.querySelector(`img[src="${img.src}"]`);
+          imgElement.src = URL.createObjectURL(blob);
 
-            modal.remove();
+          modal.remove();
         }, originalFile.type);
-    }
-});
+      }
+    });
 
 
-</script>
+  </script>
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-  
+
 
   <%- include('../partials/footer') %>

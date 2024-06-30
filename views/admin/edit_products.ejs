@@ -250,10 +250,6 @@
                             <label for="variantPrice-<%= variantIndex %>">Price:</label>
                             <input type="number" class="form-control" id="variantPrice-<%= variantIndex %>" name="variants[<%= variantIndex %>][price]" value="<%= variant.price %>">
                           </div>
-                          <div class="col">
-                            <label for="variantDiscountPrice-<%= variantIndex %>">Discount Price:</label>
-                            <input type="number" class="form-control" id="variantDiscountPrice-<%= variantIndex %>" name="variants[<%= variantIndex %>][discountPrice]" value="<%= variant.discountPrice %>">
-                          </div>
                         </div>
                         <div class="form-group row">
                           <div class="col">
@@ -528,10 +524,6 @@
                 <input type="number" class="form-control" id="variantPrice-${variantIndex}" name="variants[${variantIndex}][price]">
               </div>
               <div class="col">
-                <label for="variantDiscountPrice-${variantIndex}">Discount Price:</label>
-                <input type="number" class="form-control" id="variantDiscountPrice-${variantIndex}" name="variants[${variantIndex}][discountPrice]">
-              </div>
-              <div class="col">
                 <label for="variantImages-${variantIndex}">Images:</label>
                 <input type="file" class="form-control file-input" id="variantImages-${variantIndex}" name="variantImages-${variantIndex}[]" data-variant-index="${variantIndex}" multiple>
               </div>
@@ -647,11 +639,8 @@
 
           // Validate Price
           let price = variant.querySelector(`[name="variants[${index}][price]"]`).value.trim();
-          let dPrice = variant.querySelector(`[name="variants[${index}][discountPrice]"]`).value.trim();
           if (!price || isNaN(price) || Number(price) <= 0) {
             variantMessage.push(`Valid Price is required for Variant ${index + 1}.`);
-          } else if (dPrice > price){
-            variantMessage.push(`Discount price could not be greater than actual price.`);
           }
 
           // Validate Sizes and Quantities

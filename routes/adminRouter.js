@@ -5,6 +5,7 @@ const nocache = require('nocache');
 const config = require('../config/config');
 const adminController = require('../controllers/adminController');
 const productController = require('../controllers/productController');
+const dashboardController = require('../controllers/dashboardController');
 const adminAuth = require('../middleWare/adminAuth');
 const { cpUpload } = require('../multer/productMulter');
 
@@ -56,11 +57,11 @@ a_route.get('/login',adminController.loadLogin);
 a_route.post('/login',adminController.verifyAdmin);
 
 //dashboard management
-a_route.get('/dashboard',adminAuth.checkAdminSession,adminController.loadDashboard);
+a_route.get('/dashboard',dashboardController.loadDashboard);
 
 //product management
-a_route.get('/products',adminAuth.checkAdminSession,productController.loadProducts);
-a_route.get('/products/add_products',adminAuth.checkAdminSession,productController.loadAddProducts);
+a_route.get('/products',productController.loadProducts);
+a_route.get('/products/add_products',productController.loadAddProducts);
 a_route.post('/products/add_products',cpUpload,productController.insertProduct);
 a_route.get('/products/detail_products',adminAuth.checkAdminSession,productController.loadDetailProduct);
 a_route.get('/products/edit_products',productController.loadEditProduct);
@@ -77,7 +78,7 @@ a_route.get('/users/unblock_user',adminAuth.checkAdminSession,adminController.un
 //order management
 a_route.get('/orders',adminAuth.checkAdminSession,adminController.loadOrder);
 a_route.get('/orders/order_details',adminAuth.checkAdminSession,adminController.loadOrderDetail);
-a_route.post('/orders/order_details/change_status',adminController.cancelOrder);
+a_route.post('/orders/order_details/change_status',adminController.changeStatusOrder);
 
 //category management
 a_route.get('/categories',adminAuth.checkAdminSession,productController.loadCategory);
@@ -94,6 +95,23 @@ a_route.post('/brands/edit',productController.updateBrand);
 a_route.get('/brands/delete_brands',adminAuth.checkAdminSession,productController.deleteBrand);
 a_route.get('/brands/unlisted_brands',adminAuth.checkAdminSession,productController.loadUnlistedBrand);
 a_route.get('/brands/reAdd_brands',adminAuth.checkAdminSession,productController.reAddBrand);
+
+//coupon management
+a_route.get('/coupons',adminController.loadCoupon);
+a_route.post('/coupons/add',adminController.insertCoupon);
+a_route.post('/coupons/edit',adminController.updateCoupon);
+a_route.get('/coupons/delete',adminController.deleteCoupon);
+
+//offer management
+a_route.get('/offers',adminController.loadOffer);
+a_route.get('/offers/add_offers',adminController.loadAddOffer);
+a_route.post('/offers/add_offers',adminController.insertOffer);
+a_route.put('/offers/edit/:id',adminController.updateOffer);
+a_route.delete('/offers/delete/:id',adminController.deleteOffer);
+
+//sales report
+a_route.get('/dashboard/sales_report',dashboardController.loadSalesReport);
+a_route.get('/dashboard/sales_report/pdf',dashboardController.downloadPDF);
 
 //logout
 a_route.get('/logout',adminAuth.checkAdminSession,adminController.logoutAdmin);

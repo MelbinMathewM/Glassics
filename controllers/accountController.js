@@ -1,6 +1,7 @@
 const Address = require('../model/addressModel');
 const Product = require('../model/productModel');
 const User = require('../model/userModel');
+const Wallet = require('../model/walletModel');
 const bcrypt = require('bcrypt');
 
 const securePassword = async (password) => {
@@ -16,8 +17,10 @@ const loadProfile = async (req, res) => {
     try {
         const userId = req.session.user_id;
         const products = await Product.find();
-        const user = await User.findById(userId)
-        res.render(`profile`, { products: products, user: user });
+        const user = await User.findById(userId);
+        const defaultImage = '/static/userImages/default.jpg';
+        const profileImage = user.userImage ? `/static/userImages/${user.userImage}` : defaultImage;
+        res.render(`profile`, { products: products, user: user, profileImage : profileImage });
     } catch (error) {
         res.send(error)
     }
@@ -205,6 +208,63 @@ const deleteAddress = async (req, res) => {
     }
 };
 
+const getBalance = async function(userId) {
+    const wallet = await Wallet.findOne({ user: userId });
+    return wallet ? wallet.balance : 0;
+};
+
+const getTransactions = async function(userId) {
+    const wallet = await Wallet.findOne({ user: userId });
+    return wallet ? wallet.transactions.sort((a, b) => b.date - a.date) : [];
+};
+
+// Add money to wallet
+const addMoney = async function(userId, amount) {
+    const wallet = await Wallet.findOne({ user: userId });
+    if (!wallet) {
+        throw new Error('Wallet not found');
+    }
+
+    wallet.balance += amount;
+
+    // Add a transaction record
+    wallet.transactions.push({
+        description: 'Money added',
+        amount: amount,
+        balance: wallet.balance
+    });
+
+    await wallet.save();
+};
+
+const loadWallet = async (req,res) => {
+    try{
+        const userId = req.session.user_id;
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        const walletBalance = await getBalance(userId);
+        const transactions = await getTransactions(userId);
+        res.render('wallet',{walletBalance,transactions});
+    }catch(error){
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+const addMoneyToWallet = async (req, res) => {
+    try {
+        const userId = req.session.user_id;
+        const { amount } = req.body;
+        await addMoney(userId, parseFloat(amount));
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error adding money to wallet:', error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
 module.exports = {
     loadProfile,
     loadEditPassword,
@@ -216,5 +276,7 @@ module.exports = {
     insertAddress,
     loadEditAddress,
     updateAddress,
-    deleteAddress
+    deleteAddress,
+    loadWallet,
+    addMoneyToWallet
 }

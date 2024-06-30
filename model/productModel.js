@@ -28,7 +28,11 @@ const VariantSchema = new Schema({
         required: true
     },
     discountPrice: Number,
-    subVariants: [SubVariantSchema]
+    subVariants: [SubVariantSchema],
+    offer: { 
+        type: Schema.Types.ObjectId, 
+        ref: 'Offer' 
+    }
 }, { _id: false });
 
 // Product Schema
@@ -76,6 +80,10 @@ const ProductSchema = new Schema({
         required : true
     },
     variants: [VariantSchema],
+    orderCount: {
+        type: Number,
+        default: 0
+    },
     is_delete: {
         type: Boolean,
         default: false

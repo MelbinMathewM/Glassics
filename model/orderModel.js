@@ -19,6 +19,15 @@ const OrderItemSchema = new Schema({
         type : Number,
         required : true
     },
+    productDiscPrice : {
+        type : Number
+    },
+    offerDiscount : {
+        type : Number
+    },
+    couponDiscount : {
+        type : Number
+    },
     productSize: {
         type: String,
         required: true
@@ -33,8 +42,16 @@ const OrderItemSchema = new Schema({
     },
     orderStatus: {
         type: String,
-        enum: ['Pending', 'Processing','Dispatched', 'Delivered', 'Canceled'],
+        enum: ['Pending', 'Processing','Dispatched', 'Delivered', 'Canceled','Return requested', 'Returned'],
         default : 'Pending'
+    },
+    paymentStatus : {
+        type : String,
+        enum: ['Pending','Paid'],
+        default : 'Pending'
+    },
+    returnReason: {
+        type: String
     }
 });
 

@@ -174,14 +174,23 @@
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-6">
-                            <h6 class="coupon__code"> Have a coupon? <a href="#">Click here</a> to enter your code</h6>
+                            <h6 class="coupon__code">Have a coupon? <a href="#" id="show-coupon">Click here</a> to enter
+                                your code</h6>
+                            <div id="coupon-field" style="display:none;">
+                                <input type="text" id="coupon-code" placeholder="Enter your coupon code">
+                                <button id="apply-coupon" type="button">Apply</button>
+                                <button id="remove-coupon" type="button" style="display:none;">Remove</button>
+                                <p id="coupon-message" style="color: red;"></p>
+                            </div>
                             <div class="checkout__order">
                                 <h4 class="order__title">Your order</h4>
                                 <div class="cart__total">
                                     <h6>Cart total</h6>
                                     <ul id="cart-items">
                                         <li>Price (<%= cart.length %>) <span id="subtotal"></span></li>
-                                        <li>Discount <span id="discount" class="text-success"></span></li>
+                                        <li>Offer Discount <span id="discount" class="text-success"></span></li>
+                                        <li>Coupon Discount <span id="coupon-discount" class="text-success"></span></li>
+                                        <input type="hidden" id="discountPercentage" name="discountPercentage" value="">
                                         <li>Total <span id="total"></span></li>
                                     </ul>
                                     <hr>
@@ -205,11 +214,12 @@
                                                 <span class="checkmark"></span>
                                             </label>
                                         </div>
-
                                     </div>
                                     <hr>
                                     <div class="delivery-date">
-                                        Delivery Date: <span class="text-primary"><%= new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString() %></span>
+                                        Delivery Date: <span class="text-primary">
+                                            <%= new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString() %>
+                                        </span>
                                     </div>
                                     <hr>
                                     <button type="submit" class="site-btn">PLACE ORDER</button>
@@ -331,7 +341,7 @@
                 <div class="form-group row">
                     <div class="col">
                         <label for="addressMobile">Mobile</label>
-                        <input type="tel" id="addressMobile" class="form-control">
+                        <input type="text" id="addressMobile" class="form-control">
                     </div>
                     <div class="col">
                         <label for="addressHouse">House No.</label>
@@ -492,6 +502,7 @@
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
             var firstAddressRadio = document.querySelector('input[name="address"]');
@@ -628,8 +639,6 @@
                 addressState: addressState,
                 addressPin: addressPin
             };
-
-            // Send the new address to the backend
             fetch('/checkout/add_address', {
                 method: 'POST',
                 headers: {
@@ -650,7 +659,6 @@
                             title: 'Address Added',
                             text: data.message,
                         });
-                        location.reload();
                         addAddressToList(newAddress);
                         addAddressModal.style.display = "none";
                     } else {
@@ -721,51 +729,142 @@
         }
 
         function formatPrice(price) {
-            return `&#8377;${price.toFixed(2)}`;
+    return `₹${price.toFixed(2)}`;
+}
+
+function calculatePrices(items, couponDiscount = 0) {
+    let subtotal = 0;
+    let discount = 0;
+    let total = 0;
+    items.forEach(item => {
+        subtotal += item.productPrice * item.productQuantity;
+        discount += (item.productPrice - item.productDiscPrice) * item.productQuantity;
+        total += item.productDiscPrice * item.productQuantity;
+    });
+    total -= couponDiscount;
+    return { subtotal, total, discount };
+}
+
+// Retrieve and parse cart data
+const cartData = document.getElementById('cartData').value;
+const cart = JSON.parse(cartData);
+
+// Initial calculation without coupon
+const prices = calculatePrices(cart);
+let subtotal = prices.subtotal;
+let discount = prices.discount;
+let total = prices.total;
+
+document.getElementById('subtotal').innerHTML = formatPrice(prices.subtotal);
+document.getElementById('discount').innerHTML = `-${formatPrice(prices.discount)}`;
+document.getElementById('coupon-discount').innerHTML = formatPrice(0);
+document.getElementById('total').innerHTML = formatPrice(prices.total);
+
+// Show coupon field
+document.getElementById('show-coupon').addEventListener('click', function (event) {
+    event.preventDefault();
+    document.getElementById('coupon-field').style.display = 'block';
+});
+
+// Apply coupon
+document.getElementById('apply-coupon').addEventListener('click', function () {
+    const code = document.getElementById('coupon-code').value;
+    fetch('/checkout/apply_coupon', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ code })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const couponDiscount = data.discount; // Get coupon discount
+            const discountPercentage = data.percentage;
+
+            // Update the totals with the coupon discount
+            const updatedPrices = calculatePrices(cart, couponDiscount);
+
+            document.getElementById('subtotal').textContent = formatPrice(updatedPrices.subtotal);
+            document.getElementById('discount').textContent = `-${formatPrice(updatedPrices.discount)}`;
+            document.getElementById('coupon-discount').textContent = `-${formatPrice(couponDiscount)}`;
+            document.getElementById('total').textContent = formatPrice(updatedPrices.total);
+            document.getElementById('coupon-message').textContent = 'Coupon applied!';
+            document.getElementById('apply-coupon').style.display = 'none';
+            document.getElementById('remove-coupon').style.display = 'inline-block';
+            document.getElementById('discountPercentage').value = discountPercentage;
+        } else {
+            document.getElementById('coupon-message').textContent = data.message;
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('coupon-message').textContent = 'An error occurred while applying the coupon.';
+    });
+});
 
-        function calculatePrices(items) {
-            let subtotal = 0;
-            let discount = 0;
-            let total = 0;
-            items.forEach(item => {
-                subtotal += item.productPrice * item.productQuantity;
-                discount += (item.productPrice - item.productDiscPrice) * item.productQuantity;
-                total += item.productDiscPrice * item.productQuantity;
-            });
-            return { subtotal, total, discount };
+document.getElementById('remove-coupon').addEventListener('click', function () {
+    fetch('/checkout/remove_coupon', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
         }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update the totals without the coupon discount
+            document.getElementById('subtotal').textContent = formatPrice(data.subtotal);
+            document.getElementById('discount').textContent = `-${formatPrice(data.offerDiscount)}`;
+            document.getElementById('coupon-discount').textContent = formatPrice(0);
+            document.getElementById('total').textContent = formatPrice(data.total);
+            document.getElementById('coupon-message').textContent = 'Coupon removed!';
+            document.getElementById('apply-coupon').style.display = 'inline-block';
+            document.getElementById('remove-coupon').style.display = 'none';
+            document.getElementById('coupon-code').value = '';
+            document.getElementById('discountPercentage').value = 0;
+        } else {
+            document.getElementById('coupon-message').textContent = data.message;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('coupon-message').textContent = 'An error occurred while removing the coupon.';
+    });
+});
 
-        const cartData = document.getElementById('cartData').value;
-        const cart = JSON.parse(cartData);
 
-        const prices = calculatePrices(cart);
-        const subtotal = prices.subtotal;
-        const discount = prices.discount;
-        const total = prices.total;
+document.getElementById('checkout-form').onsubmit = async function (event) {
+    event.preventDefault();
 
-        document.getElementById('subtotal').innerHTML = formatPrice(prices.subtotal);
-        document.getElementById('discount').innerHTML = `-${formatPrice(prices.discount)}`;
-        document.getElementById('total').innerHTML = formatPrice(prices.total);
+    const selectedAddressIndex = document.getElementById('addressDetails').value;
+    const selectedPaymentMethod = document.querySelector('input[name="payment"]:checked');
 
-        document.getElementById('checkout-form').onsubmit = function (event) {
-            event.preventDefault();
+    if (selectedAddressIndex === "" || !selectedPaymentMethod) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Incomplete Selection',
+            text: 'Please select an address and a payment method.',
+        });
+        return;
+    }
 
-            const selectedAddressIndex = document.getElementById('addressDetails').value;
-            const selectedPaymentMethod = document.querySelector('input[name="payment"]:checked');
+    document.getElementById('paymentOption').value = selectedPaymentMethod.value;
 
-            if (selectedAddressIndex === "" || !selectedPaymentMethod) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Incomplete Selection',
-                    text: 'Please select an address and a payment method.',
-                });
-                return;
-            }
+    // Retrieve and parse cart data
+    const cartData = JSON.parse(document.getElementById('cartData').value);
 
-            document.getElementById('paymentOption').value = selectedPaymentMethod.value;
+    // Calculate the final price
+    const couponDiscount = parseFloat(document.getElementById('coupon-discount').textContent.replace('₹', '').replace('-', '')) || 0;
+    const discountPercentage = parseFloat(document.getElementById('discountPercentage').value) || 0;
+    const prices = calculatePrices(cartData, couponDiscount);
+    const code = document.getElementById('coupon-code').value;
+    const finalPrice = prices.total;
+    console.log(finalPrice);
 
-            fetch('/checkout', {
+    if (selectedPaymentMethod.value === 'RazorPay') {
+        try {
+            const response = await fetch('/checkout', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -773,43 +872,137 @@
                 body: JSON.stringify({
                     cartData: document.getElementById('cartData').value,
                     addressDetails: selectedAddressIndex,
-                    paymentOption: selectedPaymentMethod.value
+                    paymentOption: selectedPaymentMethod.value,
+                    discountPercentage,
+                    finalPrice: finalPrice,
+                    code
                 })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.message) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Order Placed',
-                            text: data.message,
-                        }).then(() => {
-                            window.location.href = '/shop';
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                const keyResponse = await fetch('/razorpay_key');
+                const keyData = await keyResponse.json();
+                const options = {
+                    key: keyData.key,
+                    amount: data.amount,
+                    currency: data.currency,
+                    order_id: data.razorpayOrderId,
+                    handler: async function (response) {
+                        const paymentData = {
+                            orderCreationId: data.razorpayOrderId,
+                            razorpayPaymentId: response.razorpay_payment_id,
+                            razorpayOrderId: response.razorpay_order_id,
+                            razorpaySignature: response.razorpay_signature
+                        };
+                        const verifyResponse = await fetch('/verify_razorpay_payment', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(paymentData)
                         });
-                    } else if (data.error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: data.error,
-                            showCancelButton: true,
-                            confirmButtonText: 'Go to Cart',
-                            cancelButtonText: 'Cancel'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = '/cart';
-                            }
-                        });
+                        const verifyData = await verifyResponse.json();
+                        if (verifyResponse.ok) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Payment Successful',
+                                text: 'Your order has been placed successfully.',
+                            }).then(() => {
+                                window.location.href = '/shop'; // Redirect to shop page or success page
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Payment Verification Failed',
+                                text: verifyData.error,
+                            });
+                        }
+                    },
+                    prefill: {
+                        name: 'Customer Name',
+                        email: 'customer@example.com',
+                        contact: '9999999999'
+                    },
+                    theme: {
+                        color: '#3399cc'
                     }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
+                };
+                const rzp1 = new Razorpay(options);
+                rzp1.on('payment.failed', function (response) {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Unexpected Error',
-                        text: 'An unexpected error occurred. Please try again later.',
+                        title: 'Payment Failed',
+                        text: 'Your payment could not be processed. Please try again.',
                     });
                 });
-        };
+                rzp1.open();
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.error,
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Unexpected Error',
+                text: 'An unexpected error occurred. Please try again later.',
+            });
+        }
+    } else if (selectedPaymentMethod.value === 'COD') {
+        // Handle Cash on Delivery
+        fetch('/checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                cartData: document.getElementById('cartData').value,
+                addressDetails: selectedAddressIndex,
+                paymentOption: selectedPaymentMethod.value,
+                discountPercentage,
+                finalPrice: finalPrice,
+                code
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Order Placed',
+                        text: data.message,
+                    }).then(() => {
+                        window.location.href = '/shop';
+                    });
+                } else if (data.error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.error,
+                        showCancelButton: true,
+                        confirmButtonText: 'Go to Cart',
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/cart';
+                        }
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Unexpected Error',
+                    text: 'An unexpected error occurred. Please try again later.',
+                });
+            });
+    }
+};
 
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

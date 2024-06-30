@@ -61,9 +61,9 @@
                         <i class="mdi mdi-home menu-icon"></i>
                     </a>
                 </li>
-                <li class="nav-item active bg-gradient-info">
+                <li class="nav-item">
                     <a class="nav-link" href="/account/wishlist">
-                        <span class="menu-title font-weight-bold text-white">Wishlist</span>
+                        <span class="menu-title">Wishlist</span>
                         <i class="menu-arrow"></i>
                         <i class="mdi mdi-crosshairs-gps menu-icon"></i>
                     </a>
@@ -86,22 +86,22 @@
                         <i class="mdi mdi-table-large menu-icon"></i>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/coupons">
-                        <span class="menu-title">Coupons</span>
+                <li class="nav-item  active bg-gradient-info">
+                    <a class="nav-link" href="/account/coupons">
+                        <span class="menu-title font-weight-bold text-white">Coupons</span>
                         <i class="menu-arrow"></i>
                         <i class="mdi mdi-medical-bag menu-icon"></i>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/banners">
+                    <a class="nav-link" href="/account/banners">
                         <span class="menu-title">Banners</span>
                         <i class="menu-arrow"></i>
                         <i class="mdi mdi-medical-bag menu-icon"></i>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/Offers">
+                    <a class="nav-link" href="/account/offers">
                         <span class="menu-title">Offers</span>
                         <i class="menu-arrow"></i>
                         <i class="mdi mdi-medical-bag menu-icon"></i>
@@ -123,11 +123,13 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="breadcrumb__text ps-4">
-                                <h4 class="mt-3">Wishlist</h4>
+                                <h4 class="mt-3">Coupons</h4>
                                 <div>
-                                    <a class="text-decoration-none text-dark fw-bold" href="/">Home&nbsp;&gt;&nbsp;</a>
-                                    <a class="text-decoration-none text-dark fw-bold" href="/account/profile">Account</a>
-                                    <span>&nbsp;&gt;&nbsp;Wishlist</span>
+                                    <a class="text-decoration-none text-dark fw-bold"
+                                        href="/">Home&nbsp;&gt;&nbsp;</a>
+                                    <a class="text-decoration-none text-dark fw-bold"
+                                        href="/account/profile">Account</a>
+                                    <span>&nbsp;&gt;&nbsp;Coupons</span>
                                 </div>
                             </div>
                         </div>
@@ -135,36 +137,67 @@
                 </div>
             </section>
             <!-- Breadcrumb Section End -->
-            <div class="content-wrapper d-flex justify-content-center " style="background-color: rgb(239, 247, 239);">
+            <div class="content-wrapper d-flex justify-content-center " style="background-color: rgb(240, 253, 241);">
                 <div class="container mt-5">
-                    <div class="row">
-                        <% wishlist.forEach(item => { %>
-                            <div class="col-lg-4 col-md-6 mb-4">
-                                <div class="card h-100 product-card">
-                                    <a href="/product_details/<%= item.productId %>">
-                                        <img class="card-img-top" src="/static/productImages/<%= item.productImage %>" alt="<%= item.productName %>" style="height: 200px; object-fit: contain;">
-                                    </a>
-                                    <ul class="product__hover">
-                                        <li>
-                                            <a href="javascript:void(0);">
-                                                <button class="btn btn-danger" onclick="confirmDelete('<%= item._id %>')">
-                                                <img src="/static/img/icon/heart.png" class="add-wishlist" alt="" style="background: transparent;"></button>
-                                            </a>
-                                        </li>
-                                    </ul>
+                    <!-- Heading and Add Address Button -->
+                    <div class="container">
+                        <div class="card-grid">
+                            <% coupons.forEach((coupon)=> { %>
+                                <div class="card">
                                     <div class="card-body">
-                                        <h5 class="card-title"><%= item.productName %></h5>
-                                        <p class="card-text">₹<%= item.productPrice %></p>
+                                        <h5 class="card-title font-weight-bold mb-4 text-center">
+                                            <%= coupon.code %>
+                                        </h5>
+                                        <p class="text-center"><%= coupon.discount %>% off <br> - Expires on - <br> <%= coupon.expirationDate.toDateString() %></p>
+                                        <p class="text-center">Min pay : <%= coupon.minPurchase %></p>
+                                        <p class="text-center">Max usage : <%= coupon.usageLimit %></p>
+                                        <div class="text-center">
+                                            <button id="openEditModalBtn_<%= coupon._id %>"
+                                                class="btn btn-primary">Edit</button>
+                                            <button class="btn btn-danger"
+                                                onclick="confirmDelete('<%= coupon._id %>')">Delete</button>
+                                        </div>
+                                        <!-- edit category modal -->
+                                        <div id="couponEditModal_<%= coupon._id %>" class="modal">
+                                            <div class="modal-content">
+                                                <span class="close text-end">&times;</span>
+                                                <h3 class="mb-3 text-center">Edit Coupon</h3>
+                                                <div id="messagerContainer_<%= coupon._id %>"
+                                                    class="message-container"></div>
+                                                    <form id="couponEditForm_<%= coupon._id %>" action="/edit_coupons" method="POST">
+                                                        <label for="code">Code:</label>
+                                                        <p class="form-control" name="code" id="code"><%= coupon.code %></p>
+                                                        <br>
+                                                        <label for="discount">Discount (%):</label>
+                                                        <input type="number" class="form-control" value="<%= coupon.discount %>" name="discount" id="discount" required>
+                                                        <br>
+                                                        <label for="minPurchase">Min purchase:</label>
+                                                        <input type="number" class="form-control" value="<%= coupon.minPurchase %>" name="minPurchase" id="minPurchase" required>
+                                                        <br>
+                                                        <label for="expirationDate">Expiration Date:</label>
+                                                        <input type="date" class="form-control" value="<%= coupon.expirationDate.toDateString() %>" name="expirationDate" id="expirationDate" required>
+                                                        <br>
+                                                        <label for="usageLimit">Usage Limit:</label>
+                                                        <input type="number" class="form-control" value="<%= coupon.usageLimit %>" name="usageLimit" id="usageLimit" required>
+                                                        <br>
+                                                        <input type="hidden" value="<%= coupon._id %>" name="couponId" class="form-control">
+                                                        <div class="text-center">
+                                                            <button class="btn btn-primary" type="submit">Edit Coupon</button>
+                                                        </div>
+                                                      </form>
+                                            </div>
+                                        </div>
+
                                     </div>
-                                </div>                                
-                            </div>
-                        <% }); %>
+                                </div>
+                                <% }) %>
+                        </div>
                     </div>
+                    
+                    
                 </div>
             </div>
-        </div>
-        
-        
+          <!-- main-panel ends -->
     </div>
     <!-- page-body-wrapper ends -->
 </div>
@@ -175,7 +208,7 @@
         width: 100vw;
         z-index: 999;
     }
-    
+
     .sidebar {
         position: relative;
         position: absolute;
@@ -183,13 +216,13 @@
         z-index: 999;
         top: 104px;
     }
-    
+
     @media (min-width : 992px) {
         .main-panel {
             margin-left: 250px;
             
         }
-        
+
         .sidebar {
             margin-top: 12.3px;
         }
@@ -201,105 +234,24 @@
     .editref:hover {
         color: red;
     }
-    .product-card {
-    transition: transform 0.3s, box-shadow 0.3s;
-    position: relative;
-    overflow: hidden;
-}
+    .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
 
-.product-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(245, 244, 244, 0.2);
-}
+        .card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
 
-.product-card .product__hover {
-    position: absolute;
-    top: 20%;
-    right: 0%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    transition: opacity 0.3s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.product-card:hover .product__hover {
-    opacity: 1;
-}
-
-.product-card .product__hover li {
-    margin-bottom: 10px;
-}
-
-.product-card .product__hover li a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    text-decoration: none;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-.product-card .product__hover li a img {
-    margin-right: 5px;
-}
-
-.product-card .card-body {
-    text-align: center;
-}
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-    function confirmDelete(wishlistId) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'Do you really want to delete this item?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'No, cancel'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fetch(`/account/wishlist/delete/${wishlistId}`, {
-                    method: 'DELETE'
-                })
-                    .then(response => response.json())
-                    .then(result => {
-                        if (result.success) {
-                            Swal.fire({
-                                title: 'Deleted!',
-                                text: 'Item deleted successfully',
-                                icon: 'success',
-                                confirmButtonText: 'OK'
-                            }).then(() => {
-                                location.reload();
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Error deleting item',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'Error deleting item',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                    });
-            }
-        });
-    }
-</script>
+        .card img {
+            height: 200px;
+            /* Adjust the height as needed */
+            object-fit: cover;
+        }
+</style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

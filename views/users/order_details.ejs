@@ -185,8 +185,8 @@
                                                                         <p>Quantity: <%= item.quantity %></p>
                                                                         </div>
                                                                         <div class="col-md-6">
-                                                                            <p>Price: &#8377;<%= item.productPrice.toFixed(2) %></p>
-                                                                            <p>Total: &#8377;<%= (item.productPrice * item.quantity).toFixed(2) %></p>
+                                                                            <p>Price: &#8377;<%= item.productDiscPrice.toFixed(2) %></p>
+                                                                            <p>Total: &#8377;<%= (item.productDiscPrice * item.quantity).toFixed(2) %></p>
                                                                             <% if (item.orderStatus !== 'Canceled') { %>
                                                                                 <p>Delivery Date: <%= new Date(item.deliveryDate).toLocaleDateString() %></p>
                                                                                 <% } %>
@@ -207,7 +207,10 @@
                                                                                     </div>
                                                                             <button class="btn btn-danger btn-sm" onclick="cancelOrder('<%= item._id %>')">Cancel</button>
                                                                         <% } else if (item.orderStatus === 'Delivered') { %>
-                                                                            <button class="btn btn-warning btn-sm" onclick="returnOrder('<%= item._id %>')">Return</button>
+                                                                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#returnModal" onclick="openReturnModal('<%= order._id %>','<%= item._id %>')">Return</button>
+                                                                        <% } %>
+                                                                        <% if(item.orderStatus === 'Return requested' || item.orderStatus === 'Returned'){ %>
+                                                                            <p>Return Reason: <%= item.returnReason %></p>
                                                                         <% } %>
                                                                     </div>
                                                                 </div>
@@ -224,7 +227,7 @@
                                     </div>
                                     <% } else { %>
                                         <p>Order not found.</p>
-                                        <% } %>
+                                    <% } %>
                             </div>
                         </div>
                     </div>
@@ -237,6 +240,34 @@
         <!-- page-body-wrapper ends -->
     </div>
     <!-- container-scroller -->
+     <!-- Return Modal -->
+<div class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="returnModalLabel">Return Order</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="returnForm">
+                    <div class="form-group">
+                        <label for="returnReason">Reason for Return</label>
+                        <textarea class="form-control" id="returnReason" rows="3"></textarea>
+                    </div>
+                    <input type="hidden" id="returnOrderId">
+                    <input type="hidden" id="returnItemId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="submitReturn()">Return</button>
+            </div>
+        </div>
+    </div>
+</div>
+
     <style>
         header {
             position: relative;
@@ -354,6 +385,41 @@
                         Swal.fire('Error!', 'An error occurred. Please try again.', 'error');
                     });
                 }
+            });
+        }
+    </script>
+    <script>
+        function openReturnModal(orderId, itemId) {
+            console.log(orderId);
+            console.log(itemId);
+            document.getElementById('returnOrderId').value = orderId;
+            document.getElementById('returnItemId').value = itemId;
+        }
+    
+        function submitReturn() {
+            const orderId = document.getElementById('returnOrderId').value;
+            const itemId = document.getElementById('returnItemId').value;
+            const reason = document.getElementById('returnReason').value;
+    
+            fetch('/account/orders/order_details/return_order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ orderId, itemId, reason })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Order returned successfully');
+                    window.location.reload();
+                } else {
+                    alert('Failed to return the order');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while returning the order');
             });
         }
     </script>

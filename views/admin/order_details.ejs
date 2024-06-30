@@ -170,8 +170,8 @@
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <p>Quantity: <%= item.quantity %></p>
-                                                                    <p>Price: &#8377;<%= item.productPrice.toFixed(2) %></p>
-                                                                    <p>Total: &#8377;<%= (item.productPrice * item.quantity).toFixed(2) %></p>
+                                                                    <p>Price: &#8377;<%= item.productDiscPrice.toFixed(2) %></p>
+                                                                    <p>Total: &#8377;<%= (item.productDiscPrice * item.quantity).toFixed(2) %></p>
                                                                     <% if (item.orderStatus !== 'Canceled') { %>
                                                                         <p>Delivery Date: <%= new Date(item.deliveryDate).toLocaleDateString() %></p>
                                                                     <% } %>
@@ -186,6 +186,7 @@
                                                                             <option value="Dispatched">Dispatched</option>
                                                                             <option value="Delivered">Delivered</option>
                                                                             <option value="Canceled">Canceled</option>
+                                                                            <option value="Returned">Returned</option>
                                                                         </select>
                                                                     </p>
                                                                 </div>
@@ -232,16 +233,19 @@
 .status-canceled {
     color: red;
 }
+.status-returned {
+    color: grey;
+}
 
 </style>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function confirmUpdateOrderStatus(itemId, newStatus, currentStatus) {
-        if (currentStatus === 'Canceled') {
+        if (currentStatus === 'Canceled' || currentStatus === 'Delivered' && newStatus !== 'Returned') {
             Swal.fire({
                 icon: 'error',
                 title: 'Update Failed',
-                text: 'Cannot update status because the order is already canceled.'
+                text: 'Cannot update status because the order is already canceled or delivered.'
             });
             return;
         }
