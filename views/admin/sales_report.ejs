@@ -23,7 +23,8 @@
                     </form>
                 </div>
                 <ul class="navbar-nav navbar-nav-right">
-                    <button id="downloadButton" class="btn btn-secondary">Download PDF Report</button>
+                    <button id="downloadPDF" class="btn btn-danger me-2"><i class="mdi mdi-download"></i> PDF</button>
+                    <button id="downloadExcel" class="btn btn-success me-2"><i class="mdi mdi-download"></i> Excel</button>
                 </ul>
                 <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
                     data-toggle="offcanvas">
@@ -36,20 +37,6 @@
             <!-- partial:partials/_sidebar.html -->
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <ul class="nav">
-                    <li class="nav-item nav-profile">
-                        <a href="#" class="nav-link">
-                            <div class="nav-profile-image">
-                                <img src="assets/images/faces/face1.jpg" alt="profile">
-                                <span class="login-status online"></span>
-                                <!--change to offline or busy as needed-->
-                            </div>
-                            <div class="nav-profile-text d-flex flex-column">
-                                <span class="font-weight-bold mb-2">David Grey. H</span>
-                                <span class="text-secondary text-small">Project Manager</span>
-                            </div>
-                            <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
-                        </a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/admin/dashboard">
                             <span class="menu-title">Dashboard</span>
@@ -241,7 +228,7 @@
     <!-- sales_report.ejs or your main script file -->
   
     <script>
-        document.getElementById('downloadButton').addEventListener('click', async () => {
+        document.getElementById('downloadPDF').addEventListener('click', async () => {
             try {
                 // Retrieve form input values
                 const startDate = document.getElementById('startDate').value.trim();
@@ -288,7 +275,56 @@
                 console.error('Error downloading PDF:', error);
             }
         });
-        </script>
+    </script>
+    <script>
+        document.getElementById('downloadExcel').addEventListener('click', async () => {
+            try {
+                // Retrieve form input values
+                const startDate = document.getElementById('startDate').value.trim();
+                const endDate = document.getElementById('endDate').value.trim();
+                const period = document.getElementById('period').value;
+    
+                console.log('startDate:', startDate);
+                console.log('endDate:', endDate);
+                console.log('period:', period);
+    
+                const url = `/admin/dashboard/sales_report/excel?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&period=${encodeURIComponent(period)}`;
+    
+                // Fetch request to download Excel file
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+    
+                // Check if fetch was successful
+                if (response.ok) {
+                    // Convert response to blob
+                    const blob = await response.blob();
+    
+                    // Create a temporary URL for the blob
+                    const blobUrl = window.URL.createObjectURL(blob);
+    
+                    // Create a hidden <a> element to trigger download
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = blobUrl;
+                    a.download = 'sales_report.xlsx';
+                    document.body.appendChild(a);
+                    a.click();
+    
+                    // Clean up after download
+                    window.URL.revokeObjectURL(blobUrl);
+                    document.body.removeChild(a);
+                } else {
+                    console.error('Failed to download Excel file');
+                }
+            } catch (error) {
+                console.error('Error downloading Excel file:', error);
+            }
+        });
+    </script>    
         
     
 

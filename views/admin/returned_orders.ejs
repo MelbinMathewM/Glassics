@@ -1,0 +1,200 @@
+<%- include('../partials/header') %>
+
+    <div class="container-scroller">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+            <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+                <a class="navbar-brand text-decoration-none" href="/">
+                    <h1 class="fw-bold" style="font-style: italic;">Glassics</h1>
+                </a>
+            </div>
+            <div class="navbar-menu-wrapper d-flex align-items-stretch">
+
+                <div class="collapse navbar-collapse" id="sidebar">
+                    <form class="d-flex ms-auto">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                </div>
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                    data-bs-toggle="offcanvas">
+                    <span class="mdi mdi-menu"></span>
+                </button>
+            </div>
+        </nav>
+        <div class="container-fluid page-body-wrapper pe-0">
+            <!-- Sidebar -->
+            <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                <ul class="nav mt-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/dashboard">
+                            <span class="menu-title">Dashboard</span>
+                            <i class="mdi mdi-home menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/products">
+                            <span class="menu-title">Products</span>
+                            <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/users">
+                            <span class="menu-title">Users</span>
+                            <i class="mdi mdi-contacts menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="" data-toggle="collapse" data-target="#orders">
+                          <span class="menu-title">Orders</span>
+                          <i class="menu-arrow"></i>
+                          <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                        </a>
+                        <div class="collapse show" id="orders">
+                          <ul class="nav flex-column sub-menu">
+                            <li class="nav-item">
+                              <a class="nav-link" href="/admin/orders">Listed</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link active" href="/admin/orders/returned_orders">Returned</a>
+                            </li>
+                          </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/categories">
+                            <span class="menu-title">Categories</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-chart-bar menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/brands">
+                            <span class="menu-title">Brands</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-table-large menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/coupons">
+                            <span class="menu-title">Coupons</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/offers">
+                            <span class="menu-title">Offers</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/logout">
+                            <span class="menu-title">Logout</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- Content Wrapper -->
+            <div class="main-panel">
+                <div class="content-wrapper col-lg-12">
+                    <section class="shopping-cart spad pt-0">
+                        <div class="container">
+                            <div class="page-header">
+                                <h3 class="page-title">
+                                  <span class="page-title-icon bg-gradient-primary text-white mr-2">
+                                    <i class="mdi mdi-home"></i>
+                                  </span> Returned orders
+                                </h3>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered text-center">
+                                            <thead>
+                                                <tr>
+                                                    <th class="p-3">Order ID</th>
+                                                    <th>Order Date</th>
+                                                    <th>Customer</th>
+                                                    <th>Total Price</th>
+                                                    <th>Items Count</th>
+                                                    <th>Status</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% if(returnedOrders.length> 0) { %>
+                                                    <% returnedOrders.forEach(order=> {
+                                                        let totalPrice = 0;
+                                                        let itemsCount = order.items.length;
+                                                        order.items.forEach(item => {
+                                                        totalPrice += item.productDiscPrice * item.quantity;
+                                                        });
+                                                        %>
+                                                        <tr>
+                                                            <td class="p-4">
+                                                                <%= order.orderID %>
+                                                            </td>
+                                                            <td class="p-4">
+                                                                <%= new Date(order.orderDate).toLocaleDateString() %>
+                                                            </td>
+                                                            <td class="p-4">
+                                                                <%= order.customer_id.userName %>
+                                                            </td>
+                                                            <td class="p-4">&#8377;<%= totalPrice.toFixed(2) %>
+                                                            </td>
+                                                            <td class="p-4">
+                                                                <%= itemsCount %>
+                                                            </td>
+                                                            <td class="pe-4 pt-3">
+                                                                <% let statusText = ''; %>
+                                                                
+                                                                <% order.items.forEach(item => { %>
+                                                                    <% if (item.orderStatus.toLowerCase() === 'returned') { %>
+                                                                        <% statusText = 'Returned'; %>
+                                                                    <% } else if (item.orderStatus.toLowerCase() === 'return requested') { %>
+                                                                        <% statusText = 'Requested'; %>
+                                                                    <% } %>
+                                                                    <% if (statusText) return; %>
+                                                                <% }); %>
+                                                                
+                                                                <% if (statusText === 'Returned') { %>
+                                                                    <p class="text-secondary"><%= statusText %></p>
+                                                                <% } else if (statusText === 'Requested') { %>
+                                                                    <p class="text-warning"><%= statusText %></p>
+                                                                <% } else { %>
+                                                                    <p>Pending</p>
+                                                                <% } %>
+                                                            </td>                                                                                                                       
+                                                            <td class="p-4">
+                                                                <a href="/admin/orders/order_details?id=<%= order._id %>"
+                                                                    class="btn btn-primary btn-sm">Details</a>
+                                                            </td>
+                                                        </tr>
+                                                        <% }) %>
+                                                    <% } else { %>
+                                                                <tr class="text-center">
+                                                                    <td colspan="7">No returned orders found!</td>
+                                                                </tr>
+                                                            <% } %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.bundle.min.js"></script>
+
+    <%- include('../partials/footer') %>

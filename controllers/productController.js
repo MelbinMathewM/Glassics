@@ -10,14 +10,22 @@ const path = require('path');
 
 const loadProducts = async (req, res) => {
     try {
-        const productData = await Product.find({ is_delete: false }).populate('productCategory').populate('productBrand');
-        const transformedProductData = productData.map(product => {
-            const { _id, productName, productGender, productDescription, productImage, frameMaterial, frameShape, frameStyle, lensType, specialFeatures, variants, is_delete } = product;
-            const productCategory = product.productCategory ? product.productCategory.categoryName : null;
-            const productBrand = product.productBrand ? product.productBrand.brandName : null;
-            return { _id, productName, productGender, productDescription, productCategory, productBrand, productImage,frameMaterial, frameShape, frameStyle, lensType, specialFeatures, variants, is_delete };
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+        const productData = await Product.find({ is_delete: false })
+            .populate('productCategory')
+            .populate('productBrand')
+            .sort({ createdAt: -1 })
+            .skip((page - 1) * limit)
+            .limit(limit);
+        const totalProducts = await Product.countDocuments({ is_delete: false });
+        res.render('products', { 
+            products: productData,
+            currentPage: page,
+            totalPages: Math.ceil(totalProducts / limit),
+            limit: limit 
         });
-        res.render('products', { products: transformedProductData });
     } catch (error) {
         res.send(error);
     }

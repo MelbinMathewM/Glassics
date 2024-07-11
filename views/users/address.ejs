@@ -87,22 +87,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/coupons">
+                        <a class="nav-link" href="/account/coupons">
                             <span class="menu-title">Coupons</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-medical-bag menu-icon"></i>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/banners">
-                            <span class="menu-title">Banners</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-medical-bag menu-icon"></i>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/Offers">
-                            <span class="menu-title">Offers</span>
                             <i class="menu-arrow"></i>
                             <i class="mdi mdi-medical-bag menu-icon"></i>
                         </a>
@@ -116,7 +102,7 @@
                     </li>
                 </ul>
             </nav>
-            <div class="main-panel mt-5">
+            <div class="main-panel mt-5 w-100">
                 <!-- Breadcrumb Section Begin -->
                 <section class="breadcrumb-option mt-5" style="background-color: rgb(232, 243, 250);">
                     <div class="container-fluid">
@@ -147,21 +133,25 @@
                         
                         <!-- Address List -->
                         <div id="address-list">
-                            <% addresses.forEach((address) => { %>
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h5 class="card-title"><%= address.addressName %></h5>
-                                    <p class="card-text">
-                                        <%= address.addressEmail %>, <%= address.addressMobile %><br>
-                                        <%= address.addressHouse %>, <%= address.addressStreet %>, <%= address.addressPost %>, <%= address.addressMark %><br>
-                                        <%= address.addressCity %>, <%= address.addressDistrict %> <%= address.addressState %><br>
-                                        <%= address.addressPin %>
-                                    </p>
-                                    <a href="/account/address/edit_address?id=<%= address._id %>"><button class="btn btn-primary btn-sm">Edit</button></a>
-                                    <button class="btn btn-danger btn-sm" onclick="deleteAddress('<%= address._id %>')">Delete</button>
+                            <div class="row">
+                                <% addresses.forEach((address) => { %>
+                                <div class="col-md-6">
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><%= address.addressName %></h5>
+                                            <p class="card-text">
+                                                <%= address.addressEmail %>, <%= address.addressMobile %><br>
+                                                <%= address.addressHouse %>, <%= address.addressStreet %>, <%= address.addressPost %>, <%= address.addressMark %><br>
+                                                <%= address.addressCity %>, <%= address.addressDistrict %> <%= address.addressState %><br>
+                                                <%= address.addressPin %>
+                                            </p>
+                                            <a href="/account/address/edit_address?id=<%= address._id %>"><button class="btn btn-primary btn-sm">Edit</button></a>
+                                            <button class="btn btn-danger btn-sm" onclick="deleteAddress('<%= address._id %>')">Delete</button>
+                                        </div>
+                                    </div>
                                 </div>
+                                <% }) %>
                             </div>
-                            <% }) %>
                         </div>
                     </div>
                 </div>

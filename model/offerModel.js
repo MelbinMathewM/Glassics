@@ -45,11 +45,6 @@ const Offer = new Schema({
     addedDateTime:{
         type:Date,
         default:Date.now
-    },
-    expiryDate:{
-        type:Date,
-        required:true,
-        index: { expires: 0 } 
     }
 })
 

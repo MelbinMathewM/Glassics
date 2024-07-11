@@ -45,11 +45,6 @@ const OrderItemSchema = new Schema({
         enum: ['Pending', 'Processing','Dispatched', 'Delivered', 'Canceled','Return requested', 'Returned'],
         default : 'Pending'
     },
-    paymentStatus : {
-        type : String,
-        enum: ['Pending','Paid'],
-        default : 'Pending'
-    },
     returnReason: {
         type: String
     }
@@ -66,6 +61,9 @@ const OrderSchema = new Schema({
         ref: 'Address',
         required: true
     },
+    couponCode: {
+        type : String
+    },
     items: [OrderItemSchema],
     orderDate: {
         type: Date,
@@ -75,10 +73,18 @@ const OrderSchema = new Schema({
         type: String,
         required: true
     },
+    paymentStatus : {
+        type : String,
+        enum: ['Pending','Paid'],
+        default : 'Pending'
+    },
     orderID: {
         type: String,
-        unique: true,
-        required: true
+        unique: true
+    },
+    razorpayOrderId : {
+        type : String,
+        unique : true
     }
 });
 

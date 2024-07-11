@@ -17,11 +17,11 @@
                             <li class="active"><a class="text-decoration-none" href="/shop">Shop</a></li>
                             <% if (isAuthenticated) { %>
                                 <li><a class="text-decoration-none" href='/account/profile'>Account</a></li>
-                            <% } else { %>
-                                <li><a class="text-decoration-none" href="/login">Sign In</a></li>
-                            <% } %>
-                            <li><a class="text-decoration-none" href="./blog.html">Blog</a></li>
-                            <li><a class="text-decoration-none" href="./contact.html">Contacts</a></li>
+                                <% } else { %>
+                                    <li><a class="text-decoration-none" href="/login">Sign In</a></li>
+                                    <% } %>
+                                        <li><a class="text-decoration-none" href="./blog.html">Blog</a></li>
+                                        <li><a class="text-decoration-none" href="./contact.html">Contacts</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -240,6 +240,7 @@
                 </div>
             </footer>
             <!-- Footer Section End -->
+            <div id="snackbar"></div>
 
             <style>
                 .checkbtn {
@@ -289,9 +290,86 @@
                     width: 100%;
                     z-index: 999;
                 }
+
+                #snackbar {
+                    visibility: hidden;
+                    min-width: 250px;
+                    margin-left: -125px;
+                    background-color: #333;
+                    color: #fff;
+                    text-align: center;
+                    border-radius: 2px;
+                    padding: 16px;
+                    position: fixed;
+                    z-index: 1;
+                    left: 50%;
+                    bottom: 30px;
+                    font-size: 17px;
+                }
+
+                #snackbar.show {
+                    visibility: visible;
+                    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+                    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+                }
+
+                @-webkit-keyframes fadein {
+                    from {
+                        bottom: 0;
+                        opacity: 0;
+                    }
+
+                    to {
+                        bottom: 30px;
+                        opacity: 1;
+                    }
+                }
+
+                @keyframes fadein {
+                    from {
+                        bottom: 0;
+                        opacity: 0;
+                    }
+
+                    to {
+                        bottom: 30px;
+                        opacity: 1;
+                    }
+                }
+
+                @-webkit-keyframes fadeout {
+                    from {
+                        bottom: 30px;
+                        opacity: 1;
+                    }
+
+                    to {
+                        bottom: 0;
+                        opacity: 0;
+                    }
+                }
+
+                @keyframes fadeout {
+                    from {
+                        bottom: 30px;
+                        opacity: 1;
+                    }
+
+                    to {
+                        bottom: 0;
+                        opacity: 0;
+                    }
+                }
             </style>
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <script>
+                function showSnackbar(message) {
+                    var snackbar = document.getElementById("snackbar");
+                    snackbar.className = "show";
+                    snackbar.innerHTML = message;
+                    setTimeout(function () { snackbar.className = snackbar.className.replace("show", ""); }, 3000);
+                }
+
                 document.addEventListener('DOMContentLoaded', () => {
                     const updateQuantity = async (cartId, newQuantity, priceElement, unitPrice) => {
                         const quantities = {};
@@ -307,19 +385,19 @@
                             });
 
                             const data = await response.json();
-                            if (response.ok) {
-                                // Update the price on the client side
+                            if (data.success) {
+                                showSnackbar(data.message);
                                 const newTotalPrice = unitPrice * newQuantity;
                                 priceElement.textContent = `₹${newTotalPrice.toFixed(2)}`;
-                                console.log('Cart updated successfully:', data);
-                                // Update subtotal, discount, and total
                                 updateCartPrices();
+                                if(data.message.includes('Only')){
+                                    setTimeout(() => location.reload(),1500);
+                                }
                             } else {
-                                alert('Cart update failed');
+                                showSnackbar(data.message);
                             }
                         } catch (error) {
-                            console.error('Error updating cart:', error);
-                            alert('Error updating cart');
+                            showSnackbar("An error occurred while updating the cart.");
                         }
                     };
 

@@ -210,7 +210,6 @@ passport.deserializeUser(async (id, done) => {
 
 const googleSuccess = async (req, res, next) => {
     try {
-       
         if (!req.user) {
             return res.redirect('/login');
         }
@@ -223,7 +222,6 @@ const googleSuccess = async (req, res, next) => {
         res.send(error);
     }
 };
-
 
 const logoutUser = async (req,res) => {
     try{

@@ -128,7 +128,7 @@ const loadProductDetail = async (req, res) => {
         }
         const {
             _id, productName, productGender, productDescription, productImage, frameMaterial,
-            frameShape, frameStyle, lensType, specialFeatures, variants, is_delete 
+            frameShape, frameStyle, lensType, specialFeatures, variants, is_delete
         } = product;
         const productCategory = product.productCategory ? product.productCategory.categoryName : null;
         const productBrand = product.productBrand ? product.productBrand.brandName : null;
@@ -211,21 +211,47 @@ const updateCart = async (req, res) => {
     try {
         const { quantities } = req.body;
         const userId = req.session.user_id;
+        const messages = [];
+
         for (const cartId in quantities) {
             const quantity = quantities[cartId];
-            const cartItem = await Cart.findById(cartId);
+            const cartItem = await Cart.findById(cartId).populate('productId');
+
             if (cartItem) {
-                cartItem.productQuantity = quantity;
-                cartItem.cartPrice = quantity * cartItem.productDiscPrice;
-                await cartItem.save();
+                const product = await Product.findById(cartItem.productId);
+
+                if (!product) {
+                    return res.json({ success: false, message: 'Product not found.' });
+                }
+
+                const variant = product.variants.find(v => v.color === cartItem.productColor);
+                if (!variant) {
+                    return res.status(400).json({ success: false, message: `Variant not found for product ${product.productName}` });
+                }
+
+                const subvariant = variant.subVariants.find(s => s.size === cartItem.productSize);
+                if (!subvariant) {
+                    return res.status(400).json({ success: false, message: `Subvariant not found for product ${product.productName}` });
+                }
+
+                if (subvariant.quantity >= quantity) {
+                    cartItem.productQuantity = quantity;
+                    cartItem.cartPrice = quantity * cartItem.productDiscPrice;
+                    await cartItem.save();
+                    messages.push(`Updated quantity for ${product.productName} to ${quantity}`);
+                } else {
+                    messages.push(`Only ${subvariant.quantity} items available for ${product.productName}`);
+                }
             }
         };
-        res.render('cart', { message: "Cart updated successfully", cart: updatedCart });
         const updatedCart = await Cart.find({ userId: userId });
+        res.status(201).json({ success: true, message: messages.join('. '), cart: updatedCart });
     } catch (error) {
-        res.send(error);
+        res.status(500).json({ success: false, message: error.message });
     }
 };
+
+
 
 const deleteCart = async (req, res) => {
     try {
@@ -270,7 +296,7 @@ const insertWishlist = async (req, res) => {
             productId: productId,
         });
         if (existingProduct) {
-            return res.status(201).json({ success : false, message: 'Product Already in wishlist.' });
+            return res.status(201).json({ success: false, message: 'Product Already in wishlist.' });
         } else {
             const wishlist = new Wishlist({
                 userId: user._id,
@@ -292,16 +318,16 @@ const insertWishlist = async (req, res) => {
 };
 
 const removeWishlist = async (req, res) => {
-    try{
+    try {
         const id = req.params.id;
         const wishlistData = await Wishlist.findByIdAndDelete(id);
-        if(wishlistData){
-            res.json({success : true, message : 'removed successfully'});
-        }else{
-            res.json({ success : false, message : 'couldn\'t remove'});
+        if (wishlistData) {
+            res.json({ success: true, message: 'removed successfully' });
+        } else {
+            res.json({ success: false, message: 'couldn\'t remove' });
         }
-    }catch(error){
-        res.json({ success : false, message : 'Error deleting item'});
+    } catch (error) {
+        res.json({ success: false, message: 'Error deleting item' });
     }
 };
 

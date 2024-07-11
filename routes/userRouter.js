@@ -15,12 +15,15 @@ const multer = require('multer');
 const nocache = require('nocache');
 const path = require('path');
 
-//session handling
 u_route.use(session({
-    secret: config.sessionSecretos,
+    secret: config.sessionSecret,
     resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false }
+    saveUninitialized: false,
+    cookie: {
+        path: '/',
+        _expires: 86400000,
+        httpOnly: true
+    }
 }));
 
 u_route.use(userAuth.authMiddleware)
@@ -88,9 +91,11 @@ u_route.get('/cart/delete_cart',userAuth.isLogin,userController.deleteCart);
 //checkout routes
 u_route.get('/checkout',userAuth.isLogin,orderController.loadCheckout);
 u_route.post('/checkout/add_address',orderController.checkoutAddAdress);
+u_route.post('/account/wallet/check_balance',orderController.balanceCheck);
 u_route.post('/checkout',orderController.addCheckout);
-u_route.get('/razorpay_key',orderController.RazorPayKey);
+u_route.get('/razorpay_key',userAuth.isLogin,orderController.RazorPayKey);
 u_route.post('/verify_razorpay_payment', orderController.verifyRazorpayPayment);
+u_route.post('/handle_failed_payment',orderController.handleFailedPayment);
 
 //profile routes
 u_route.get('/account/profile',userAuth.isLogin,accountController.loadProfile);
@@ -106,8 +111,10 @@ u_route.delete('/account/wishlist/delete/:id',userController.removeWishlist);
 
 //order routes
 u_route.get('/account/orders',userAuth.isLogin,orderController.loadOrder);
+u_route.post('/continue_payment',orderController.continuePay);
 u_route.get('/account/orders/order_details',userAuth.isLogin,orderController.loadOrderDetail);
 u_route.post('/account/orders/order_details/cancel_order',orderController.cancelOrder);
+u_route.get('/account/orders/order_details/invoice',orderController.getInvoice);
 u_route.post('/account/orders/order_details/return_order',orderController.returnOrder);
 
 //address routes
@@ -119,11 +126,12 @@ u_route.post('/account/address/edit_address',accountController.updateAddress);
 u_route.get('/account/address/delete_address',userAuth.isLogin,accountController.deleteAddress);
 
 //wallet routes
-u_route.get('/account/wallet',accountController.loadWallet);
+u_route.get('/account/wallet',userAuth.isLogin,accountController.loadWallet);
 u_route.post('/account/wallet/add_money',accountController.addMoneyToWallet);
+u_route.post('/account/wallet/verify_payment',accountController.verifyPayment);
 
 //coupon routes
-u_route.get('/account/coupons',orderController.loadCoupon);
+u_route.get('/account/coupons',userAuth.isLogin,orderController.loadCoupon);
 u_route.post('/checkout/apply_coupon',orderController.applyCoupon);
 u_route.post('/checkout/remove_coupon',orderController.removeCoupon);
 

@@ -94,20 +94,6 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/banners">
-                            <span class="menu-title">Banners</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-medical-bag menu-icon"></i>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/Offers">
-                            <span class="menu-title">Offers</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-medical-bag menu-icon"></i>
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="/logout">
                             <span class="menu-title">Logout</span>
                             <i class="menu-arrow"></i>
@@ -156,24 +142,28 @@
                                                 <p class="mb-1"><strong>Email : </strong>
                                                     <%= user.userEmail %>
                                                 </p>
-                                                <p class="mb-1"><strong>Mobile : </strong>
-                                                    <%= user.userMobile %>
-                                                </p>                                            
+                                                <% if (user.userMobile) { %>
+                                                    <p class="mb-1"><strong>Mobile : </strong>
+                                                        <%= user.userMobile %>
+                                                    </p>  
+                                                <% } %>                                          
                                         </div>
                                     </div>
                                     <!-- End of User Profile Section -->
                                 </div>
                             </div>
-                            <div class="row mt-3 text-center">
-                                <div class="col">
-                                    <a href="/account/profile/edit_password" class="editref text-decoration-none">
-                                        <span class="pe-5">Edit Password</span>
-                                    </a>
-                                    <a href="/account/profile/edit_details" class="editref text-decoration-none">
-                                        <span>Edit Details</span>
-                                    </a>
+                            <% if (!user.googleId) { %>
+                                <div class="row mt-3 text-center">
+                                    <div class="col">
+                                        <a href="/account/profile/edit_password" class="editref text-decoration-none">
+                                            <span class="pe-5">Edit Password</span>
+                                        </a>
+                                        <a href="/account/profile/edit_details" class="editref text-decoration-none">
+                                            <span>Edit Details</span>
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
+                            <% } %>
                         </div>
                     </section>
                 </div>

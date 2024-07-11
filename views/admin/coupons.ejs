@@ -23,7 +23,7 @@
                     </form>
                 </div>
                 <ul class="navbar-nav navbar-nav-right">
-                    <button id="openAddModalBtn" class="btn btn-success">Add Categories</button>
+                    <button id="openAddModalBtn" class="btn btn-success">Add Coupon</button>
                 </ul>
                 <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
                     data-toggle="offcanvas">
@@ -36,20 +36,6 @@
             <!-- partial:partials/_sidebar.html -->
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <ul class="nav">
-                    <li class="nav-item nav-profile">
-                        <a href="#" class="nav-link">
-                            <div class="nav-profile-image">
-                                <img src="assets/images/faces/face1.jpg" alt="profile">
-                                <span class="login-status online"></span>
-                                <!--change to offline or busy as needed-->
-                            </div>
-                            <div class="nav-profile-text d-flex flex-column">
-                                <span class="font-weight-bold mb-2">David Grey. H</span>
-                                <span class="text-secondary text-small">Project Manager</span>
-                            </div>
-                            <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
-                        </a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/admin/dashboard">
                             <span class="menu-title">Dashboard</span>
@@ -97,13 +83,6 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/banners">
-                            <span class="menu-title">Banners</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-medical-bag menu-icon"></i>
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="/admin/offers">
                             <span class="menu-title">Offers</span>
                             <i class="menu-arrow"></i>
@@ -142,9 +121,14 @@
                                                 <h5 class="card-title font-weight-bold mb-4 text-center">
                                                     <%= coupon.code %>
                                                 </h5>
-                                                <p class="text-center"><%= coupon.discount %>% off <br> - Expires on - <br> <%= coupon.expirationDate.toDateString() %></p>
-                                                <p class="text-center">Min pay : <%= coupon.minPurchase %></p>
-                                                <p class="text-center">Max usage : <%= coupon.usageLimit %></p>
+                                                <p class="text-center">
+                                                    <%= coupon.discount %>% off <br> - Expires on - <br>
+                                                        <%= coupon.expirationDate.toDateString() %>
+                                                </p>
+                                                <p class="text-center">Min pay : <%= coupon.minPurchase %>
+                                                </p>
+                                                <p class="text-center">Max usage : <%= coupon.usageLimit %>
+                                                </p>
                                                 <div class="text-center">
                                                     <button id="openEditModalBtn_<%= coupon._id %>"
                                                         class="btn btn-primary">Edit</button>
@@ -158,30 +142,30 @@
                                                         <h3 class="mb-3 text-center">Edit Coupon</h3>
                                                         <div id="messagerContainer_<%= coupon._id %>"
                                                             class="message-container"></div>
-                                                            <form id="couponEditForm_<%= coupon._id %>" action="/edit_coupons" method="POST">
-                                                                <label for="code">Code:</label>
-                                                                <p class="form-control" name="code" id="code"><%= coupon.code %></p>
+                                                            <div id="error_<%= coupon._id %>" class="text-warning fw-bold text-center"></div>
+                                                            <form id="couponEditForm_<%= coupon._id %>" action="/edit_coupons" method="POST" onsubmit="return validateForm('<%= coupon._id %>')">
+                                                                <label for="code_<%= coupon._id %>">Code:</label>
+                                                                <p class="form-control" id="code_<%= coupon._id %>"><%= coupon.code %></p>
                                                                 <br>
-                                                                <label for="discount">Discount (%):</label>
-                                                                <input type="number" class="form-control" value="<%= coupon.discount %>" name="discount" id="discount" required>
+                                                                <label for="discount_<%= coupon._id %>">Discount (%):</label>
+                                                                <input type="number" class="form-control" value="<%= coupon.discount %>" name="discount" id="discount_<%= coupon._id %>" >
                                                                 <br>
-                                                                <label for="minPurchase">Min purchase:</label>
-                                                                <input type="number" class="form-control" value="<%= coupon.minPurchase %>" name="minPurchase" id="minPurchase" required>
+                                                                <label for="minPurchase_<%= coupon._id %>">Min purchase:</label>
+                                                                <input type="number" class="form-control" value="<%= coupon.minPurchase %>" name="minPurchase" id="minPurchase_<%= coupon._id %>" >
                                                                 <br>
-                                                                <label for="expirationDate">Expiration Date:</label>
-                                                                <input type="date" class="form-control" value="<%= coupon.expirationDate.toISOString().split('T')[0] %>" name="expirationDate" id="expirationDate_<%= coupon._id %>" required>
+                                                                <label for="expirationDate_<%= coupon._id %>">Expiration Date:</label>
+                                                                <input type="date" class="form-control" value="<%= coupon.expirationDate.toISOString().split('T')[0] %>" name="expirationDate" id="expirationDate_<%= coupon._id %>" >
                                                                 <br>
-                                                                <label for="usageLimit">Usage Limit:</label>
-                                                                <input type="number" class="form-control" value="<%= coupon.usageLimit %>" name="usageLimit" id="usageLimit" required>
+                                                                <label for="usageLimit_<%= coupon._id %>">Usage Limit:</label>
+                                                                <input type="number" class="form-control" value="<%= coupon.usageLimit %>" name="usageLimit" id="usageLimit_<%= coupon._id %>" >
                                                                 <br>
-                                                                <input type="hidden" value="<%= coupon._id %>" name="couponId" class="form-control">
+                                                                <input type="hidden" value="<%= coupon._id %>" name="couponId">
                                                                 <div class="text-center">
                                                                     <button class="btn btn-primary" type="submit">Edit Coupon</button>
                                                                 </div>
-                                                              </form>
+                                                            </form>
                                                     </div>
                                                 </div>
-
                                             </div>
                                         </div>
                                         <% }) %>
@@ -195,23 +179,24 @@
     <div id="couponAddModal" class="modal">
         <div class="modal-content">
             <span class="close text-end">&times;</span>
-            <h3 class="mb-3 text-center">Add Category</h3>
+            <h3 class="mb-3 text-center">Add Coupon</h3>
             <div id="messageContainer" class="message-container"></div>
+            <div id="error" class="text-warning fw-bold text-center"></div>
             <form id="couponAddForm" action="/add_coupons" method="POST">
                 <label for="code">Code:</label>
-                <input type="text" name="code" class="form-control" id="code" required>
+                <input type="text" name="code" class="form-control" id="code">
                 <br>
                 <label for="discount">Discount (%):</label>
-                <input type="number" name="discount" class="form-control" id="discount" required>
+                <input type="number" name="discount" class="form-control" id="discount">
                 <br>
                 <label for="minPurchase">Min purchase:</label>
-                <input type="number" class="form-control" name="minPurchase" id="minPurchase" required>
+                <input type="number" class="form-control" name="minPurchase" id="minPurchase">
                 <br>
                 <label for="expirationDate">Expiration Date:</label>
-                <input type="date" name="expirationDate" class="form-control" id="expirationDate" required>
+                <input type="date" name="expirationDate" class="form-control" id="expirationDate">
                 <br>
                 <label for="usageLimit">Usage Limit:</label>
-                <input type="number" name="usageLimit" class="form-control" id="usageLimit" required>
+                <input type="number" name="usageLimit" class="form-control" id="usageLimit">
                 <br>
                 <div class="text-center">
                     <button class="btn btn-primary text-cente" type="submit">Create Coupon</button>
@@ -219,7 +204,6 @@
               </form>
         </div>
     </div>
-
     <!-- container-scroller -->
     <style>
         .modal {
@@ -233,7 +217,6 @@
             overflow: auto;
             background-color: rgba(0, 0, 0, 0.4);
         }
-
         .modal-content {
             background-color: #fefefe;
             margin: 15% auto;
@@ -242,36 +225,30 @@
             width: 80%;
             max-width: 400px;
         }
-
         .close {
             color: #aaa;
             float: right;
             font-size: 28px;
             font-weight: bold;
         }
-
         .close:hover,
         .close:focus {
             color: black;
             text-decoration: none;
             cursor: pointer;
         }
-
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 20px;
         }
-
         .card {
             display: flex;
             flex-direction: column;
             height: 100%;
         }
-
         .card img {
             height: 200px;
-            /* Adjust the height as needed */
             object-fit: cover;
         }
     </style>
@@ -286,17 +263,13 @@
             const sidebar = document.getElementById('sidebar');
 
             aBtn.onclick = () => aModal.style.display = 'block';
-
             eBtns.forEach((btn, index) => {
                 btn.onclick = () => eModals[index].style.display = 'block';
             });
-
             aCloseBtn.onclick = () => aModal.style.display = 'none';
-
             eCloseBtns.forEach((btn) => {
                 btn.onclick = () => btn.closest('.modal').style.display = 'none';
             });
-
             window.onclick = (event) => {
                 if (event.target == aModal) {
                     aModal.style.display = 'none';
@@ -307,7 +280,6 @@
                     }
                 });
             }
-
             sidebar.onclick = () => {
                 aModal.style.display = 'none';
                 eModals.forEach(modal => modal.style.display = 'none');
@@ -365,6 +337,11 @@
         document.getElementById('couponAddForm').addEventListener('submit', async (event) => {
             event.preventDefault();
 
+            const isValid = validateAddCouponForm();
+
+            if (!isValid) {
+            return;
+        }
             const formData = new FormData(event.target);
             try {
                 const response = await fetch('/admin/coupons/add', {
@@ -389,43 +366,125 @@
         });
 
         document.querySelectorAll('form[id^="couponEditForm_"]').forEach(form => {
-            form.addEventListener('submit', async (event) => {
-                event.preventDefault();
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-                const formData = new FormData(event.target);
-                try {
-                    const response = await fetch('/admin/coupons/edit', {
-                        method: 'POST',
-                        body: new URLSearchParams(formData)
-                    });
-                    const data = await response.json();
-                    const messagerContainer = document.getElementById('messagerContainer_' + event.target.id.split('_')[1]);
+        const couponId = event.target.id.split('_')[1];
+        const isValid = validateForm(couponId);
 
-                    if (response.ok) {
-                        Swal.fire(
-                            'Edited',
-                            'Editing the coupon was successful',
-                            'success'
-                        ).then(() => {
-                            setTimeout(() => location.reload(), 1000)
-                            // Optionally, close the modal here if needed
-                            const modal = document.getElementById('couponEditModal_' + event.target.id.split('_')[1]);
-                            modal.style.display = 'none';
-                        });
-                    } else {
-                        messagerContainer.innerHTML = `<div class="alert alert-danger">${data.message}</div>`;
-                    }
-                } catch (error) {
-                    console.error("Network error:", error);
-                    const messagerContainer = document.getElementById('messagerContainer_' + event.target.id.split('_')[1]);
-                    messagerContainer.innerHTML = `<div class="alert alert-danger">Network error occurred. Please try again.</div>`;
-                }
+        if (!isValid) {
+            return;
+        }
+
+        const formData = new FormData(event.target);
+        try {
+            const response = await fetch('/admin/coupons/edit', {
+                method: 'POST',
+                body: new URLSearchParams(formData)
             });
-        });
+            const data = await response.json();
+            const messagerContainer = document.getElementById('messagerContainer_' + couponId);
 
+            if (response.ok) {
+                Swal.fire(
+                    'Edited',
+                    'Editing the coupon was successful',
+                    'success'
+                ).then(() => {
+                    setTimeout(() => location.reload(), 1000);
+                    // Optionally, close the modal here if needed
+                    const modal = document.getElementById('couponEditModal_' + couponId);
+                    modal.style.display = 'none';
+                });
+            } else {
+                messagerContainer.innerHTML = `<div class="alert alert-danger">${data.message}</div>`;
+            }
+        } catch (error) {
+            console.error("Network error:", error);
+            messagerContainer.innerHTML = `<div class="alert alert-danger">Network error occurred. Please try again.</div>`;
+        }
+    });
+});
+
+function validateForm(couponId) {
+    const errorDiv = document.getElementById('error_' + couponId);
+    const discount = document.getElementById('discount_' + couponId).value;
+    const minPurchase = document.getElementById('minPurchase_' + couponId).value;
+    const expirationDate = document.getElementById('expirationDate_' + couponId).value;
+    const usageLimit = document.getElementById('usageLimit_' + couponId).value;
+    const currentDate = new Date().toISOString().split('T')[0];
+
+    let errors = [];
+
+    if (!discount) {
+        errors.push('Add discount');
+    }else if (discount < 1 || discount > 100) {
+        errors.push('Discount must be between 1 and 100');
+    }
+
+    if (!minPurchase) {
+        errors.push('Add minimum purchase value');
+    }else if (minPurchase < 0) {
+        errors.push('Minimum purchase cannot be negative');
+    }
+
+    if (expirationDate < currentDate) {
+        errors.push('Expiration date cannot be in the past');
+    }
+    if (usageLimit < 1 && usageLimit !== 0) {
+        errors.push('Usage limit must be at least 1');
+    }
+
+    if (errors.length > 0) {
+        errorDiv.innerHTML = errors[0];
+        return false;
+    }
+
+    return true;
+}
+
+function validateAddCouponForm() {
+    const errorDiv = document.getElementById('error');
+    const code = document.getElementById('code').value;
+    const discount = parseFloat(document.getElementById('discount').value);
+    const minPurchase = parseFloat(document.getElementById('minPurchase').value);
+    const expirationDate = document.getElementById('expirationDate').value;
+    const usageLimit = parseInt(document.getElementById('usageLimit').value);
+    const currentDate = new Date().toISOString().split('T')[0];
+
+    let errors = [];
+
+    if(!code) {
+        errors.push('Coupon code is required');
+    }
+
+    if (!discount || discount < 1 || discount > 100) {
+        errors.push('Discount must be between 1 and 100');
+    }
+
+    if (!minPurchase || minPurchase < 0) {
+        errors.push('Minimum purchase cannot be negative');
+    }
+
+    if (expirationDate < currentDate) {
+        errors.push('Expiration date cannot be in the past');
+    }
+
+    if (!usageLimit || usageLimit < 1) {
+        errors.push('Usage limit must be at least 1');
+    }
+
+    if (errors.length > 0) {
+        errorDiv.innerHTML = errors[0];
+        return false;
+    }
+
+    errorDiv.innerHTML = '';
+    return true;
+}
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-<%- include('../partials/footer') %>
+    <%- include('../partials/footer') %>

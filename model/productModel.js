@@ -11,7 +11,7 @@ const SubVariantSchema = new Schema({
         type: Number,
         required: true
     }
-}, { _id: false });
+});
 
 // Variant Schema for Colors
 const VariantSchema = new Schema({
@@ -33,7 +33,7 @@ const VariantSchema = new Schema({
         type: Schema.Types.ObjectId, 
         ref: 'Offer' 
     }
-}, { _id: false });
+});
 
 // Product Schema
 const ProductSchema = new Schema({

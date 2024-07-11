@@ -4,7 +4,9 @@
     <!-- partial:partials/_navbar.html -->
     <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <a class="text-decoration-none" href="/"><h1 class="fw-bold" style="font-style: italic;">Glassics</h1></a>
+        <a class="text-decoration-none" href="/">
+          <h1 class="fw-bold" style="font-style: italic;">Glassics</h1>
+        </a>
       </div>
       <div class="navbar-menu-wrapper d-flex align-items-stretch">
         <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -21,9 +23,11 @@
           </form>
         </div>
         <ul class="navbar-nav navbar-nav-right">
-          <a href="/admin/products" class="text-light text-decoration-none"><button class="btn btn-primary">Go Back</button></a>
+          <a href="/admin/products" class="text-light text-decoration-none"><button class="btn btn-primary">Go
+              Back</button></a>
         </ul>
-        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+          data-toggle="offcanvas">
           <span class="mdi mdi-menu"></span>
         </button>
       </div>
@@ -33,80 +37,59 @@
       <!-- partial:partials/_sidebar.html -->
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
-          <li class="nav-item nav-profile">
-            <a href="#" class="nav-link">
-              <div class="nav-profile-image">
-                <img src="/assets/images/faces/face1.jpg" alt="profile">
-                <span class="login-status online"></span>
-                <!--change to offline or busy as needed-->
-              </div>
-              <div class="nav-profile-text d-flex flex-column">
-                <span class="font-weight-bold mb-2">David Grey. H</span>
-                <span class="text-secondary text-small">Project Manager</span>
-              </div>
-              <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
-            </a>
-          </li>
           <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" href="/admin/dashboard">
               <span class="menu-title">Dashboard</span>
               <i class="mdi mdi-home menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" href="/admin/products">
               <span class="menu-title">Products</span>
               <i class="menu-arrow"></i>
               <i class="mdi mdi-crosshairs-gps menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" href="/admin/users">
               <span class="menu-title">Users</span>
               <i class="mdi mdi-contacts menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" href="/admin/orders">
               <span class="menu-title">Orders</span>
               <i class="mdi mdi-format-list-bulleted menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" href="/admin/categories">
               <span class="menu-title">Categories</span>
               <i class="mdi mdi-chart-bar menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" href="/admin/brands">
               <span class="menu-title">Brands</span>
               <i class="mdi mdi-table-large menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" href="/admin/coupons">
               <span class="menu-title">Coupons</span>
               <i class="menu-arrow"></i>
               <i class="mdi mdi-medical-bag menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link">
-              <span class="menu-title">Banners</span>
-              <i class="menu-arrow"></i>
-              <i class="mdi mdi-medical-bag menu-icon"></i>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" href="/admin/offers">
               <span class="menu-title">Offers</span>
               <i class="menu-arrow"></i>
               <i class="mdi mdi-medical-bag menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" href="/admin/logout">
               <span class="menu-title">Logout</span>
               <i class="menu-arrow"></i>
               <i class="mdi mdi-medical-bag menu-icon"></i>
@@ -125,18 +108,21 @@
             </h3>
           </div>
           <form id="editProductForm" action="" method="POST" enctype="multipart/form-data">
-            <div id="mainError" class="text-warning fw-bold text-center"></div>
             <input type="hidden" name="productId" value="<%= product._id %>">
             <div class="form group row mb-3">
               <div class="col">
                 <label for="productName">Product Name:</label>
-                <input type="text" id="productName" class="form-control" name="productName" value="<%= product.productName %>" required>
+                <input type="text" id="productName" class="form-control" name="productName"
+                  value="<%= product.productName %>">
               </div>
               <div class="col">
                 <label for="productCategory">Product Category:</label>
-                <select class="form-control" id="productCategory" name="productCategory" required>
-                    <% categories.forEach(category => { %>
-                        <option value="<%= category._id %>" <%= product.productCategory.equals(category._id) ? 'selected' : '' %>><%= category.categoryName %></option>
+                <select class="form-control" id="productCategory" name="productCategory">
+                  <option value="">Select Category</option>
+                  <% categories.forEach(category=> { %>
+                    <option value="<%= category._id %>" <%= product.productCategory.equals(category._id) ? 'selected'
+                      : '' %>><%= category.categoryName %>
+                    </option>
                     <% }) %>
                 </select>
               </div>
@@ -144,26 +130,33 @@
             <div class="form-group row">
               <div class="col">
                 <label for="productBrand">Product Brand:</label>
-                <select class="form-control" id="productBrand" name="productBrand" required>
-                  <% brands.forEach(brand => { %>
-                      <option value="<%= brand._id %>" <%= product.productBrand.equals(brand._id) ? 'selected' : '' %>><%= brand.brandName %></option>
-                  <% }) %>
+                <select class="form-control" id="productBrand" name="productBrand">
+                  <option value="">Select Brand</option>
+                  <% brands.forEach(brand=> { %>
+                    <option value="<%= brand._id %>" <%= product.productBrand.equals(brand._id) ? 'selected' : '' %>><%=
+                        brand.brandName %>
+                    </option>
+                    <% }) %>
                 </select>
               </div>
               <div class="col">
                 <label for="productGender">Gender:</label><br>
                 <div class="radio-group">
-                  <input type="radio" id="genderMale" name="productGender" value="Male" <%= product.productGender === 'Male' ? 'checked' : '' %>>
+                  <input type="radio" id="genderMale" name="productGender" value="Male"
+                    <%=product.productGender==='Male' ? 'checked' : '' %>>
                   <label for="genderMale">Male</label>
-                  
-                  <input type="radio" id="genderFemale" name="productGender" value="Female" <%= product.productGender === 'Female' ? 'checked' : '' %>>
+
+                  <input type="radio" id="genderFemale" name="productGender" value="Female"
+                    <%=product.productGender==='Female' ? 'checked' : '' %>>
                   <label for="genderFemale">Female</label>
-                  
-                  <input type="radio" id="genderUnisex" name="productGender" value="Unisex" <%= product.productGender === 'Unisex' ? 'checked' : '' %>>
+
+                  <input type="radio" id="genderUnisex" name="productGender" value="Unisex"
+                    <%=product.productGender==='Unisex' ? 'checked' : '' %>>
                   <label for="genderUnisex">Unisex</label>
-                  <input type="radio" id="genderKids" name="productGender" value="Kids" <%= product.productGender === 'Kids' ? 'checked' : '' %>>
+                  <input type="radio" id="genderKids" name="productGender" value="Kids"
+                    <%=product.productGender==='Kids' ? 'checked' : '' %>>
                   <label for="genderKids">Kids</label>
-                </div>                
+                </div>
               </div>
             </div>
             <div class="form-group">
@@ -171,37 +164,44 @@
                 <div class="col">
                   <label for="frameMaterial">Frame Material:</label>
                   <select class="form-control" name="frameMaterial">
-                      <option value="">Select Frame Material</option>
-                      <option value="Plastic Frames" <%= product.frameMaterial === 'Plastic Frames' ? 'selected' : '' %>>Plastic Frames</option>
-                      <option value="Metal Frames" <%= product.frameMaterial === 'Metal Frames' ? 'selected' : '' %>>Metal Frames</option>
-                      <option value="Titanium Frames" <%= product.frameMaterial === 'Titanium Frames' ? 'selected' : '' %>>Titanium Frames</option>
-                      <option value="Wooden Frames" <%= product.frameMaterial === 'Wooden Frames' ? 'selected' : '' %>>Wooden Frames</option>
-                      <option value="Acetate Frames" <%= product.frameMaterial === 'Acetate Frames' ? 'selected' : '' %>>Acetate Frames</option>
+                    <option value="">Select Frame Material</option>
+                    <option value="Plastic Frames" <%=product.frameMaterial==='Plastic Frames' ? 'selected' : '' %>
+                      >Plastic Frames</option>
+                    <option value="Metal Frames" <%=product.frameMaterial==='Metal Frames' ? 'selected' : '' %>>Metal
+                      Frames</option>
+                    <option value="Titanium Frames" <%=product.frameMaterial==='Titanium Frames' ? 'selected' : '' %>
+                      >Titanium Frames</option>
+                    <option value="Wooden Frames" <%=product.frameMaterial==='Wooden Frames' ? 'selected' : '' %>>Wooden
+                      Frames</option>
+                    <option value="Acetate Frames" <%=product.frameMaterial==='Acetate Frames' ? 'selected' : '' %>
+                      >Acetate Frames</option>
                   </select>
-              </div>
-              <div class="col">
+                </div>
+                <div class="col">
                   <label for="frameShape">Frame Shape:</label>
                   <select class="form-control" name="frameShape">
-                      <option value="">Select Frame Shape</option>
-                      <option value="Round" <%= product.frameShape === 'Round' ? 'selected' : '' %>>Round</option>
-                      <option value="Square" <%= product.frameShape === 'Square' ? 'selected' : '' %>>Square</option>
-                      <option value="Rectangular" <%= product.frameShape === 'Rectangular' ? 'selected' : '' %>>Rectangular</option>
-                      <option value="Oval" <%= product.frameShape === 'Oval' ? 'selected' : '' %>>Oval</option>
-                      <option value="Cat-Eye" <%= product.frameShape === 'Cat-Eye' ? 'selected' : '' %>>Cat-Eye</option>
-                      <option value="Browline" <%= product.frameShape === 'Browline' ? 'selected' : '' %>>Browline</option>
+                    <option value="">Select Frame Shape</option>
+                    <option value="Round" <%=product.frameShape==='Round' ? 'selected' : '' %>>Round</option>
+                    <option value="Square" <%=product.frameShape==='Square' ? 'selected' : '' %>>Square</option>
+                    <option value="Rectangular" <%=product.frameShape==='Rectangular' ? 'selected' : '' %>>Rectangular
+                    </option>
+                    <option value="Oval" <%=product.frameShape==='Oval' ? 'selected' : '' %>>Oval</option>
+                    <option value="Cat-Eye" <%=product.frameShape==='Cat-Eye' ? 'selected' : '' %>>Cat-Eye</option>
+                    <option value="Browline" <%=product.frameShape==='Browline' ? 'selected' : '' %>>Browline</option>
                   </select>
-              </div>
-              <div class="col">
-                <label for="frameStyle">Frame Style:</label>
-                <select class="form-control" name="frameStyle">
-                    <option value="">Select Style</option>
-                    <option value="Classic" <%= product.frameStyle === 'Classic' ? 'selected' : '' %>>Classic</option>
-                    <option value="Modern" <%= product.frameStyle === 'Modern' ? 'selected' : '' %>>Modern</option>
-                    <option value="Vintage" <%= product.frameStyle === 'Vintage' ? 'selected' : '' %>>Vintage</option>
-                    <option value="Fashionable" <%= product.frameStyle === 'Fashionable' ? 'selected' : '' %>>Fashionable</option>
-                    <option value="Sporty" <%= product.frameStyle === 'Sporty' ? 'selected' : '' %>>Sporty</option>
-                </select>
-            </div>
+                </div>
+                <div class="col">
+                  <label for="frameStyle">Frame Style:</label>
+                  <select class="form-control" name="frameStyle">
+                    <option value="">Select Frame Style</option>
+                    <option value="Classic" <%=product.frameStyle==='Classic' ? 'selected' : '' %>>Classic</option>
+                    <option value="Modern" <%=product.frameStyle==='Modern' ? 'selected' : '' %>>Modern</option>
+                    <option value="Vintage" <%=product.frameStyle==='Vintage' ? 'selected' : '' %>>Vintage</option>
+                    <option value="Fashionable" <%=product.frameStyle==='Fashionable' ? 'selected' : '' %>>Fashionable
+                    </option>
+                    <option value="Sporty" <%=product.frameStyle==='Sporty' ? 'selected' : '' %>>Sporty</option>
+                  </select>
+                </div>
               </div>
             </div>
             <div class="form-group">
@@ -209,104 +209,131 @@
                 <div class="col">
                   <label for="lensType">Lens Type:</label>
                   <select class="form-control" name="lensType">
-                      <option value="">Select Lens Type</option>
-                      <option value="Single Vision Lenses" <%= product.lensType === 'Single Vision Lenses' ? 'selected' : '' %>>Single Vision Lenses</option>
-                      <option value="Bifocal Lenses" <%= product.lensType === 'Bifocal Lenses' ? 'selected' : '' %>>Bifocal Lenses</option>
-                      <option value="Progressive Lenses" <%= product.lensType === 'Progressive Lenses' ? 'selected' : '' %>>Progressive Lenses</option>
-                      <option value="Photochromic Lenses" <%= product.lensType === 'Photochromic Lenses' ? 'selected' : '' %>>Photochromic Lenses</option>
-                      <option value="Polarized Lenses" <%= product.lensType === 'Polarized Lenses' ? 'selected' : '' %>>Polarized Lenses</option>
+                    <option value="">Select Lens Type</option>
+                    <option value="Single Vision Lenses" <%=product.lensType==='Single Vision Lenses' ? 'selected' : ''
+                      %>>Single Vision Lenses</option>
+                    <option value="Bifocal Lenses" <%=product.lensType==='Bifocal Lenses' ? 'selected' : '' %>>Bifocal
+                      Lenses</option>
+                    <option value="Progressive Lenses" <%=product.lensType==='Progressive Lenses' ? 'selected' : '' %>
+                      >Progressive Lenses</option>
+                    <option value="Photochromic Lenses" <%=product.lensType==='Photochromic Lenses' ? 'selected' : '' %>
+                      >Photochromic Lenses</option>
+                    <option value="Polarized Lenses" <%=product.lensType==='Polarized Lenses' ? 'selected' : '' %>
+                      >Polarized Lenses</option>
                   </select>
-              </div>
-              <div class="col">
+                </div>
+                <div class="col">
                   <label for="specialFeatures">Special Features:</label>
                   <select class="form-control" name="specialFeatures">
-                      <option value="">Select Special Features</option>
-                      <option value="Anti-Reflective Coating" <%= product.specialFeatures === 'Anti-Reflective Coating' ? 'selected' : '' %>>Anti-Reflective Coating</option>
-                      <option value="Blue Light Blocking" <%= product.specialFeatures === 'Blue Light Blocking' ? 'selected' : '' %>>Blue Light Blocking</option>
-                      <option value="Scratch Resistant" <%= product.specialFeatures === 'Scratch Resistant' ? 'selected' : '' %>>Scratch Resistant</option>
-                      <option value="UV Protection" <%= product.specialFeatures === 'UV Protection' ? 'selected' : '' %>>UV Protection</option>
+                    <option value="">Select Special Features</option>
+                    <option value="Anti-Reflective Coating" <%= product.specialFeatures === ' Anti-Reflective Coating'
+                      ? ' selected' : '' %>>Anti-Reflective Coating</option>
+                    <option value="Blue Light Blocking" <%= product.specialFeatures === ' Blue Light Blocking ' ? ' selected '
+                      : '' %>>Blue Light Blocking</option>
+                    <option value="Scratch Resistant" <%= product.specialFeatures ==='Scratch Resistant' ? ' selected ' : ''
+                      %>>Scratch Resistant</option>
+                    <option value="UV Protection" <%= product.specialFeatures ===' UV Protection' ? ' selected ' : '' %>>UV
+                      Protection</option>
                   </select>
-              </div>
+                </div>
               </div>
             </div>
             <div class="form-group row">
               <div class="col">
-                  <label for="productDescription">Product Description:</label>
-                  <textarea id="productDescription" class="form-control" name="productDescription" required><%= product.productDescription %></textarea>
+                <label for="productDescription">Product Description:</label>
+                <textarea id="productDescription" class="form-control" name="productDescription"
+                  ><%= product.productDescription %></textarea>
               </div>
             </div>
-            <div id="variantError" class="text-warning fw-bold text-center"></div>
             <input type="hidden" id="variantCount" name="variantCount" value="<%= product.variants.length %>">
             <div id="variantsContainer">
-                <% product.variants.forEach((variant, variantIndex) => { %>
-                    <div class="variant">
-                        <h3>Variant <%= variantIndex + 1 %></h3>
-                        <div class="form-group row">
-                          <div class="col">
-                            <label for="variantColor-<%= variantIndex %>">Color:</label>
-                            <input type="text" class="form-control" id="variantColor-<%= variantIndex %>" name="variants[<%= variantIndex %>][color]" value="<%= variant.color %>">
-                          </div>
-                          <div class="col">
-                            <label for="variantPrice-<%= variantIndex %>">Price:</label>
-                            <input type="number" class="form-control" id="variantPrice-<%= variantIndex %>" name="variants[<%= variantIndex %>][price]" value="<%= variant.price %>">
-                          </div>
-                        </div>
-                        <div class="form-group row">
-                          <div class="col">
-                            <label for="variantImages-<%= variantIndex %>">Images:</label>
-                              <div class="form-group row">
-                                <% variant.images.forEach((image, imageIndex) => { %>
-                                  <div class="col">
-                                    <img src="/static/productImages/<%= image %>" alt="Variant Image" width="100">
-                                    <input type="hidden" name="variants[<%= variantIndex %>][existingImages][]" value="<%= image %>">
-                                    <button type="button" class="remove-image-button btn btn-danger" data-variant-index="<%= variantIndex %>" data-image-index="<%= imageIndex %>">X</button>
-                                  </div>
-                                <% }) %>
-                              </div>
-                            <input type="file" class="form-control w-25" id="variantImages-<%= variantIndex %>" name="variants[<%= variantIndex %>][newImages][]" multiple>
-                          </div>
-                        </div>
-                        <div class="subVariantsContainer">
-                            <% variant.subVariants.forEach((subVariant, subVariantIndex) => { %>
-                                <div class="subVariant">
-                                    <h4>Sub-Variant <%= subVariantIndex + 1 %></h4>
-                                    <div class="form-group row">
-                                      <div class="col">
-                                        <label for="subVariantSize-<%= variantIndex %>-<%= subVariantIndex %>">Size:</label>
-                                        <input type="text" class="form-control" id="subVariantSize-<%= variantIndex %>-<%= subVariantIndex %>" name="variants[<%= variantIndex %>][subVariants][<%= subVariantIndex %>][size]" value="<%= subVariant.size %>">
-                                      </div>
-                                      <div class="col">
-                                        <label for="subVariantQuantity-<%= variantIndex %>-<%= subVariantIndex %>">Quantity:</label>
-                                        <input type="number" class="form-control" id="subVariantQuantity-<%= variantIndex %>-<%= subVariantIndex %>" name="variants[<%= variantIndex %>][subVariants][<%= subVariantIndex %>][quantity]" value="<%= subVariant.quantity %>">
-                                      </div>
-                                      <div class="col">
-                                        <button type="button" class="remove-subvariant-button btn btn-danger mt-4" data-variant-index="<%= variantIndex %>" data-subvariant-index="<%= subVariantIndex %>">Remove Sub-Variant</button>
-                                      </div>
-                                    </div>
-                                </div>
-                            <% }) %>
-                            <button type="button" class="add-subvariant-button btn btn-secondary mb-2" data-variant-index="<%= variantIndex %>">Add Sub-Variant</button>
-                        </div>
-                        <button type="button" class="remove-variant-button btn btn-primary mb-2" data-variant-index="<%= variantIndex %>">Remove Variant</button>
+              <% product.variants.forEach((variant, variantIndex)=> { %>
+                <div class="variant">
+                  <h4>Variant <%= variantIndex + 1 %></h4>
+                  <div class="form-group row">
+                    <div class="col">
+                      <label for="variantColor-<%= variantIndex %>">Color:</label>
+                      <input type="text" class="form-control" id="variantColor-<%= variantIndex %>"
+                        name="variants[<%= variantIndex %>][color]" value="<%= variant.color %>">
                     </div>
-                <% }) %>
+                    <div class="col">
+                      <label for="variantPrice-<%= variantIndex %>">Price:</label>
+                      <input type="number" class="form-control" id="variantPrice-<%= variantIndex %>"
+                        name="variants[<%= variantIndex %>][price]" value="<%= variant.price %>">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col">
+                      <label for="variantImages-<%= variantIndex %>">Images:</label>
+                      <div class="form-group row">
+                        <% variant.images.forEach((image, imageIndex)=> { %>
+                          <div class="col">
+                            <img src="/static/productImages/<%= image %>" alt="Variant Image" width="100">
+                            <input type="hidden" name="variants[<%= variantIndex %>][existingImages][]"
+                              value="<%= image %>">
+                            <button type="button" class="remove-image-button btn btn-danger"
+                              data-variant-index="<%= variantIndex %>" data-image-index="<%= imageIndex %>">X</button>
+                          </div>
+                          <% }) %>
+                      </div>
+                      <input type="file" class="form-control w-25" id="variantImages-<%= variantIndex %>"
+                        name="variants[<%= variantIndex %>][newImages][]" multiple>
+                    </div>
+                  </div>
+                  <div class="subVariantsContainer">
+                    <% variant.subVariants.forEach((subVariant, subVariantIndex)=> { %>
+                      <div class="subVariant">
+                        <h5>Sub-Variant <%= subVariantIndex + 1 %></h5>
+                        <div class="form-group row">
+                          <div class="col">
+                            <label for="subVariantSize-<%= variantIndex %>-<%= subVariantIndex %>">Size:</label>
+                            <input type="text" class="form-control"
+                              id="subVariantSize-<%= variantIndex %>-<%= subVariantIndex %>"
+                              name="variants[<%= variantIndex %>][subVariants][<%= subVariantIndex %>][size]"
+                              value="<%= subVariant.size %>">
+                          </div>
+                          <div class="col">
+                            <label for="subVariantQuantity-<%= variantIndex %>-<%= subVariantIndex %>">Quantity:</label>
+                            <input type="number" class="form-control"
+                              id="subVariantQuantity-<%= variantIndex %>-<%= subVariantIndex %>"
+                              name="variants[<%= variantIndex %>][subVariants][<%= subVariantIndex %>][quantity]"
+                              value="<%= subVariant.quantity %>">
+                          </div>
+                          <div class="col">
+                            <button type="button" class="remove-subvariant-button btn btn-danger mt-4"
+                              data-variant-index="<%= variantIndex %>"
+                              data-subvariant-index="<%= subVariantIndex %>">Remove Sub-Variant</button>
+                          </div>
+                        </div>
+                        <div class="subvariantError text-danger fw-bold text-center"></div>
+                      </div>
+                    <% }) %>
+                    <button type="button" class="add-subvariant-button btn btn-secondary mb-2"
+                      data-variant-index="<%= variantIndex %>">Add Sub-Variant</button>
+                  </div>
+                  <button type="button" class="remove-variant-button btn btn-primary mb-2"
+                    data-variant-index="<%= variantIndex %>">Remove Variant</button>
+                </div>
+                <div id="variantError<%= variantIndex %>" class="variantError text-danger fw-bold text-center"></div>
+              <% }) %>
+              <div id="mainError" class="text-warning fw-bold text-center"></div>
             </div>
-            <button class="btn text-light mb-2" style="background-color: blueviolet;" type="button" id="addVariantButton">Add Variant</button>
-            
+            <button class="btn text-light mb-2" style="background-color: blueviolet;" type="button"
+              id="addVariantButton">Add Variant</button>
+
             <div class="text-center" id="image-preview-container"></div>
             <div id="modal-container"></div>
             <div>
-                <button class="btn text-light" style="background-color: black;" type="submit">Save Changes</button>
+              <button class="btn text-light" style="background-color: black;" type="submit">Save Changes</button>
             </div>
-        </form>
+          </form>
         </div>
       </div>
       <!-- main-panel ends -->
-      </div>
+    </div>
     <!-- page-body-wrapper ends -->
   </div>
   <!-- container-scroller -->
-  <!-- Add a modal for cropping -->
   <style>
     .radio-group {
       display: flex;
@@ -335,62 +362,64 @@
       color: white;
       border-color: rgb(123, 59, 187);
     }
+
     .img-container {
       width: 100%;
       height: 400px;
       max-height: 400px;
     }
-  
+
     .img-container img {
       max-width: 100%;
     }
+
     .modal {
-    display: none;
-    position: fixed;
-    z-index: 1050;
-    left: 0;
-    top: 0%;
-    margin-top: 50px;
-    margin-bottom: 50px;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-}
+      display: none;
+      position: fixed;
+      z-index: 1050;
+      left: 0;
+      top: 0%;
+      margin-top: 50px;
+      margin-bottom: 50px;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+    }
 
-.modal-content {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 60%;
-    max-width: 600px;
-}
+    .modal-content {
+      background-color: #fefefe;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 60%;
+      max-width: 600px;
+    }
 
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
 
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
 
-.image-preview {
-    display: inline-block;
-    margin: 10px;
-    border: 1px solid #ddd;
-    padding: 5px;
-}
+    .image-preview {
+      display: inline-block;
+      margin: 10px;
+      border: 1px solid #ddd;
+      padding: 5px;
+    }
 
-.image-preview img {
-    max-width: 150px;
-    max-height: 150px;
-}
+    .image-preview img {
+      max-width: 150px;
+      max-height: 150px;
+    }
   </style>
   <!-- plugins:js -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
@@ -400,12 +429,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', (event) => {
-      document.body.addEventListener('change', function(event) {
+      document.body.addEventListener('change', function (event) {
         if (event.target.classList.contains('file-input')) {
           handleFileInput(event.target);
         }
       });
-  
+
       function handleFileInput(inputElement) {
         const variantIndex = inputElement.dataset.variantIndex;
         const files = inputElement.files;
@@ -414,13 +443,13 @@
         Array.from(files).forEach(file => {
           if (file.type.startsWith('image/')) {
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
               const imgPreview = document.createElement('div');
               imgPreview.classList.add('image-preview');
               imgPreview.dataset.variantIndex = variantIndex; // Associate preview with variant
               const imgElement = document.createElement('img');
               imgElement.src = e.target.result;
-              imgElement.addEventListener('click', function() {
+              imgElement.addEventListener('click', function () {
                 showCropperModal(e.target.result, inputElement, file);
               });
               imgPreview.appendChild(imgElement);
@@ -430,49 +459,49 @@
           }
         });
       }
-  
+
       function showCropperModal(imageSrc, inputElement, originalFile) {
         const existingModal = document.querySelector('.modal');
         if (existingModal) {
           existingModal.remove();
         }
-  
+
         const modal = document.createElement('div');
         modal.classList.add('modal');
         modal.style.display = 'block';
-  
+
         const modalContent = document.createElement('div');
         modalContent.classList.add('modal-content');
-  
+
         const closeButton = document.createElement('span');
         closeButton.classList.add('close');
         closeButton.innerHTML = '&times;';
-        closeButton.onclick = function() {
+        closeButton.onclick = function () {
           modal.remove();
         };
-  
+
         const imgContainer = document.createElement('div');
         imgContainer.classList.add('img-container');
         const img = document.createElement('img');
         img.src = imageSrc;
         img.id = 'image-to-crop';
         imgContainer.appendChild(img);
-  
+
         const cropButton = document.createElement('button');
         cropButton.classList.add('btn', 'btn-primary');
         cropButton.type = 'button'; // Prevent form submission
         cropButton.innerText = 'Crop';
-        cropButton.addEventListener('click', function() {
+        cropButton.addEventListener('click', function () {
           cropImage(img, inputElement, modal, originalFile);
         });
-  
+
         modalContent.appendChild(closeButton);
         modalContent.appendChild(imgContainer);
         modalContent.appendChild(cropButton);
         modal.appendChild(modalContent);
         document.getElementById('modal-container').appendChild(modal);
-  
-        img.onload = function() {
+
+        img.onload = function () {
           const cropper = new Cropper(img, {
             aspectRatio: 1,
             viewMode: 1,
@@ -480,40 +509,39 @@
           img.cropperInstance = cropper;
         };
       }
-  
+
       function cropImage(img, inputElement, modal, originalFile) {
         const cropper = img.cropperInstance;
         const canvas = cropper.getCroppedCanvas();
         canvas.toBlob((blob) => {
           const newFile = new File([blob], 'cropped_' + originalFile.name, { type: originalFile.type });
           const dataTransfer = new DataTransfer();
-  
+
           Array.from(inputElement.files).forEach(file => {
             if (file !== originalFile) {
               dataTransfer.items.add(file);
             }
           });
-  
+
           dataTransfer.items.add(newFile);
           inputElement.files = dataTransfer.files;
-  
+
           const previewContainer = document.getElementById('image-preview-container');
           const imgElement = previewContainer.querySelector(`img[src="${img.src}"]`);
           imgElement.src = URL.createObjectURL(blob);
-  
+
           modal.remove();
         }, originalFile.type);
       }
-  
+
       const variantsContainer = document.getElementById('variantsContainer');
       const addVariantButton = document.getElementById('addVariantButton');
-  
+
       addVariantButton.addEventListener('click', () => {
         const variantIndex = document.querySelectorAll('.variant').length;
         const variantHtml = `
           <div class="variant" data-variant-index="${variantIndex}">
-            <h3>Variant ${variantIndex + 1}</h3>
-            <div id="subvariantError${variantIndex}" class="text-warning fw-bold text-center"></div>
+            <h4>Variant ${variantIndex + 1}</h4>
             <div class="form-group row">
               <div class="col">
                 <label for="variantColor-${variantIndex}">Color:</label>
@@ -527,7 +555,8 @@
                 <label for="variantImages-${variantIndex}">Images:</label>
                 <input type="file" class="form-control file-input" id="variantImages-${variantIndex}" name="variantImages-${variantIndex}[]" data-variant-index="${variantIndex}" multiple>
               </div>
-            </div>
+              </div>
+              <div id="variantError${variantIndex}" class="variantError text-danger fw-bold text-center"></div>
             <div class="subVariantsContainer">
               <button type="button" class="add-subvariant-button btn mb-2" style="background-color: yellow;" data-variant-index="${variantIndex}">Add Sub-Variant</button>
             </div>
@@ -535,7 +564,7 @@
           </div>`;
         variantsContainer.insertAdjacentHTML('beforeend', variantHtml);
       });
-  
+
       variantsContainer.addEventListener('click', (e) => {
         if (e.target.classList.contains('add-subvariant-button')) {
           const variantIndex = e.target.dataset.variantIndex;
@@ -543,11 +572,11 @@
           const subVariantIndex = subVariantsContainer.querySelectorAll('.subVariant').length;
           const subVariantHtml = `
             <div class="subVariant">
-              <h4>Sub-Variant ${subVariantIndex + 1}</h4>
+              <h5>Sub-Variant ${subVariantIndex + 1}</h5>
               <div class="form-group row">
                 <div class="col">
                   <label for="subVariantSize-${variantIndex}-${subVariantIndex}">Size:</label>
-                  <input type="text" id="subVariantSize-${variantIndex}-${subVariantIndex}" class="form-control" name="variants[${variantIndex}][subVariants][${subVariantIndex}][size]" required>
+                  <input type="text" id="subVariantSize-${variantIndex}-${subVariantIndex}" class="form-control" name="variants[${variantIndex}][subVariants][${subVariantIndex}][size]">
                 </div>
                 <div class="col">
                   <label for="subVariantQuantity-${variantIndex}-${subVariantIndex}">Quantity:</label>
@@ -557,26 +586,27 @@
                   <button type="button" class="btn btn-danger mt-4 remove-subvariant-button" data-variant-index="${variantIndex}" data-subvariant-index="${subVariantIndex}">Remove Sub-Variant</button>
                 </div>
               </div>
+              <div class="subvariantError text-danger fw-bold text-center"></div>
             </div>`;
           subVariantsContainer.insertAdjacentHTML('beforeend', subVariantHtml);
         }
-  
+
         if (e.target.classList.contains('remove-variant-button')) {
           const variantIndex = e.target.dataset.variantIndex;
           const variantElement = e.target.closest('.variant');
-  
+
           // Remove associated image previews
           const imagePreviews = document.querySelectorAll(`.image-preview[data-variant-index="${variantIndex}"]`);
           imagePreviews.forEach(preview => preview.remove());
-  
+
           variantElement.remove();
         }
-  
+
         if (e.target.classList.contains('remove-subvariant-button')) {
           const subVariantElement = e.target.closest('.subVariant');
           subVariantElement.remove();
         }
-  
+
         if (e.target.classList.contains('remove-image-button')) {
           const variantIndex = e.target.dataset.variantIndex;
           const imageIndex = e.target.dataset.imageIndex;
@@ -589,144 +619,167 @@
         }
       });
     });
-  
+
     document.addEventListener('DOMContentLoaded', (event) => {
-    const form = document.getElementById("editProductForm");
-    const mainError = document.getElementById("mainError");
-    const variantError = document.getElementById("variantError");
+      const form = document.getElementById("editProductForm");
+      const mainError = document.getElementById("mainError");
+      
 
-    form.addEventListener("submit", function (event) {
-      event.preventDefault(); // Prevent default form submission
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
 
-      let mainMessage = []; // Array to collect main form error messages
-      let variantMessage = []; // Array to collect variant error messages
+        let mainMessage = [];
+        let variantMessages = {};
+        let hasErrors = false;
 
-      // Validate Product Name
-      let productName = document.getElementById("productName").value.trim();
-      if (!productName) {
-        mainMessage.push("Product Name is required.");
-      }
+        // Validate Product Name
+        let productName = document.getElementById("productName").value.trim();
+        if (!productName) {
+          mainMessage.push("Product Name is required.");
+          hasErrors = true;
+        }
 
-      // Validate Product Category
-      let productCategory = document.querySelector("[name='productCategory']").value;
-      if (!productCategory) {
-        mainMessage.push("Product Category is required.");
-      }
+        // Validate Product Category
+        let productCategory = document.querySelector("[name='productCategory']").value;
+        if (!productCategory) {
+          mainMessage.push("Product Category is required.");
+          hasErrors = true;
+        }
 
-      // Validate Product Brand
-      let productBrand = document.querySelector("[name='productBrand']").value;
-      if (!productBrand) {
-        mainMessage.push("Product Brand is required.");
-      }
+        // Validate Product Brand
+        let productBrand = document.querySelector("[name='productBrand']").value;
+        if (!productBrand) {
+          mainMessage.push("Product Brand is required.");
+          hasErrors = true;
+        }
 
-      // Validate Product Description
-      let productDescription = document.getElementById("productDescription").value.trim();
-      if (!productDescription) {
-        mainMessage.push("Product Description is required.");
-      }
+        // Validate Product Description
+        let productDescription = document.getElementById("productDescription").value.trim();
+        if (!productDescription) {
+          mainMessage.push("Product Description is required.");
+          hasErrors = true;
+        }
 
-      // Validate Variants
-      let variants = document.querySelectorAll(".variant");
-      if (variants.length === 0) {
-        variantMessage.push("At least one variant is required.");
-      } else {
-        variants.forEach((variant, index) => {
-          // Validate Color
-          let color = variant.querySelector(`[name="variants[${index}][color]"]`).value.trim();
-          if (!color) {
-            variantMessage.push(`Color is required for Variant ${index + 1}.`);
-          }
+        // Validate Variants
+        let variants = document.querySelectorAll(".variant");
+        if (variants.length === 0) {
+          mainMessage.push("At least one variant is required.");
+          hasErrors = true;
+        } else {
+          variants.forEach((variant, index) => {
+            let variantErrorMessages = [];
 
-          // Validate Price
-          let price = variant.querySelector(`[name="variants[${index}][price]"]`).value.trim();
-          if (!price || isNaN(price) || Number(price) <= 0) {
-            variantMessage.push(`Valid Price is required for Variant ${index + 1}.`);
-          }
+            // Validate Color
+            let color = variant.querySelector(`[name="variants[${index}][color]"]`).value.trim();
+            if (!color) {
+              variantErrorMessages.push(`Color is required for Variant ${index + 1}.`);
+              hasErrors = true;
+            }
 
-          // Validate Sizes and Quantities
-          let subVariants = variant.querySelectorAll(`.subVariant`);
-          if (subVariants.length === 0) {
-            let subvariantError = document.getElementById(`subvariantError${index}`);
-            subvariantError.innerText = `At least one size and quantity is required for Variant ${index + 1}.`;
-            subvariantError.style.display = "block";
+            // Validate Price
+            let price = variant.querySelector(`[name="variants[${index}][price]"]`).value.trim();
+            if (!price || isNaN(price) || Number(price) <= 0) {
+              variantErrorMessages.push(`Valid Price is required for Variant ${index + 1}.`);
+              hasErrors = true;
+            }
+
+            // Validate Sizes and Quantities
+            let subVariants = variant.querySelectorAll(`.subVariant`);
+            if (subVariants.length === 0) {
+              variantErrorMessages.push("At least one size and quantity is required.");
+              hasErrors = true;
+            } else {
+              subVariants.forEach((subVariant, subIndex) => {
+                let subVariantErrorMessages = [];
+
+                let size = subVariant.querySelector(`[name="variants[${index}][subVariants][${subIndex}][size]"]`).value.trim();
+                if (!size) {
+                  subVariantErrorMessages.push("Size is required.");
+                  hasErrors = true;
+                }
+                let quantity = subVariant.querySelector(`[name="variants[${index}][subVariants][${subIndex}][quantity]"]`).value.trim();
+                if (!quantity || isNaN(quantity) || Number(quantity) <= 0) {
+                  subVariantErrorMessages.push("Valid quantity is required.");
+                  hasErrors = true;
+                }
+                if (subVariantErrorMessages.length > 0) {
+                  subVariant.querySelector('.subvariantError').innerText = subVariantErrorMessages[0];
+                } else {
+                  subVariant.querySelector('.subvariantError').innerText = '';
+                }
+              });
+            }
+            if (variantErrorMessages.length > 0) {
+              variantMessages[index] = variantErrorMessages;
+            }
+          });
+        }
+
+        // Show errors or proceed with form submission
+        if (hasErrors) {
+          if (mainMessage.length > 0) {
+            mainError.innerText = mainMessage[0];
+            mainError.style.display = "block";
           } else {
-            subVariants.forEach((subVariant, subIndex) => {
-              let size = subVariant.querySelector(`[name="variants[${index}][subVariants][${subIndex}][size]"]`).value.trim();
-              if (!size) {
-                let subvariantError = document.getElementById(`subvariantError${index}`);
-                subvariantError.innerText = `Size ${subIndex + 1} is required for Variant ${index + 1}.`;
-                subvariantError.style.display = "block";
-              }
-              let quantity = subVariant.querySelector(`[name="variants[${index}][subVariants][${subIndex}][quantity]"]`).value.trim();
-              if (!quantity || isNaN(quantity) || Number(quantity) <= 0) {
-                let subvariantError = document.getElementById(`subvariantError${index}`);
-                subvariantError.innerText = `Valid Quantity ${subIndex + 1} is required for Variant ${index + 1}.`;
-                subvariantError.style.display = "block";
-              }
-            });
+            mainError.style.display = "none";
           }
-        });
-      }
 
-      // Show errors or proceed with form submission
-      if (mainMessage.length > 0 || variantMessage.length > 0) {
-        if (mainMessage.length > 0) {
-          mainError.innerText = mainMessage[0];
-          mainError.style.display = "block";
+          Object.keys(variantMessages).forEach(index => {
+            const variantError = document.getElementById(`variantError${index}`);
+            variantError.innerText = variantMessages[index][0];
+            variantError.style.display = "block";
+          });
         } else {
           mainError.style.display = "none";
-        }
-        if (variantMessage.length > 0) {
-          variantError.innerText = variantMessage[0];
-          variantError.style.display = "block";
-        } else {
-          variantError.style.display = "none";
-        }
-      } else {
-        mainError.style.display = "none";
-        variantError.style.display = "none";
-        const formData = new FormData(this);
+          Object.keys(variantMessages).forEach(index => {
+            const variantError = document.getElementById(`variantError${index}`);
+            variantError.innerText = '';
+            variantError.style.display = "none";
+          });
 
-        // Append the cropped images to the FormData
-      const fileInputs = document.querySelectorAll('.file-input');
-      fileInputs.forEach(input => {
-        const variantIndex = input.dataset.variantIndex;
-        Array.from(input.files).forEach((file, index) => {
-          formData.append(`variants[${variantIndex}][newImages][]`, file, file.name);
-        });
+          const formData = new FormData(this);
+
+          // Append the cropped images to the FormData
+          const fileInputs = document.querySelectorAll('.file-input');
+          fileInputs.forEach(input => {
+            const variantIndex = input.dataset.variantIndex;
+            Array.from(input.files).forEach((file, index) => {
+              formData.append(`variants[${variantIndex}][newImages][]`, file, file.name);
+            });
+          });
+
+          fetch('/admin/products/edit_products', {
+            method: 'POST',
+            body: formData,
+          })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                Swal.fire(
+                  'Updated',
+                  'The product is updated',
+                  'success'
+                )
+                setTimeout(() => location.href = '/admin/products', 1000);
+              } else {
+                Swal.fire(
+                  'Error!',
+                  'Could not update product',
+                  'error'
+                )
+              }
+            })
+            .catch(error => {
+              Swal.fire(
+                'Error!',
+                'Could not update product',
+                'error'
+              )
+            });
+        }
       });
-        fetch('/admin/products/edit_products', {
-          method: 'POST',
-          body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            Swal.fire(
-              'Updated',
-              'The product is updated',
-              'success'
-            )
-            setTimeout(() => location.href = '/admin/products', 1000);
-          } else {
-            Swal.fire(
-              'Error!',
-              'Could not update product',
-              'error'
-            )
-          }
-        })
-        .catch(error => {
-          Swal.fire(
-            'Error!',
-            'Could not update product',
-            'error'
-          )
-        });
-      }
     });
-  });
   </script>
-  
 
-<%- include('../partials/footer') %>
+
+  <%- include('../partials/footer') %>

@@ -3,14 +3,12 @@ const User = require('../model/userModel');
 const Order = require('../model/orderModel');
 const Product = require('../model/productModel');
 const Category = require('../model/categoryModel');
+const Cart = require('../model/cartModel');
 const Coupon = require('../model/couponModel');
+const Wallet = require('../model/walletModel');
 const Offer = require('../model/offerModel');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const PDFDocument = require('pdfkit');
-const fs = require('fs');
-const path = require('path');
-const { promisify } = require('util');
 
 const loadLogin = async (req, res) => {
     try {
@@ -43,10 +41,21 @@ const verifyAdmin = async (req, res) => {
 
 const loadUser = async (req, res) => {
     try {
-        const users = await User.find();
-        const defaultImage = '/static/userImages/default.jpg';
-        const profileImage = users.userImage ? `/static/userImages/${users.userImage}` : defaultImage;
-        res.render('users', { users: users, profileImage: profileImage });
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+
+        const users = await User.find()
+            .skip((page - 1) * limit)
+            .limit(limit);
+
+        const totalUsers = await User.countDocuments();
+
+        res.render('users', { 
+            users: users, 
+            currentPage: page, 
+            totalPages: Math.ceil(totalUsers / limit),
+            limit: limit 
+        });
     } catch (error) {
         res.send(error);
     }
@@ -82,8 +91,22 @@ const unblockUser = async (req, res) => {
 
 const loadOrder = async (req, res) => {
     try {
-        const orders = await Order.find().populate('address_id').populate('items.product_id').populate('customer_id');
-        res.render('orders', { orders: orders })
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const orders = await Order.find()
+            .populate('address_id')
+            .populate('items.product_id')
+            .populate('customer_id')
+            .sort({ orderDate: -1 })
+            .skip((page - 1) * limit)
+            .limit(limit);
+        const totalOrders = await Order.countDocuments();
+        res.render('orders', {
+            orders: orders,
+            currentPage: page,
+            totalPages: Math.ceil(totalOrders / limit),
+            limit: limit
+        });
     } catch (error) {
         res.send(error);
     }
@@ -92,7 +115,10 @@ const loadOrder = async (req, res) => {
 const loadOrderDetail = async (req, res) => {
     try {
         const orderId = req.query.id;
-        const order = await Order.findById(orderId).populate('address_id').populate('items.product_id').populate('customer_id');
+        const order = await Order.findById(orderId)
+            .populate('address_id')
+            .populate('items.product_id')
+            .populate('customer_id');
         res.render('order_details', { order: order });
     } catch (error) {
         res.send(error);
@@ -129,12 +155,44 @@ const changeStatusOrder = async (req, res) => {
             }
             subvariant.quantity += item.quantity;
             await product.save();
+            if (newStatus === 'Canceled' && order.paymentMethod === 'Razorpay') {
+                const wallet = await Wallet.findOne({user : order.customer_id });
+                if (!wallet) {
+                    return res.json({ success: false, message: 'User not found.' });
+                }
+                wallet.balance += item.price * item.quantity;
+                wallet.transactions.push({
+                    description: 'Order canceled',
+                    amount: item.price * item.quantity,
+                    balance: wallet.balance
+                });
+                await wallet.save();
+            }
         }
         item.orderStatus = newStatus;
+        if(item.orderStatus === 'Delivered'){
+            item.deliveryDate = Date.now();
+        }
+        if(item.orderStatus === 'Canceled'){
+            item.deliveryDate = null;
+        }
         await order.save();
         res.json({ success: true, message: 'Order status updated successfully.', newStatus });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Failed to update the order status.' });
+    }
+};
+
+const getReturnedOrder = async (req, res) => {
+    try {
+        const returnedOrders = await Order.find({ $or: 
+            [{ 'items.orderStatus': 'Returned' },
+                { 'items.orderStatus': 'Return requested' }
+            ] }).populate('customer_id');
+        res.render('returned_orders', { returnedOrders });
+    } catch (error) {
+        console.error('Error fetching returned orders:', error);
+        res.status(500).send('Internal Server Error');
     }
 };
 
@@ -216,40 +274,27 @@ const loadOffer = async (req, res) => {
     }
 };
 
-const loadAddOffer = async (req, res) => {
-    try {
-        const products = await Product.find();
-        const categories = await Category.find();
-        res.render('add_offers', { products: products, categories: categories });
-    } catch (error) {
-        res.send(error);
-    }
-};
-
 const insertOffer = async (req, res) => {
     try {
-        const { offerName, offerDescription, discountPercentage, offerType, typeName, productId, categoryId, isActive, expiryDate } = req.body;
-
+        const { offerName, offerDescription, discountPercentage, offerType, typeName, productId, categoryId, isActive } = req.body;
         if (productId && !mongoose.Types.ObjectId.isValid(productId)) {
             return res.status(400).send('Invalid product ID.');
         }
-
         if (categoryId && !mongoose.Types.ObjectId.isValid(categoryId)) {
             return res.status(400).send('Invalid category ID.');
         }
-
         let product = null;
         let category = null;
         if (productId) {
             product = await Product.findById(productId);
             if (!product) {
-                return res.status(404).send({ success: false, message: 'Product not found.' });
+                return res.status(404).json({ success: false, message: 'Product not found.' });
             }
         }
         if (categoryId) {
             category = await Category.findById(categoryId);
             if (!category) {
-                return res.status(404).send({ success: false, message: 'Category not found.' });
+                return res.status(404).json({ success: false, message: 'Category not found.' });
             }
         }
         const offer = new Offer({
@@ -260,43 +305,58 @@ const insertOffer = async (req, res) => {
             typeName,
             productId: product ? product._id : undefined,
             categoryId: category ? category._id : undefined,
-            isActive: !!isActive,
-            expiryDate: new Date(expiryDate)
+            isActive: !!isActive
         });
         const offerData = await offer.save();
-        if (offerType === 'productOffer' && product) {
-            product.variants.forEach(variant => {
-                const currentDiscountPrice = variant.discountPrice || variant.price;
-                const newDiscountPrice = Math.floor(variant.price - (variant.price * (discountPercentage / 100)));
-                variant.discountPrice = newDiscountPrice < currentDiscountPrice ? newDiscountPrice : currentDiscountPrice;
-            });
-            await product.save();
-        } else if (offerType === 'categoryOffer' && category) {
-            const products = await Product.find({ productCategory: category._id });
-            products.forEach(async product => {
+        if (offerData && isActive) {
+            if (offerType === 'productOffer' && product) {
                 product.variants.forEach(variant => {
-                    const currentDiscountPrice = variant.discountPrice || variant.price;
                     const newDiscountPrice = Math.floor(variant.price - (variant.price * (discountPercentage / 100)));
-                    variant.discountPrice = newDiscountPrice < currentDiscountPrice ? newDiscountPrice : currentDiscountPrice;
+                    variant.discountPrice = Math.min(newDiscountPrice, variant.discountPrice || variant.price);
                 });
                 await product.save();
-            });
-        }
-        if (offerData) {
-            res.redirect('/admin/offers');
+                const carts = await Cart.find({ productId: product._id });
+                for (const cart of carts) {
+                    cart.productDiscPrice = Math.floor(cart.productPrice - (cart.productPrice * (discountPercentage / 100)));
+                    cart.cartPrice = cart.productDiscPrice * cart.productQuantity;
+                    await cart.save();
+                }
+            } else if (offerType === 'categoryOffer' && category) {
+                const categoryOffers = await Offer.find({ categoryId: category._id, isActive: true }).sort({ discountPercentage: -1 });
+                const highestCategoryDiscount = categoryOffers.length > 0 ? categoryOffers[0].discountPercentage : 0;
+                const products = await Product.find({ productCategory: category._id });
+                for (const product of products) {
+                    const productOffers = await Offer.find({ productId: product._id, isActive: true }).sort({ discountPercentage: -1 });
+                    const highestProductDiscount = productOffers.length > 0 ? productOffers[0].discountPercentage : 0;
+                    const highestDiscount = Math.max(highestCategoryDiscount, highestProductDiscount);
+                    product.variants.forEach(variant => {
+                        variant.discountPrice = Math.floor(variant.price - (variant.price * (highestDiscount / 100)));
+                    });
+                    await product.save();
+                    const carts = await Cart.find({ productId: product._id });
+                    for (const cart of carts) {
+                        cart.productDiscPrice = Math.floor(cart.productPrice - (cart.productPrice * (highestDiscount / 100)));
+                        cart.cartPrice = cart.productDiscPrice * cart.productQuantity;
+                        await cart.save();
+                    }
+                }
+            }
+            res.status(201).json({ success: true, message: 'Offer creation successful' });
+        } else if (!isActive) {
+            res.status(201).json({ success: true, message: 'Offer created but not active, no discounts applied.' });
         } else {
             res.status(500).json({ success: false, message: 'Offer creation unsuccessful' });
         }
     } catch (error) {
-        res.status(500).send({ success: false, message: 'Server error' });
+        console.error('Error inserting offer:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
     }
 };
 
 const updateOffer = async (req, res) => {
     try {
         const offerId = req.params.id;
-        const { offerName, offerDescription, discountPercentage, offerType, typeName, productId, categoryId, isActive, expiryDate } = req.body;
-        console.log(discountPercentage);
+        const { offerName, offerDescription, discountPercentage, offerType, typeName, productId, categoryId, isActive } = req.body;
         if (productId && !mongoose.Types.ObjectId.isValid(productId)) {
             return res.status(400).send('Invalid product ID.');
         }
@@ -320,40 +380,22 @@ const updateOffer = async (req, res) => {
         const updatedOffer = await Offer.findByIdAndUpdate(
             offerId,
             {
-                offerName : offerName,
-                offerDescription : offerDescription,
-                discountPercentage : discountPercentage,
-                offerType : offerType,
-                typeName : typeName,
+                offerName,
+                offerDescription,
+                discountPercentage,
+                offerType,
+                typeName,
                 productId: product ? product._id : undefined,
                 categoryId: category ? category._id : undefined,
-                isActive: !!isActive,
-                expiryDate: new Date(expiryDate)
+                isActive: !!isActive
             },
             { new: true }
         );
-        console.log(updatedOffer);
         if (updatedOffer) {
-            if (offerType === 'productOffer' && product) {
-                const productOffers = await Offer.find({ productId: product._id, isActive: true }).sort({ discountPercentage: -1 });
-                const highestProductDiscount = productOffers.length > 0 ? productOffers[0].discountPercentage : 0;
-                product.variants.forEach(variant => {
-                    variant.discountPrice = Math.floor(variant.price - (variant.price * (highestProductDiscount / 100)));
-                });
-                await product.save();
-            } else if (offerType === 'categoryOffer' && category) {
-                const categoryOffers = await Offer.find({ categoryId: category._id, isActive: true }).sort({ discountPercentage: -1 });
-                const highestCategoryDiscount = categoryOffers.length > 0 ? categoryOffers[0].discountPercentage : 0;
-                const products = await Product.find({ productCategory: category._id });
-                products.forEach(async product => {
-                    const productOffers = await Offer.find({ productId: product._id, isActive: true }).sort({ discountPercentage: -1 });
-                    const highestProductDiscount = productOffers.length > 0 ? productOffers[0].discountPercentage : 0;
-                    const highestDiscount = Math.max(highestCategoryDiscount, highestProductDiscount);
-                    product.variants.forEach(variant => {
-                        variant.discountPrice = Math.floor(variant.price - (variant.price * (highestDiscount / 100)));
-                    });
-                    await product.save();
-                });
+            if (isActive) {
+                await applyDiscounts(offerType, product, category, discountPercentage);
+            } else {
+                await revertToHighestAvailableDiscount(offerType, product, category);
             }
             res.status(200).json({ success: true, message: 'Offer updated successfully', offer: updatedOffer });
         } else {
@@ -365,25 +407,149 @@ const updateOffer = async (req, res) => {
     }
 };
 
+const applyDiscounts = async (offerType, product, category, discountPercentage) => {
+    if (offerType === 'productOffer' && product) {
+        const productOffers = await Offer.find({ productId: product._id, isActive: true }).sort({ discountPercentage: -1 });
+        const highestProductDiscount = productOffers.length > 0 ? productOffers[0].discountPercentage : discountPercentage;
+        product.variants.forEach(variant => {
+            variant.discountPrice = Math.floor(variant.price - (variant.price * (highestProductDiscount / 100)));
+        });
+        await product.save();
+        await updateCartPrices(product._id, highestProductDiscount);
+    } else if (offerType === 'categoryOffer' && category) {
+        const products = await Product.find({ productCategory: category._id });
+        for (const product of products) {
+            const highestDiscount = await getHighestDiscount(product._id, category._id);
+            product.variants.forEach(variant => {
+                variant.discountPrice = Math.floor(variant.price - (variant.price * (highestDiscount / 100)));
+            });
+            await product.save();
+            await updateCartPrices(product._id, highestDiscount);
+        }
+    }
+};
+
+const revertToHighestAvailableDiscount = async (offerType, product, category) => {
+    if (offerType === 'productOffer' && product) {
+        const highestDiscount = await getHighestDiscount(product._id);
+        const discountToApply = highestDiscount || 5;
+        product.variants.forEach(variant => {
+            variant.discountPrice = Math.floor(variant.price - (variant.price * (discountToApply / 100)));
+        });
+        await product.save();
+        await updateCartPrices(product._id, discountToApply);
+    } else if (offerType === 'categoryOffer' && category) {
+        const products = await Product.find({ productCategory: category._id });
+        for (const product of products) {
+            const highestDiscount = await getHighestDiscount(product._id, category._id);
+            const discountToApply = highestDiscount || 5;
+            product.variants.forEach(variant => {
+                variant.discountPrice = Math.floor(variant.price - (variant.price * (discountToApply / 100)));
+            });
+            await product.save();
+            await updateCartPrices(product._id, discountToApply);
+        }
+    }
+};
+
+
+const getHighestDiscount = async (productId, categoryId = null) => {
+    const productOffers = await Offer.find({ productId, isActive: true }).sort({ discountPercentage: -1 });
+    const categoryOffers = categoryId ? await Offer.find({ categoryId, isActive: true }).sort({ discountPercentage: -1 }) : [];
+    const highestProductDiscount = productOffers.length > 0 ? productOffers[0].discountPercentage : 0;
+    const highestCategoryDiscount = categoryOffers.length > 0 ? categoryOffers[0].discountPercentage : 0;
+    return Math.max(highestProductDiscount, highestCategoryDiscount);
+};
+
+const updateCartPrices = async (productId, discountPercentage) => {
+    const carts = await Cart.find({ productId });
+    for (const cart of carts) {
+        cart.productDiscPrice = Math.floor(cart.productPrice - (cart.productPrice * (discountPercentage / 100)));
+        cart.cartPrice = cart.productDiscPrice * cart.productQuantity;
+        await cart.save();
+    }
+};
+
 const deleteOffer = async (req, res) => {
     try {
         const offerId = req.params.id;
         const deletedOffer = await Offer.findByIdAndDelete(offerId);
-        if (deletedOffer) {
-            res.status(200).json({ success: true, message: 'Offer deleted successfully' });
-        } else {
-            res.status(404).json({ success: false, message: 'Offer not found' });
+        if (!deletedOffer) {
+            return res.status(404).json({ success: false, message: 'Offer not found' });
         }
+        const { productId, categoryId, brandId } = deletedOffer;
+        let highestOffer = { discountPercentage: 0 };
+        if (productId) {
+            const productOffers = await Offer.find({ productId, isActive: true });
+            if (productOffers.length > 0) {
+                highestOffer = productOffers.reduce((prev, curr) => (prev.discountPercentage > curr.discountPercentage ? prev : curr), highestOffer);
+            } else if (categoryId) {
+                const categoryOffers = await Offer.find({ categoryId, isActive: true });
+                if (categoryOffers.length > 0) {
+                    highestOffer = categoryOffers.reduce((prev, curr) => (prev.discountPercentage > curr.discountPercentage ? prev : curr), highestOffer);
+                }
+            } else {
+                const product = await Product.findById(productId);
+                if (product) {
+                    const productCategoryId = product.productCategory;
+                    const categoryOffers = await Offer.find({ categoryId: productCategoryId, isActive: true });
+                    if (categoryOffers.length > 0) {
+                        highestOffer = categoryOffers.reduce((prev, curr) => (prev.discountPercentage > curr.discountPercentage ? prev : curr), highestOffer);
+                    }
+                } else {
+                    return res.status(404).json({ success: false, message: 'Product not found' });
+                }
+            }
+            await updateProductAndCartPrices(productId, highestOffer.discountPercentage || 5, !highestOffer.discountPercentage);
+        }
+        if (categoryId) {
+            const products = await Product.find({ productCategory: categoryId });
+            for (const product of products) {
+                const productOffers = await Offer.find({ productId: product._id, isActive: true });
+                if (productOffers.length === 0) {
+                    const categoryOffers = await Offer.find({ categoryId, isActive: true });
+                    highestOffer = { discountPercentage: 0 };
+                    if (categoryOffers.length > 0) {
+                        highestOffer = categoryOffers.reduce((prev, curr) => (prev.discountPercentage > curr.discountPercentage ? prev : curr), highestOffer);
+                    }
+                    await updateProductAndCartPrices(product._id, highestOffer.discountPercentage || 5, !highestOffer.discountPercentage);
+                }
+            }
+        }
+        if (brandId) {
+            const brandOffers = await Offer.find({ brandId, isActive: true });
+            if (brandOffers.length > 0) {
+                highestOffer = brandOffers.reduce((prev, curr) => (prev.discountPercentage > curr.discountPercentage ? prev : curr), highestOffer);
+            }
+        }
+        res.status(200).json({ success: true, message: 'Offer deleted successfully' });
     } catch (error) {
         console.error('Error deleting offer:', error);
         res.status(500).json({ success: false, message: 'Server error' });
     }
 };
 
+const updateProductAndCartPrices = async (productId, discountPercentage, isFlatDiscount = false) => {
+    const product = await Product.findById(productId);
+    product.variants.forEach(variant => {
+        const discount = isFlatDiscount ? 5 : discountPercentage;
+        variant.discountPrice = Math.floor(variant.price * (1 - discount / 100));
+    });
+    await product.save();
+
+    const carts = await Cart.find({ productId });
+    for (const cart of carts) {
+        const discount = isFlatDiscount ? 5 : discountPercentage;
+        cart.productDiscPrice = Math.floor(cart.productPrice * (1 - discount / 100));
+        cart.cartPrice = cart.productDiscPrice * cart.productQuantity;
+        await cart.save();
+    }
+};
+
 const logoutAdmin = async (req, res) => {
     try {
         req.session.destroy();
-        res.redirect('/login');
+        res.redirect('/admin/login');
     } catch (error) {
         res.send(error);
     }
@@ -398,12 +564,12 @@ module.exports = {
     loadOrder,
     changeStatusOrder,
     loadOrderDetail,
+    getReturnedOrder,
     loadCoupon,
     insertCoupon,
     updateCoupon,
     deleteCoupon,
     loadOffer,
-    loadAddOffer,
     insertOffer,
     updateOffer,
     deleteOffer,

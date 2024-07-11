@@ -9,18 +9,16 @@ const dashboardController = require('../controllers/dashboardController');
 const adminAuth = require('../middleWare/adminAuth');
 const { cpUpload } = require('../multer/productMulter');
 
-//session handling
 a_route.use(session({
-    secret : config.sessionSecret,
-    resave : false,
-    saveUninitialized : false,
+    secret: config.sessionSecret,
+    resave: false,
+    saveUninitialized: false,
     cookie: {
         path: '/admin',
         _expires: 86400000,
         httpOnly: true
     }
 }));
-
 
 //set engines and views
 a_route.set('view engine','ejs');
@@ -53,67 +51,72 @@ const storage = multer.diskStorage({
 const upload = multer({ storage : storage })
 
 //login
-a_route.get('/login',adminController.loadLogin);
+a_route.get('/login',adminAuth.isLogout,adminController.loadLogin);
 a_route.post('/login',adminController.verifyAdmin);
 
 //dashboard management
 a_route.get('/dashboard',dashboardController.loadDashboard);
+a_route.get('/dashboard/sales_data',dashboardController.loadSalesData);
+a_route.get('/dashboard/top_products',dashboardController.getTopProducts);
+a_route.get('/dashboard/top_categories',dashboardController.getTopCategories);
+a_route.get('/dashboard/top_brands',dashboardController.getTopBrands);
 
 //product management
-a_route.get('/products',productController.loadProducts);
-a_route.get('/products/add_products',productController.loadAddProducts);
+a_route.get('/products',adminAuth.isLogin,productController.loadProducts);
+a_route.get('/products/add_products',adminAuth.isLogin,productController.loadAddProducts);
 a_route.post('/products/add_products',cpUpload,productController.insertProduct);
-a_route.get('/products/detail_products',adminAuth.checkAdminSession,productController.loadDetailProduct);
-a_route.get('/products/edit_products',productController.loadEditProduct);
+a_route.get('/products/detail_products',adminAuth.isLogin,productController.loadDetailProduct);
+a_route.get('/products/edit_products',adminAuth.isLogin,productController.loadEditProduct);
 a_route.post('/products/edit_products',upload.any(),productController.updateProduct);
-a_route.get('/products/delete_products',adminAuth.checkAdminSession,productController.deleteProduct);
-a_route.get('/products/unlisted_products',adminAuth.checkAdminSession,productController.loadUnlistedProduct);
-a_route.get('/products/reAdd_products',adminAuth.checkAdminSession,productController.reAddProduct);
+a_route.get('/products/delete_products',adminAuth.isLogin,productController.deleteProduct);
+a_route.get('/products/unlisted_products',adminAuth.isLogin,productController.loadUnlistedProduct);
+a_route.get('/products/reAdd_products',adminAuth.isLogin,productController.reAddProduct);
 
 //user management
-a_route.get('/users',adminAuth.checkAdminSession,adminController.loadUser);
-a_route.get('/users/block_user',adminAuth.checkAdminSession,adminController.blockUser);
-a_route.get('/users/unblock_user',adminAuth.checkAdminSession,adminController.unblockUser);
+a_route.get('/users',adminAuth.isLogin,adminController.loadUser);
+a_route.get('/users/block_user',adminAuth.isLogin,adminController.blockUser);
+a_route.get('/users/unblock_user',adminAuth.isLogin,adminController.unblockUser);
 
 //order management
-a_route.get('/orders',adminAuth.checkAdminSession,adminController.loadOrder);
-a_route.get('/orders/order_details',adminAuth.checkAdminSession,adminController.loadOrderDetail);
+a_route.get('/orders',adminAuth.isLogin,adminController.loadOrder);
+a_route.get('/orders/order_details',adminAuth.isLogin,adminController.loadOrderDetail);
 a_route.post('/orders/order_details/change_status',adminController.changeStatusOrder);
+a_route.get('/orders/returned_orders',adminController.getReturnedOrder);
 
 //category management
-a_route.get('/categories',adminAuth.checkAdminSession,productController.loadCategory);
+a_route.get('/categories',adminAuth.isLogin,productController.loadCategory);
 a_route.post('/categories/add',productController.insertCategory);
 a_route.post('/categories/edit',productController.updateCategory);
-a_route.get('/categories/delete_categories',adminAuth.checkAdminSession,productController.deleteCategory);
-a_route.get('/categories/unlisted_categories',adminAuth.checkAdminSession,productController.loadUnlistedCategory);
-a_route.get('/categories/reAdd_categories',adminAuth.checkAdminSession,productController.reAddCategory);
+a_route.get('/categories/delete_categories',adminAuth.isLogin,productController.deleteCategory);
+a_route.get('/categories/unlisted_categories',adminAuth.isLogin,productController.loadUnlistedCategory);
+a_route.get('/categories/reAdd_categories',adminAuth.isLogin,productController.reAddCategory);
 
 //brand management
-a_route.get('/brands',adminAuth.checkAdminSession,productController.loadBrand);
-a_route.post('/brands/add',adminAuth.checkAdminSession,productController.insertBrand);
+a_route.get('/brands',adminAuth.isLogin,productController.loadBrand);
+a_route.post('/brands/add',adminAuth.isLogin,productController.insertBrand);
 a_route.post('/brands/edit',productController.updateBrand);
-a_route.get('/brands/delete_brands',adminAuth.checkAdminSession,productController.deleteBrand);
-a_route.get('/brands/unlisted_brands',adminAuth.checkAdminSession,productController.loadUnlistedBrand);
-a_route.get('/brands/reAdd_brands',adminAuth.checkAdminSession,productController.reAddBrand);
+a_route.get('/brands/delete_brands',adminAuth.isLogin,productController.deleteBrand);
+a_route.get('/brands/unlisted_brands',adminAuth.isLogin,productController.loadUnlistedBrand);
+a_route.get('/brands/reAdd_brands',adminAuth.isLogin,productController.reAddBrand);
 
 //coupon management
-a_route.get('/coupons',adminController.loadCoupon);
+a_route.get('/coupons',adminAuth.isLogin,adminController.loadCoupon);
 a_route.post('/coupons/add',adminController.insertCoupon);
 a_route.post('/coupons/edit',adminController.updateCoupon);
-a_route.get('/coupons/delete',adminController.deleteCoupon);
+a_route.get('/coupons/delete',adminAuth.isLogin,adminController.deleteCoupon);
 
 //offer management
 a_route.get('/offers',adminController.loadOffer);
-a_route.get('/offers/add_offers',adminController.loadAddOffer);
-a_route.post('/offers/add_offers',adminController.insertOffer);
+a_route.post('/offers/add',adminController.insertOffer);
 a_route.put('/offers/edit/:id',adminController.updateOffer);
 a_route.delete('/offers/delete/:id',adminController.deleteOffer);
 
 //sales report
 a_route.get('/dashboard/sales_report',dashboardController.loadSalesReport);
-a_route.get('/dashboard/sales_report/pdf',dashboardController.downloadPDF);
+a_route.get('/dashboard/sales_report/pdf',adminAuth.isLogin,dashboardController.downloadPDF);
+a_route.get('/dashboard/sales_report/excel',adminAuth.isLogin,dashboardController.downloadExcel);
 
 //logout
-a_route.get('/logout',adminAuth.checkAdminSession,adminController.logoutAdmin);
+a_route.get('/logout',adminAuth.isLogin,adminController.logoutAdmin);
 
 module.exports = a_route;

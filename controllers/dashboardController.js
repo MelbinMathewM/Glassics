@@ -8,6 +8,7 @@ const Offer = require('../model/offerModel');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const PDFDocument = require('pdfkit');
+const xlsx = require('xlsx');
 const fs = require('fs');
 const path = require('path');
 const { promisify } = require('util');
@@ -20,10 +21,171 @@ const loadDashboard = async (req, res) => {
     }
 };
 
+const loadSalesData = async (req, res) => {
+    const filter = req.query.filter;
+    let matchStage = {};
+    let groupStage = {};
+    let dateFormat;
+    switch (filter) {
+        case 'yearly':
+            dateFormat = '%Y';
+            break;
+        case 'monthly':
+            dateFormat = '%Y-%m';
+            break;
+        case 'weekly':
+            dateFormat = '%Y-%U';
+            break;
+        case 'daily':
+            dateFormat = '%Y-%m-%d';
+            break;
+        default:
+            dateFormat = '%Y-%m-%d';
+    }
+    groupStage = {
+        _id: { $dateToString: { format: dateFormat, date: "$items.deliveryDate" } },
+        totalSales: { $sum: "$items.productPrice" },
+        totalDiscount: { 
+            $sum: {
+                $add: [
+                    { $ifNull: ["$items.offerDiscount", 0] },
+                    { $ifNull: ["$items.couponDiscount", 0] }
+                ]
+            }
+        },
+        totalQuantity: { $sum: "$items.quantity" },
+        totalOrders: { $sum: 1 }
+    };
+    try {
+        const salesData = await Order.aggregate([
+            { $unwind: "$items" },
+            { $group: groupStage },
+            { $sort: { _id: 1 } }
+        ]);
+        const labels = salesData.map(data => data._id);
+        const totalSales = salesData.map(data => data.totalSales/1000);
+        const totalDiscount = salesData.map(data => data.totalDiscount/1000);
+        const totalQuantity = salesData.map(data => data.totalQuantity);
+        const totalOrders = salesData.map(data => data.totalOrders);
+        res.json({ labels, totalSales, totalDiscount, totalQuantity, totalOrders });
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+};
+
+const getTopProducts = async (req, res) => {
+    try {
+        const bestSellingProducts = await Order.aggregate([
+            { $unwind: '$items' },
+            {
+                $group: {
+                    _id: '$items.product_id',
+                    totalSold: { $sum: '$items.quantity' },
+                    totalRevenue: { $sum: { $multiply: ['$items.productPrice', '$items.quantity'] } }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'product'
+                }
+            },
+            { $unwind: '$product' },
+            { $sort: { totalSold: -1 } },
+            { $limit: 10 }
+        ]);
+        res.json(bestSellingProducts);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+};
+
+const getTopCategories = async (req, res) => {
+    try {
+        const bestSellingCategories = await Order.aggregate([
+            { $unwind: '$items' },
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: 'items.product_id',
+                    foreignField: '_id',
+                    as: 'product'
+                }
+            },
+            { $unwind: '$product' },
+            {
+                $group: {
+                    _id: '$product.productCategory',
+                    totalSold: { $sum: '$items.quantity' },
+                    totalRevenue: { $sum: { $multiply: ['$items.productPrice', '$items.quantity'] } }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'categories',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'category'
+                }
+            },
+            { $unwind: '$category' },
+            { $sort: { totalSold: -1 } },
+            { $limit: 10 }
+        ]);
+        res.json(bestSellingCategories);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+};
+
+const getTopBrands = async (req, res) => {
+    try {
+        const bestSellingBrands = await Order.aggregate([
+            { $unwind: '$items' },
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: 'items.product_id',
+                    foreignField: '_id',
+                    as: 'product'
+                }
+            },
+            { $unwind: '$product' },
+            {
+                $group: {
+                    _id: '$product.productBrand',
+                    totalSold: { $sum: '$items.quantity' },
+                    totalRevenue: { $sum: { $multiply: ['$items.productPrice', '$items.quantity'] } }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'brands',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'brand'
+                }
+            },
+            { $unwind: '$brand' },
+            { $sort: { totalSold: -1 } },
+            { $limit: 10 }
+        ]);
+        res.json(bestSellingBrands);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+};
+
 const getSalesReport = async (req, res) => {
     try {
         let { startDate, endDate, period } = req.query;
-        const matchStage = { $match: {} };
+        const matchStage = {
+            $match: {
+                "items.orderStatus": { $nin: ["Canceled", "Returned"] }
+            }
+        };
         const now = new Date();
         if (startDate) startDate = new Date(startDate);
         if (endDate) {
@@ -241,40 +403,32 @@ const downloadPDF = async (req, res) => {
     }
 };
 
-
 const generatePDF = async ({ salesReport, overallReport }, filename) => {
     return new Promise((resolve, reject) => {
         const doc = new PDFDocument();
         const outputPath = path.join(__dirname, '..', 'public', 'pdf', `${filename}.pdf`);
-
         // Ensure the directory exists
         const directory = path.dirname(outputPath);
         if (!fs.existsSync(directory)) {
             fs.mkdirSync(directory, { recursive: true });
         }
-
         const stream = fs.createWriteStream(outputPath);
         doc.pipe(stream);
-
         // PDF content generation
         doc.font('Helvetica').fontSize(24);
         doc.text('Sales Report', { align: 'center' }).moveDown();
-
         // Overall Report
         doc.fontSize(20);
         doc.text('Overall Report', { align: 'left' }).moveDown();
-
         doc.fontSize(16);
         doc.text(`Total Sales: ${overallReport.totalSales.toFixed(2)}`);
         doc.text(`Total Discount: ${overallReport.totalDiscount.toFixed(2)}`);
         doc.text(`Total Coupons: ${overallReport.totalCoupons.toFixed(2)}`);
         doc.text(`Total Orders: ${overallReport.totalOrders}`);
         doc.text(`Total Quantity: ${overallReport.totalQuantity}`).moveDown();
-
         // Sales Report Details
         doc.fontSize(16);
         doc.text('Sales Report Details', { align: 'left' }).moveDown();
-
         salesReport.forEach(item => {
             doc.fontSize(16);
             doc.text(`Product: ${item.product}`).moveDown();
@@ -296,21 +450,92 @@ const generatePDF = async ({ salesReport, overallReport }, filename) => {
             doc.text(`Total Orders: ${item.totalOrders}`);
             doc.moveDown();
         });
-
         doc.end();
-
         stream.on('finish', () => {
             resolve(outputPath);
         });
-
         stream.on('error', (err) => {
             reject(err);
         });
     });
 };
 
+const downloadExcel = async (req, res) => {
+    try {
+        const { salesReport, overallReport } = await getSalesReport(req);
+        const filename = `sales_report_${new Date().toISOString().split('T')[0]}`;
+        const filePath = await generateExcel({ salesReport, overallReport }, filename);
+        res.download(filePath, (err) => {
+            if (err) {
+                console.error('Error downloading the file:', err);
+                res.status(500).send('Error downloading the file.');
+            }
+        });
+    } catch (error) {
+        console.error('Error generating the sales report:', error);
+        res.status(500).send('Error generating the sales report.');
+    }
+};
+
+const generateExcel = async ({ salesReport, overallReport }, filename) => {
+    return new Promise((resolve, reject) => {
+        const wb = xlsx.utils.book_new();
+        // Overall Report
+        const overallData = [
+            ['Overall Report'],
+            ['Total Sales', overallReport.totalSales.toFixed(2)],
+            ['Total Discount', overallReport.totalDiscount.toFixed(2)],
+            ['Total Coupons', overallReport.totalCoupons.toFixed(2)],
+            ['Total Orders', overallReport.totalOrders],
+            ['Total Quantity', overallReport.totalQuantity]
+        ];
+        const overallSheet = xlsx.utils.aoa_to_sheet(overallData);
+        xlsx.utils.book_append_sheet(wb, overallSheet, 'Overall Report');
+        // Sales Report Details
+        const salesData = [
+            ['Product', 'Date/Week/Month/Year', 'Total Quantity', 'Total Sales', 'Total Discount', 'Total Coupons', 'Total Orders']
+        ];
+        salesReport.forEach(item => {
+            let dateInfo = '';
+            if (item.day) {
+                dateInfo = `${item.year}-${item.month}-${item.day}`;
+            } else if (item.week) {
+                dateInfo = `${item.year}-W${item.week}`;
+            } else if (item.month) {
+                dateInfo = `${item.year}-${item.month}`;
+            } else {
+                dateInfo = `${item.year}`;
+            }
+            salesData.push([
+                item.product,
+                dateInfo,
+                item.totalQuantity,
+                item.totalSales.toFixed(2),
+                item.totalDiscount.toFixed(2),
+                item.totalCoupons.toFixed(2),
+                item.totalOrders
+            ]);
+        });
+        const salesSheet = xlsx.utils.aoa_to_sheet(salesData);
+        xlsx.utils.book_append_sheet(wb, salesSheet, 'Sales Report');
+        const outputPath = path.join(__dirname, '..', 'public', 'excel', `${filename}.xlsx`);
+        const directory = path.dirname(outputPath);
+        if (!fs.existsSync(directory)) {
+            fs.mkdirSync(directory, { recursive: true });
+        }
+        // Write the workbook to a file
+        xlsx.writeFile(wb, outputPath);
+        resolve(outputPath);
+    });
+};
+
 module.exports = {
     loadDashboard,
+    loadSalesData,
+    getTopProducts,
+    getTopCategories,
+    getTopBrands,
     loadSalesReport,
-    downloadPDF
-}
+    downloadPDF,
+    downloadExcel
+};

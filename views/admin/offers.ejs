@@ -9,9 +9,9 @@
                 </a>
             </div>
             <div class="navbar-menu-wrapper d-flex align-items-stretch">
-                <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="collapse" data-target="#sidebar">
                     <span class="mdi mdi-menu"></span>
-                </button>
+                </button>                
                 <div class="search-field d-none d-md-block">
                     <form class="d-flex align-items-center h-100" action="#">
                         <div class="input-group">
@@ -23,7 +23,7 @@
                     </form>
                 </div>
                 <ul class="navbar-nav navbar-nav-right">
-                    <a href="/admin/offers/add_offers"><button class="btn btn-primary">Add Offers</button></a>
+                    <button id="openAddOfferModalBtn" class="btn btn-success">Add New Offer</button>
                 </ul>
                 <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
                     data-toggle="offcanvas">
@@ -36,20 +36,6 @@
             <!-- partial:partials/_sidebar.html -->
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <ul class="nav">
-                    <li class="nav-item nav-profile">
-                        <a href="#" class="nav-link">
-                            <div class="nav-profile-image">
-                                <img src="assets/images/faces/face1.jpg" alt="profile">
-                                <span class="login-status online"></span>
-                                <!--change to offline or busy as needed-->
-                            </div>
-                            <div class="nav-profile-text d-flex flex-column">
-                                <span class="font-weight-bold mb-2">David Grey. H</span>
-                                <span class="text-secondary text-small">Project Manager</span>
-                            </div>
-                            <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
-                        </a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/admin/dashboard">
                             <span class="menu-title">Dashboard</span>
@@ -89,22 +75,15 @@
                             <i class="mdi mdi-table-large menu-icon"></i>
                         </a>
                     </li>
-                    <li class="nav-item active">
+                    <li class="nav-item">
                         <a class="nav-link" href="/admin/coupons">
                             <span class="menu-title">Coupons</span>
                             <i class="menu-arrow"></i>
                             <i class="mdi mdi-medical-bag menu-icon"></i>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/banners">
-                            <span class="menu-title">Banners</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-medical-bag menu-icon"></i>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/Offers">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/admin/offers">
                             <span class="menu-title">Offers</span>
                             <i class="menu-arrow"></i>
                             <i class="mdi mdi-medical-bag menu-icon"></i>
@@ -119,7 +98,7 @@
                     </li>
                 </ul>
             </nav>
-            <!-- partial -->
+            <!-- Partial Template -->
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="page-header">
@@ -143,15 +122,14 @@
                                                     <%= offer.offerName %>
                                                 </h5>
                                                 <p class="text-center">
-                                                    <%= offer.offerDescription %><br> - Expires on - <br>
-                                                        <%= offer.expiryDate.toDateString() %>
+                                                    <%= offer.offerDescription %>
                                                 </p>
-                                                <p class="text-center">Redeem Amount: <%= offer.redeemAmount %>
+                                                <p class="text-center">Discount : <%= offer.discountPercentage %> %
                                                 </p>
                                                 <p class="text-center">Offer Type: <%= offer.offerType %>
                                                 </p>
                                                 <p class="text-center">Type Name: <%= offer.typeName %>
-                                                </p>
+                                                </p>                                    
                                                 <div class="text-center">
                                                     <button id="openEditModalBtn_<%= offer._id %>"
                                                         class="btn btn-primary"
@@ -161,88 +139,136 @@
                                                 </div>
                                                 <div id="offerEditModal_<%= offer._id %>" class="modal">
                                                     <div class="modal-content">
-                                                        <span class="close text-end" onclick="closeEditModal('<%= offer._id %>')">&times;</span>
+                                                        <span class="close text-end"
+                                                            onclick="closeEditModal('<%= offer._id %>')">&times;</span>
                                                         <h3 class="mb-3 text-center">Edit Offer</h3>
-                                                        <div id="messageContainer_<%= offer._id %>" class="message-container"></div>
-                                                        <form id="offerEditForm_<%= offer._id %>" action="" method="POST">
-                                                            <div id="mainError" class="text-warning fw-bold text-center"></div>
+                                                        <div id="messageContainer_<%= offer._id %>"
+                                                            class="message-container text-center fw-bold"></div>
+                                                        <form id="offerEditForm_<%= offer._id %>"
+                                                            onsubmit="handleOfferEditFormSubmit(event, '<%= offer._id %>')">
+                                                            <div id="error_<%= offer._id %>"
+                                                                class="text-warning fw-bold text-center"></div>
                                                             <div class="form-group mb-3">
                                                                 <div class="row">
                                                                     <div class="col">
-                                                                        <label for="offerName_<%= offer._id %>">Offer Name</label>
-                                                                        <input type="text" name="offerName" class="form-control" value="<%= offer.offerName %>" id="offerName_<%= offer._id %>" required>
+                                                                        <label for="offerName_<%= offer._id %>">Offer
+                                                                            Name</label>
+                                                                        <input type="text" name="offerName"
+                                                                            class="form-control"
+                                                                            value="<%= offer.offerName %>"
+                                                                            id="offerName_<%= offer._id %>">
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group mb-3">
                                                                 <div class="row">
                                                                     <div class="col">
-                                                                        <label for="offerDescription_<%= offer._id %>">Description</label>
-                                                                        <textarea id="offerDescription_<%= offer._id %>" class="form-control" name="offerDescription" required><%= offer.offerDescription %></textarea>
+                                                                        <label
+                                                                            for="offerDescription_<%= offer._id %>">Description</label>
+                                                                        <textarea id="offerDescription_<%= offer._id %>"
+                                                                            class="form-control"
+                                                                            name="offerDescription"><%= offer.offerDescription %></textarea>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
                                                                 <div class="row">
                                                                     <div class="col">
-                                                                        <label for="discountPercentage_<%= offer._id %>">Discount Percentage</label>
-                                                                        <input type="number" id="discountPercentage_<%= offer._id %>" class="form-control" name="discountPercentage" value="<%= offer.discountPercentage %>" required>
+                                                                        <label
+                                                                            for="discountPercentage_<%= offer._id %>">Discount
+                                                                            Percentage</label>
+                                                                        <input type="number"
+                                                                            id="discountPercentage_<%= offer._id %>"
+                                                                            class="form-control"
+                                                                            name="discountPercentage"
+                                                                            value="<%= offer.discountPercentage %>">
                                                                     </div>
                                                                     <div class="col mt-1">
-                                                                        <label for="offerType_<%= offer._id %>">Offer Type</label>
-                                                                        <select id="offerType_<%= offer._id %>" class="form-control" name="offerType" onchange="handleEditOfferTypeChange('<%= offer._id %>')" required>
-                                                                            <option value="productOffer" <%= offer.offerType === 'productOffer' ? 'selected' : '' %>>Product Offer</option>
-                                                                            <option value="categoryOffer" <%= offer.offerType === 'categoryOffer' ? 'selected' : '' %>>Category Offer</option>
+                                                                        <label for="offerType_<%= offer._id %>">Offer
+                                                                            Type</label>
+                                                                        <select id="offerType_<%= offer._id %>"
+                                                                            class="form-control" name="offerType"
+                                                                            onchange="handleEditOfferTypeChange('<%= offer._id %>')">
+                                                                            <option value="productOffer"
+                                                                                <%=offer.offerType==='productOffer'
+                                                                                ? 'selected' : '' %>>Product Offer
+                                                                            </option>
+                                                                            <option value="categoryOffer"
+                                                                                <%=offer.offerType==='categoryOffer'
+                                                                                ? 'selected' : '' %>>Category Offer
+                                                                            </option>
                                                                         </select>
                                                                     </div>
                                                                     <div class="col">
-                                                                        <label for="typeName_<%= offer._id %>">Type Name</label>
-                                                                        <input type="text" id="typeName_<%= offer._id %>" class="form-control" name="typeName" value="<%= offer.typeName %>" required>
+                                                                        <label for="typeName_<%= offer._id %>">Type
+                                                                            Name</label>
+                                                                        <input type="text"
+                                                                            id="typeName_<%= offer._id %>"
+                                                                            class="form-control" name="typeName"
+                                                                            value="<%= offer.typeName %>">
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
                                                                 <div class="row">
-                                                                    <div class="col" id="categorySection_<%= offer._id %>" style="display: <%= offer.offerType === 'categoryOffer' ? 'block' : 'none' %>;">
-                                                                        <label for="categoryId_<%= offer._id %>">Category</label>
-                                                                        <select class="form-control text-black" name="categoryId">
+                                                                    <div class="col"
+                                                                        id="categorySection_<%= offer._id %>"
+                                                                        style="display: <%= offer.offerType === 'categoryOffer' ? 'block' : 'none' %>">
+                                                                        <label
+                                                                            for="categoryId_<%= offer._id %>">Category</label>
+                                                                        <select class="form-control text-black"
+                                                                            name="categoryId"
+                                                                            id="categoryId_<%= offer._id %>">
                                                                             <option value="">Select Category</option>
-                                                                            <% categories.forEach(category => { %>
-                                                                                <option value="<%= category._id %>" <%= offer.categoryId && offer.categoryId.toString() === category._id.toString() ? 'selected' : '' %>><%= category.categoryName %></option>
-                                                                            <% }); %>
+                                                                            <% categories.forEach(category=> { %>
+                                                                                <option value="<%= category._id %>"
+                                                                                    <%= offer.categoryId &&
+                                                                                    offer.categoryId.toString()===category._id.toString()
+                                                                                    ? 'selected' : '' %>><%=
+                                                                                        category.categoryName %>
+                                                                                </option>
+                                                                                <% }); %>
                                                                         </select>
                                                                     </div>
-                                                                    <div class="col" id="productSection_<%= offer._id %>" style="display: <%= offer.offerType === 'productOffer' ? 'block' : 'none' %>;">
-                                                                        <label for="productId_<%= offer._id %>">Product</label>
-                                                                        <select class="form-control text-black" name="productId">
+                                                                    <div class="col"
+                                                                        id="productSection_<%= offer._id %>"
+                                                                        style="display: <%= offer.offerType === 'productOffer' ? 'block' : 'none' %>;">
+                                                                        <label
+                                                                            for="productId_<%= offer._id %>">Product</label>
+                                                                        <select class="form-control text-black"
+                                                                            name="productId"
+                                                                            id="productId_<%= offer._id %>">
                                                                             <option value="">Select Product</option>
-                                                                            <% products.forEach(product => { %>
-                                                                                <option value="<%= product._id %>" <%= offer.productId && offer.productId.toString() === product._id.toString() ? 'selected' : '' %>><%= product.productName %></option>
-                                                                            <% }); %>
+                                                                            <% products.forEach(product=> { %>
+                                                                                <option value="<%= product._id %>"
+                                                                                    <%=offer.productId &&
+                                                                                    offer.productId.toString()===product._id.toString()
+                                                                                    ? 'selected' : '' %>><%=
+                                                                                        product.productName %>
+                                                                                </option>
+                                                                                <% }); %>
                                                                         </select>
                                                                     </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <div class="row">
                                                                     <div class="col">
-                                                                        <label for="isActive_<%= offer._id %>">Active</label>
-                                                                        <input type="checkbox" id="isActive_<%= offer._id %>" name="isActive" <%= offer.isActive ? 'checked' : '' %>>
-                                                                    </div>
-                                                                    <div class="col">
-                                                                        <label for="expiryDate_<%= offer._id %>">Expiry Date</label>
-                                                                        <input type="date" id="expiryDate_<%= offer._id %>" class="form-control" name="expiryDate" value="<%= offer.expiryDate.toISOString().split('T')[0] %>" required>
+                                                                        <label
+                                                                            for="isActive_<%= offer._id %>">Active</label>
+                                                                        <input type="checkbox"
+                                                                            id="isActive_<%= offer._id %>"
+                                                                            name="isActive" <%=offer.isActive
+                                                                            ? 'checked' : '' %>>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
                                                                 <div class="row">
                                                                     <div class="col text-center">
-                                                                        <button class="btn btn-primary" type="submit">Save Changes</button>
+                                                                        <button class="btn btn-primary"
+                                                                            type="submit">Save Changes</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <input type="hidden" name="offerId" value="<%= offer._id %>">
+                                                            <input type="hidden" name="offerId"
+                                                                value="<%= offer._id %>">
                                                         </form>
                                                     </div>
                                                 </div>
@@ -257,6 +283,93 @@
     </div>
 
     <!-- container-scroller -->
+    <!-- Modal for Add Offer -->
+    <div id="addOfferModal" class="modal">
+        <div class="modal-content">
+            <span class="close text-end" onclick="closeAddOfferModal()">&times;</span>
+            <h3 class="mb-3 text-center">Add New Offer</h3>
+            <div id="addOfferMessageContainer" class="message-container text-center fw-bold"></div>
+            <form id="addOfferForm" action="/admin/offers/add" method="POST" onsubmit="return validateAddOfferForm()">
+                <div id="addOfferError" class="text-warning fw-bold text-center"></div>
+                <div class="form-group mb-3">
+                    <div class="row">
+                        <div class="col">
+                            <label for="offerName">Offer Name</label>
+                            <input type="text" name="offerName" class="form-control" id="offerName">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <div class="row">
+                        <div class="col">
+                            <label for="offerDescription">Description</label>
+                            <textarea id="offerDescription" class="form-control" name="offerDescription"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col">
+                            <label for="discountPercentage">Discount Percentage</label>
+                            <input type="number" id="discountPercentage" class="form-control" name="discountPercentage">
+                        </div>
+                        <div class="col mt-1">
+                            <label for="offerType">Offer Type</label>
+                            <select id="offerType" class="form-control" name="offerType"
+                                onchange="handleOfferTypeChange()">
+                                <option value="">Select Type</option>
+                                <option value="productOffer">Product Offer</option>
+                                <option value="categoryOffer">Category Offer</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label for="typeName">Type Name</label>
+                            <input type="text" id="typeName" class="form-control" name="typeName">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col" id="categorySection" style="display: none;">
+                            <label for="categoryId">Category</label>
+                            <select class="form-control text-black" name="categoryId" id="categoryId">
+                                <option value="">Select Category</option>
+                                <% categories.forEach(category=> { %>
+                                    <option value="<%= category._id %>">
+                                        <%= category.categoryName %>
+                                    </option>
+                                    <% }); %>
+                            </select>
+                        </div>
+                        <div class="col" id="productSection" style="display: none;">
+                            <label for="productId">Product</label>
+                            <select class="form-control text-black" name="productId" id="productId">
+                                <option value="">Select Product</option>
+                                <% products.forEach(product=> { %>
+                                    <option value="<%= product._id %>">
+                                        <%= product.productName %>
+                                    </option>
+                                    <% }); %>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label for="isActive">Active</label>
+                            <input type="checkbox" id="isActive" name="isActive" checked>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col text-center">
+                            <button class="btn btn-primary" type="submit">Add Offer</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
     <style>
         .modal {
             display: none;
@@ -295,7 +408,7 @@
 
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
         }
 
@@ -307,35 +420,196 @@
 
         .card img {
             height: 200px;
-            /* Adjust the height as needed */
             object-fit: cover;
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById('openAddOfferModalBtn').addEventListener('click', function () {
+                openAddOfferModal();
+            });
+            function validateAddOfferForm() {
+                let form = document.getElementById('addOfferForm');
+                let error = document.getElementById('addOfferError');
+                let offerNameInput = document.getElementById('offerName');
+                let offerDescriptionInput = document.getElementById('offerDescription');
+                let discountPercentageInput = document.getElementById('discountPercentage');
+                let typeNameInput = document.getElementById('typeName');
+                let offerTypeInput = document.getElementById('offerType');
+                let productIdInput = document.getElementById('productId');
+                let categoryIdInput = document.getElementById('categoryId');
+                error.textContent = '';
+                let messages = [];
+                if (!offerNameInput.value.trim()) {
+                    messages.push("Offer Name is required");
+                }
+                if (!offerDescriptionInput.value.trim()) {
+                    messages.push("Description is required");
+                }
+                let discountPercentage = parseFloat(discountPercentageInput.value.trim());
+                if (!discountPercentageInput.value.trim() || isNaN(discountPercentage) || discountPercentage < 0 || discountPercentage > 100) {
+                    messages.push("Valid Discount Percentage between 0 and 100 is required");
+                }
+                if (!typeNameInput.value.trim()) {
+                    messages.push("Type Name is required");
+                }
+                if (!offerTypeInput.value.trim()) {
+                    messages.push("Offer Type is required");
+                } else {
+                    let selectedOfferType = offerTypeInput.value.trim();
+                    if (selectedOfferType === 'productOffer' && !productIdInput.value.trim()) {
+                        messages.push("Product must be selected for Product Offer");
+                    }
+                    if (selectedOfferType === 'categoryOffer' && !categoryIdInput.value.trim()) {
+                        messages.push("Category must be selected for Category Offer");
+                    }
+                }
+                if (messages.length > 0) {
+                    error.innerHTML = messages[0];
+                    return false;
+                }
+                return true;
+            }
+            document.getElementById('addOfferForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                if (validateAddOfferForm()) {
+                    fetch(this.action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            offerName: this.offerName.value.trim(),
+                            offerDescription: this.offerDescription.value.trim(),
+                            discountPercentage: parseFloat(this.discountPercentage.value.trim()),
+                            typeName: this.typeName.value.trim(),
+                            offerType: this.offerType.value.trim(),
+                            productId: this.productId.value.trim(),
+                            categoryId: this.categoryId.value.trim(),
+                            isActive: this.isActive.checked
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            const messageContainer = document.getElementById('addOfferMessageContainer');
+                            messageContainer.innerHTML = 'Offer created successfully';
+                            messageContainer.style.color = 'green';
+                            setTimeout(() => closeAddOfferModal(), 1000);
+                            setTimeout(() => location.reload(), 1500);
+                        } else {
+                            document.getElementById('addOfferError').innerHTML = data.message || "An error occurred while saving the offer.";
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        document.getElementById('addOfferError').innerHTML = "An error occurred while processing your request.";
+                    });
+                }
+            });
+        });
+        function handleOfferTypeChange() {
+            const offerType = document.getElementById('offerType').value;
+            document.getElementById('categorySection').style.display = offerType === 'categoryOffer' ? 'block' : 'none';
+            document.getElementById('productSection').style.display = offerType === 'productOffer' ? 'block' : 'none';
+        }
+        function openAddOfferModal() {
+            document.getElementById('addOfferModal').style.display = 'block';
+        }
+        function closeAddOfferModal() {
+            document.getElementById('addOfferModal').style.display = 'none';
+        }
+    </script>
+
+    <script>
+        async function handleOfferEditFormSubmit(event, offerId) {
+            event.preventDefault();
+            const form = document.getElementById(`offerEditForm_${offerId}`);
+            const formData = new FormData(form);
+            const errorElement = document.getElementById(`error_${offerId}`);
+            const messageContainer = document.getElementById(`messageContainer_${offerId}`);
+            errorElement.textContent = '';
+            const offerData = {
+                offerName: formData.get('offerName').trim(),
+                offerDescription: formData.get('offerDescription').trim(),
+                discountPercentage: parseFloat(formData.get('discountPercentage')),
+                offerType: formData.get('offerType'),
+                typeName: formData.get('typeName').trim(),
+                productId: formData.get('productId').trim(),
+                categoryId: formData.get('categoryId').trim(),
+                isActive: formData.get('isActive') === 'on'
+            };
+            if (!offerData.offerName) {
+                errorElement.textContent = 'Offer name is required.';
+                return;
+            }
+            if (!offerData.offerDescription) {
+                errorElement.textContent = 'Offer description is required.';
+                return;
+            }
+            if (isNaN(offerData.discountPercentage) || offerData.discountPercentage < 0 || offerData.discountPercentage > 100) {
+                errorElement.textContent = 'Discount percentage must be a number between 0 and 100.';
+                return;
+            }
+            if (!offerData.typeName) {
+                errorElement.textContent = 'Type name is required.';
+                return;
+            }
+            if (offerData.offerType === 'productOffer' && !offerData.productId) {
+                errorElement.textContent = 'Product must be selected for a product offer.';
+                return;
+            }
+            if (offerData.offerType === 'categoryOffer' && !offerData.categoryId) {
+                errorElement.textContent = 'Category must be selected for a category offer.';
+                return;
+            }
+            try {
+                const response = await fetch(`/admin/offers/edit/${offerId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(offerData)
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    messageContainer.textContent = data.message || 'Offer updated';
+                    messageContainer.style.color = 'green';
+                    setTimeout(() => closeAddOfferModal(), 1000);
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    errorElement.textContent = data.message || 'Failed to update offer';
+                }
+            } catch (error) {
+                console.error('Error updating offer:', error);
+                errorElement.textContent = 'An unexpected error occurred. Please try again later.';
+            }
+        }
         function handleEditOfferTypeChange(offerId) {
             const offerType = document.getElementById('offerType_' + offerId).value;
             document.getElementById('categorySection_' + offerId).style.display = offerType === 'categoryOffer' ? 'block' : 'none';
             document.getElementById('productSection_' + offerId).style.display = offerType === 'productOffer' ? 'block' : 'none';
         }
-        
         function closeEditModal(offerId) {
             document.getElementById('offerEditModal_' + offerId).style.display = 'none';
         }
-        </script>
+    </script>
     <script>
         document.querySelectorAll('.modal').forEach(modal => {
-            modal.style.display = 'none'; // Initially hide all modals
+            modal.style.display = 'none';
         });
-
         function openEditModal(offerId) {
             document.getElementById(`offerEditModal_${offerId}`).style.display = 'block';
         }
-
         function closeEditModal(offerId) {
             document.getElementById(`offerEditModal_${offerId}`).style.display = 'none';
         }
-
         function confirmDelete(offerId) {
             Swal.fire({
                 title: 'Are you sure?',
@@ -351,81 +625,38 @@
                     fetch(`/admin/offers/delete/${offerId}`, {
                         method: 'DELETE'
                     })
-                        .then(response => response.json())
-                        .then(result => {
-                            if (result.success) {
-                                Swal.fire({
-                                    title: 'Deleted!',
-                                    text: 'Offer deleted successfully',
-                                    icon: 'success',
-                                    confirmButtonText: 'OK'
-                                }).then(() => {
-                                    location.reload();
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Error deleting offer',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK'
-                                });
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.success) {
+                            Swal.fire({
+                                title: 'Deleted!',
+                                text: 'Offer deleted successfully',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
                             Swal.fire({
                                 title: 'Error!',
                                 text: 'Error deleting offer',
                                 icon: 'error',
                                 confirmButtonText: 'OK'
                             });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Error deleting offer',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
                         });
+                    });
                 }
             });
         }
-
-
-        document.querySelectorAll('form[id^="offerEditForm_"]').forEach(form => {
-    form.addEventListener('submit', function (event) {
-        event.preventDefault();
-        const offerId = this.offerId.value;
-        const formData = new FormData(this);
-
-        const offerData = {
-            offerName: formData.get('offerName'),
-            offerDescription: formData.get('offerDescription'),
-            discountPercentage: parseFloat(formData.get('discountPercentage')),
-            offerType: formData.get('offerType'),
-            typeName: formData.get('typeName'),
-            categoryId: formData.get('categoryId') || null,
-            productId: formData.get('productId') || null,
-            isActive: formData.get('isActive') === 'on',
-            expiryDate: formData.get('expiryDate')
-        };
-
-        fetch(`/admin/offers/edit/${offerId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(offerData)
-        })
-        .then(response => response.json())
-        .then(result => {
-            if (result.success) {
-                alert('Offer updated successfully');
-                location.reload();
-            } else {
-                alert('Error updating offer: ' + result.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error updating offer');
-        });
-    });
-});
-
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>

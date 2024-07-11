@@ -85,22 +85,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/coupons">
+                    <a class="nav-link" href="/account/coupons">
                         <span class="menu-title">Coupons</span>
-                        <i class="menu-arrow"></i>
-                        <i class="mdi mdi-medical-bag menu-icon"></i>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/banners">
-                        <span class="menu-title">Banners</span>
-                        <i class="menu-arrow"></i>
-                        <i class="mdi mdi-medical-bag menu-icon"></i>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/Offers">
-                        <span class="menu-title">Offers</span>
                         <i class="menu-arrow"></i>
                         <i class="mdi mdi-medical-bag menu-icon"></i>
                     </a>
@@ -147,58 +133,62 @@
                                                 <th class="pe-4">Total Price</th>
                                                 <th class="pe-4">Items Count</th>
                                                 <th class="pe-4">Status</th>
+                                                <th class="pe-4">paymentStatus</th>
                                                 <th class="pe-4">Details</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <% if(orders.length > 0) { %>
-                                                <% orders.forEach(order => { 
-                                                    let totalPrice = 0;
-                                                    let itemsCount = order.items.length;
-                                                    order.items.forEach(item => {
-                                                        totalPrice += item.productDiscPrice * item.quantity;
-                                                    });
-                                                %>
-                                                    <tr class="border-bottom">
-                                                        <td class="pe-4 p-4">
-                                                            <%= order.orderID %>
-                                                        </td>
-                                                        <td class="pe-4 p-4">
-                                                            <%= order.orderDate %>
-                                                        </td>
-                                                        <td class="cart__price pe-4">&#8377;<%= totalPrice.toFixed(2) %></td>
-                                                        <td class="pe-4"><%= itemsCount %></td>
-                                                        <td class="pe-4 pt-3">
-                                                            <% let allDelivered = true; %>
-                                                            <% let allCancelled = true; %>
-                                                            
-                                                            <% order.items.forEach(item => { %>
-                                                                <% if (item.orderStatus !== 'Delivered') { %>
-                                                                    <% allDelivered = false; %>
-                                                                <% } %>
-                                                                <% if (item.orderStatus !== 'Canceled') { %>
-                                                                    <% allCancelled = false; %>
-                                                                <% } %>
-                                                            <% }); %>
-                                                            
-                                                            <% if (allDelivered) { %>
-                                                                <p class="text-success">Delivered</p>
-                                                            <% } else if (allCancelled) { %>
-                                                                <p class="text-warning">Canceled</p>
-                                                            <% } else { %>
-                                                                <p>Pending</p>
+                                            <% orders.forEach(order => { %>
+                                                <% let itemsCount = order.items.length; %>
+                                                <% let totalPrice = 0; %>
+                                                <% order.items.forEach(item => { %>
+                                                    <% if (item.orderStatus !== 'Canceled') { %>
+                                                        <% totalPrice += item.productDiscPrice * item.quantity; %>
+                                                    <% } %>
+                                                <% }); %>
+                                                <tr class="border-bottom">
+                                                    <td class="pe-4 p-4"><%= order.orderID %></td>
+                                                    <td class="pe-4"><%= order.orderDate.toLocaleDateString() %></td>
+                                                    <td class="cart__price pe-4">&#8377;<%= totalPrice.toFixed(2) %></td>
+                                                    <td class="pe-4"><%= itemsCount %></td>
+                                                    <td class="pe-4 pt-3">
+                                                        <% let allDelivered = true; %>
+                                                        <% let allCancelled = true; %>
+                                                        <% order.items.forEach(item => { %>
+                                                            <% if (item.orderStatus !== 'Delivered') { %>
+                                                                <% allDelivered = false; %>
                                                             <% } %>
-                                                        </td>
-                                                        
-                                                                                                                 
-                                                        <td class="pe-4">
-                                                            <a href="/account/orders/order_details?id=<%= order._id %>" class="btn btn-primary">Info</a>
-                                                        </td>
-                                                    </tr>
-                                                <% }) %>
-                                            <% } else { %>
+                                                            <% if (item.orderStatus !== 'Canceled') { %>
+                                                                <% allCancelled = false; %>
+                                                            <% } %>
+                                                        <% }); %>
+                                                        <% if (allDelivered) { %>
+                                                            <p class="text-success">Delivered</p>
+                                                        <% } else if (allCancelled) { %>
+                                                            <p class="text-warning">Canceled</p>
+                                                        <% } else { %>
+                                                            <p>Pending</p>
+                                                        <% } %>
+                                                    </td>
+                                                    <td class="pe-4">
+                                                        <% if (order.items.every(item => item.orderStatus === 'Canceled')) { %>
+                                                            <p>All items canceled</p>
+                                                        <% } else if (order.items.every(item => item.orderStatus === 'Delivered')) { %>
+                                                            <p>All items Delivered</p>
+                                                        <% } else if (order.paymentStatus === 'Pending') { %>
+                                                            <button class="btn btn-secondary pay-now-btn" data-order-id="<%= order._id %>">Pay Now</button>
+                                                        <% } else { %>
+                                                            <p>Paid</p>
+                                                        <% } %>
+                                                    </td>                                                    
+                                                    <td class="pe-4">
+                                                        <a href="/account/orders/order_details?id=<%= order._id %>" class="btn btn-primary">Info</a>
+                                                    </td>
+                                                </tr>
+                                            <% }); %>
+                                            <% if (orders.length === 0) { %>
                                                 <tr class="text-center">
-                                                    <td colspan="5">No orders found!</td>
+                                                    <td colspan="6">No orders found!</td>
                                                 </tr>
                                             <% } %>
                                         </tbody>
@@ -206,7 +196,22 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <div class="row p-3">
+                            <div class="pagination d-flex justify-content-center align-items-center">
+                                <% if (currentPage > 1) { %>
+                                    <a href="?page=<%= currentPage - 1 %>&limit=<%= limit %>" class="btn btn-info">&lt;</a>
+                                <% } %>
+                                <% for (let i = Math.max(1, currentPage - 1); i <= Math.min(currentPage + 1, totalPages); i++) { %>
+                                    <a href="?page=<%= i %>&limit=<%= limit %>" class="btn btn-secondary <%= currentPage === i ? 'active' : '' %>">
+                                        <%= i %>
+                                    </a>
+                                <% } %>
+                                <% if (currentPage < totalPages) { %>
+                                    <a href="?page=<%= currentPage + 1 %>&limit=<%= limit %>" class="btn btn-info">&gt;</a>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>                    
                 </section>  
             </div>
             <!-- content-wrapper ends -->
@@ -241,7 +246,97 @@
         }
     }
 </style>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.pay-now-btn').forEach(button => {
+            button.addEventListener('click', async function() {
+                const orderId = this.getAttribute('data-order-id');
+                
+                try {
+                    const response = await fetch('/continue_payment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ orderId })
+                    });
+                    const data = await response.json();
 
+                    if (response.ok) {
+                        const options = {
+                            key: data.key,
+                            amount: data.amount,
+                            currency: data.currency,
+                            order_id: data.razorpayOrderId,
+                            handler: async function (response) {
+                                const paymentData = {
+                                    orderCreationId: data.razorpayOrderId,
+                                    razorpayPaymentId: response.razorpay_payment_id,
+                                    razorpayOrderId: response.razorpay_order_id,
+                                    razorpaySignature: response.razorpay_signature
+                                };
+                                const verifyResponse = await fetch('/verify_razorpay_payment', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify(paymentData)
+                                });
+                                const verifyData = await verifyResponse.json();
+                                if (verifyResponse.ok) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Payment Successful',
+                                        text: 'Your order has been placed successfully.',
+                                    }).then(() => {
+                                        window.location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Payment Verification Failed',
+                                        text: verifyData.error,
+                                    });
+                                }
+                            },
+                            prefill: {
+                                name: 'Customer Name',
+                                email: 'customer@example.com',
+                                contact: '9999999999'
+                            },
+                            theme: {
+                                color: '#3399cc'
+                            }
+                        };
+                        const rzp1 = new Razorpay(options);
+                        rzp1.on('payment.failed', function (response) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Payment Failed',
+                                text: 'Your payment could not be processed. Please try again.',
+                            });
+                        });
+                        rzp1.open();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: data.error,
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Unexpected Error',
+                        text: 'An unexpected error occurred. Please try again later.',
+                    });
+                }
+            });
+        });
+    });
+</script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

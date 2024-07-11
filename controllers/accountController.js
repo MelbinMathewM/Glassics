@@ -3,6 +3,13 @@ const Product = require('../model/productModel');
 const User = require('../model/userModel');
 const Wallet = require('../model/walletModel');
 const bcrypt = require('bcrypt');
+const Razorpay = require('razorpay');
+const crypto = require('crypto');
+
+const razorpayInstance = new Razorpay({
+    key_id: process.env.key_id,
+    key_secret: process.env.key_secret,
+});
 
 const securePassword = async (password) => {
     try {
@@ -74,7 +81,7 @@ const updateDetail = async (req, res) => {
     try {
         const { customerName, userName, userMobile, password } = req.body;
         const userId = req.session.user_id;
-        const existingUserName = await User.findOne({ userName: userName });
+        const existingUserName = await User.findOne({ userName: userName, _id : { $ne : userId } });
         if (existingUserName) {
             return res.render('edit_details', { message: "Username already exists" })
         }
@@ -218,19 +225,15 @@ const getTransactions = async function(userId) {
     return wallet ? wallet.transactions.sort((a, b) => b.date - a.date) : [];
 };
 
-// Add money to wallet
 const addMoney = async function(userId, amount) {
     const wallet = await Wallet.findOne({ user: userId });
     if (!wallet) {
         throw new Error('Wallet not found');
     }
-
-    wallet.balance += amount;
-
-    // Add a transaction record
+    wallet.balance += amount * 100;
     wallet.transactions.push({
         description: 'Money added',
-        amount: amount,
+        amount: amount * 100,
         balance: wallet.balance
     });
 
@@ -254,16 +257,44 @@ const loadWallet = async (req,res) => {
 
 const addMoneyToWallet = async (req, res) => {
     try {
-        const userId = req.session.user_id;
         const { amount } = req.body;
-        await addMoney(userId, parseFloat(amount));
-
-        res.json({ success: true });
+        const options = {
+            amount: amount * 100,
+            currency: 'INR',
+            receipt: `receipt_order_${Math.random() * 1000}`,
+        };
+        const order = await razorpayInstance.orders.create(options);
+        if (!order) return res.status(500).send('Error creating Razorpay order');
+        res.json({
+            success: true,
+            orderId: order.id,
+            amount: order.amount,
+            currency: order.currency,
+        });
     } catch (error) {
         console.error('Error adding money to wallet:', error);
         res.status(500).send('Internal Server Error');
     }
 };
+
+const verifyPayment = async (req, res) => {
+    try {
+        const { razorpay_payment_id, razorpay_order_id, razorpay_signature, amount } = req.body;
+        const expectedSignature = crypto.createHmac('sha256', process.env.key_secret)
+            .update(razorpay_order_id + '|' + razorpay_payment_id)
+            .digest('hex');
+        if (razorpay_signature !== expectedSignature) {
+            return res.status(400).send('Invalid payment signature');
+        }
+        const userId = req.session.user_id;
+        await addMoney(userId, amount/100);
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error verifying Razorpay payment:', error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
 
 module.exports = {
     loadProfile,
@@ -278,5 +309,6 @@ module.exports = {
     updateAddress,
     deleteAddress,
     loadWallet,
-    addMoneyToWallet
+    addMoneyToWallet,
+    verifyPayment
 }

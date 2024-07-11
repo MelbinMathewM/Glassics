@@ -94,20 +94,6 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/account/banners">
-                        <span class="menu-title">Banners</span>
-                        <i class="menu-arrow"></i>
-                        <i class="mdi mdi-medical-bag menu-icon"></i>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/account/offers">
-                        <span class="menu-title">Offers</span>
-                        <i class="menu-arrow"></i>
-                        <i class="mdi mdi-medical-bag menu-icon"></i>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="/logout">
                         <span class="menu-title">Logout</span>
                         <i class="menu-arrow"></i>
@@ -116,7 +102,7 @@
                 </li>
             </ul>
         </nav>
-        <div class="main-panel mt-5">
+        <div class="main-panel mt-5 w-100">
             <!-- Breadcrumb Section Begin -->
             <section class="breadcrumb-option mt-5" style="background-color: rgb(232, 243, 250);">
                 <div class="container-fluid">
@@ -151,50 +137,11 @@
                                         <p class="text-center"><%= coupon.discount %>% off <br> - Expires on - <br> <%= coupon.expirationDate.toDateString() %></p>
                                         <p class="text-center">Min pay : <%= coupon.minPurchase %></p>
                                         <p class="text-center">Max usage : <%= coupon.usageLimit %></p>
-                                        <div class="text-center">
-                                            <button id="openEditModalBtn_<%= coupon._id %>"
-                                                class="btn btn-primary">Edit</button>
-                                            <button class="btn btn-danger"
-                                                onclick="confirmDelete('<%= coupon._id %>')">Delete</button>
-                                        </div>
-                                        <!-- edit category modal -->
-                                        <div id="couponEditModal_<%= coupon._id %>" class="modal">
-                                            <div class="modal-content">
-                                                <span class="close text-end">&times;</span>
-                                                <h3 class="mb-3 text-center">Edit Coupon</h3>
-                                                <div id="messagerContainer_<%= coupon._id %>"
-                                                    class="message-container"></div>
-                                                    <form id="couponEditForm_<%= coupon._id %>" action="/edit_coupons" method="POST">
-                                                        <label for="code">Code:</label>
-                                                        <p class="form-control" name="code" id="code"><%= coupon.code %></p>
-                                                        <br>
-                                                        <label for="discount">Discount (%):</label>
-                                                        <input type="number" class="form-control" value="<%= coupon.discount %>" name="discount" id="discount" required>
-                                                        <br>
-                                                        <label for="minPurchase">Min purchase:</label>
-                                                        <input type="number" class="form-control" value="<%= coupon.minPurchase %>" name="minPurchase" id="minPurchase" required>
-                                                        <br>
-                                                        <label for="expirationDate">Expiration Date:</label>
-                                                        <input type="date" class="form-control" value="<%= coupon.expirationDate.toDateString() %>" name="expirationDate" id="expirationDate" required>
-                                                        <br>
-                                                        <label for="usageLimit">Usage Limit:</label>
-                                                        <input type="number" class="form-control" value="<%= coupon.usageLimit %>" name="usageLimit" id="usageLimit" required>
-                                                        <br>
-                                                        <input type="hidden" value="<%= coupon._id %>" name="couponId" class="form-control">
-                                                        <div class="text-center">
-                                                            <button class="btn btn-primary" type="submit">Edit Coupon</button>
-                                                        </div>
-                                                      </form>
-                                            </div>
-                                        </div>
-
                                     </div>
                                 </div>
                                 <% }) %>
                         </div>
                     </div>
-                    
-                    
                 </div>
             </div>
           <!-- main-panel ends -->

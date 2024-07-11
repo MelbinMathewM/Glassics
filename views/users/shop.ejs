@@ -148,19 +148,19 @@
                                                         href="?category=<%= category %>&brand=<%= brand %>&minPrice=0&maxPrice=500&search=<%= search %>&sort=<%= sort %>&page=<%= currentPage %>" class="text-decoration-none">₹0.00
                                                         - ₹500.00</a></li>
                                                 <li><a
-                                                        href="?<%= category %>&brand=<%= brand %>&minPrice=500&maxPrice=1000&search=<%= search %>&sort=<%= sort %>&page=<%= currentPage %>" class="text-decoration-none">₹500.00
+                                                        href="?category=<%= category %>&brand=<%= brand %>&minPrice=500&maxPrice=1000&search=<%= search %>&sort=<%= sort %>&page=<%= currentPage %>" class="text-decoration-none">₹500.00
                                                         - ₹1000.00</a></li>
                                                 <li><a
-                                                        href="?<%= category %>&brand=<%= brand %>&minPrice=1000&maxPrice=1500&search=<%= search %>&sort=<%= sort %>&page=<%= currentPage %>" class="text-decoration-none">₹1000.00
+                                                        href="?category=<%= category %>&brand=<%= brand %>&minPrice=1000&maxPrice=1500&search=<%= search %>&sort=<%= sort %>&page=<%= currentPage %>" class="text-decoration-none">₹1000.00
                                                         - ₹1500.00</a></li>
                                                 <li><a
-                                                        href="?<%= category %>&brand=<%= brand %>&minPrice=1500&maxPrice=2000&search=<%= search %>&sort=<%= sort %>&page=<%= currentPage %>" class="text-decoration-none">₹1500.00
+                                                        href="?category=<%= category %>&brand=<%= brand %>&minPrice=1500&maxPrice=2000&search=<%= search %>&sort=<%= sort %>&page=<%= currentPage %>" class="text-decoration-none">₹1500.00
                                                         - ₹2000.00</a></li>
                                                 <li><a
-                                                        href="?<%= category %>&brand=<%= brand %>&minPrice=2000&maxPrice=2500&search=<%= search %>&sort=<%= sort %>&page=<%= currentPage %>" class="text-decoration-none">₹2000.00
+                                                        href="?category=<%= category %>&brand=<%= brand %>&minPrice=2000&maxPrice=2500&search=<%= search %>&sort=<%= sort %>&page=<%= currentPage %>" class="text-decoration-none">₹2000.00
                                                         - ₹2500.00</a></li>
                                                 <li><a
-                                                        href="?<%= category %>&brand=<%= brand %>&minPrice=2500&search=<%= search %>&sort=<%= sort %>" class="text-decoration-none">₹2500.00+</a>
+                                                        href="?category=<%= category %>&brand=<%= brand %>&minPrice=2500&search=<%= search %>&sort=<%= sort %>" class="text-decoration-none">₹2500.00+</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -354,8 +354,8 @@
                                                 href="?category=<%= category %>&brand=<%= brand %>&minPrice=<%= minPrice %>&maxPrice=<%= maxPrice %>&search=<%= search %>&sort=<%= sort %>&page=<%= i %>">
                                     <%= i %>
                                     </a>
-                                    <% } %>
-                                    <% if (currentPage < totalPages) { %>
+                                <% } %>
+                                <% if (currentPage < totalPages) { %>
                                         <a href="?category=<%= category %>&brand=<%= brand %>&minprice=<%= minPrice %>&maxPrice=<%= maxPrice %>&search=<%= search %>&sort=<%= sort %>&page=<%= currentPage + 1 %>"
                                                         class="text-decoration-none">&raquo;</a>
                                 <% } %>

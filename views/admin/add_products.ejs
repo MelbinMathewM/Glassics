@@ -37,80 +37,59 @@
       <!-- partial:partials/_sidebar.html -->
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
-          <li class="nav-item nav-profile">
-            <a href="#" class="nav-link">
-              <div class="nav-profile-image">
-                <img src="/assets/images/faces/face1.jpg" alt="profile">
-                <span class="login-status online"></span>
-                <!--change to offline or busy as needed-->
-              </div>
-              <div class="nav-profile-text d-flex flex-column">
-                <span class="font-weight-bold mb-2">David Grey. H</span>
-                <span class="text-secondary text-small">Project Manager</span>
-              </div>
-              <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
-            </a>
-          </li>
           <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" href="/admin/dashboard">
               <span class="menu-title">Dashboard</span>
               <i class="mdi mdi-home menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" href="/admin/products">
               <span class="menu-title">Products</span>
               <i class="menu-arrow"></i>
               <i class="mdi mdi-crosshairs-gps menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" href="/admin/users">
               <span class="menu-title">Users</span>
               <i class="mdi mdi-contacts menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" href="/admin/orders">
               <span class="menu-title">Orders</span>
               <i class="mdi mdi-format-list-bulleted menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" href="/admin/categories">
               <span class="menu-title">Categories</span>
               <i class="mdi mdi-chart-bar menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" href="/admin/brands">
               <span class="menu-title">Brands</span>
               <i class="mdi mdi-table-large menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" href="/admin/coupons">
               <span class="menu-title">Coupons</span>
               <i class="menu-arrow"></i>
               <i class="mdi mdi-medical-bag menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link">
-              <span class="menu-title">Banners</span>
-              <i class="menu-arrow"></i>
-              <i class="mdi mdi-medical-bag menu-icon"></i>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" href="/admin/offers">
               <span class="menu-title">Offers</span>
               <i class="menu-arrow"></i>
               <i class="mdi mdi-medical-bag menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" href="/admin/logout">
               <span class="menu-title">Logout</span>
               <i class="menu-arrow"></i>
               <i class="mdi mdi-medical-bag menu-icon"></i>
@@ -253,6 +232,7 @@
             <div id="variantsContainer">
               <!-- Variants will be added here -->
             </div>
+            <div class="text-center" id="image-preview-container"></div>
             <div class="form-group">
               <div class="row">
                 <div class="col">
@@ -269,7 +249,6 @@
     <!-- page-body-wrapper ends -->
   </div>
   <!-- container-scroller -->
-  <div class="text-center" id="image-preview-container"></div>
   <div id="modal-container"></div>
   <style>
     .preview {
@@ -349,7 +328,7 @@
     .image-preview {
       display: inline-block;
       margin: 10px;
-      border: 1px solid #ddd;
+      border: 1px solid #0c0c0c;
       padding: 5px;
     }
 

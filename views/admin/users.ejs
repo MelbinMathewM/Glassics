@@ -30,20 +30,6 @@
         <!-- partial:partials/_sidebar.html -->
         <nav class="sidebar sidebar-offcanvas" id="sidebar">
           <ul class="nav">
-            <li class="nav-item nav-profile">
-              <a href="#" class="nav-link">
-                <div class="nav-profile-image">
-                  <img src="assets/images/faces/face1.jpg" alt="profile">
-                  <span class="login-status online"></span>
-                  <!--change to offline or busy as needed-->
-                </div>
-                <div class="nav-profile-text d-flex flex-column">
-                  <span class="font-weight-bold mb-2">David Grey. H</span>
-                  <span class="text-secondary text-small">Project Manager</span>
-                </div>
-                <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
-              </a>
-            </li>
             <li class="nav-item">
               <a class="nav-link" href="/admin/dashboard">
                 <span class="menu-title">Dashboard</span>
@@ -57,7 +43,7 @@
                 <i class="mdi mdi-crosshairs-gps menu-icon"></i>
               </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item active">
               <a class="nav-link" href="/admin/users">
                 <span class="menu-title">Users</span>
                 <i class="mdi mdi-contacts menu-icon"></i>
@@ -89,14 +75,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/admin/banners">
-                <span class="menu-title">Banners</span>
-                <i class="menu-arrow"></i>
-                <i class="mdi mdi-medical-bag menu-icon"></i>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/admin/Offers">
+              <a class="nav-link" href="/admin/offers">
                 <span class="menu-title">Offers</span>
                 <i class="menu-arrow"></i>
                 <i class="mdi mdi-medical-bag menu-icon"></i>
@@ -114,51 +93,62 @@
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
-            <div class="page-header">
-              <h3 class="page-title">
-                <span class="page-title-icon bg-gradient-primary text-white mr-2">
-                  <i class="mdi mdi-home"></i>
-                </span> Users
-              </h3>
-            </div>
-            <table class="table table-striped">
-              <thead>
-                <tr class="text-center">
-                  <th>Image</th>
-                  <th>Name</th>
-                  <th>username</th>
-                  <th>Email</th>
-                  <th>Mobile</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody class="text-center">
-                <% if(users.length > 0) { %>
-                  <% for(let i=0; i<users.length; i++) { %>
-                    <tr>
-                      <td><img src="<%= profileImage %>" alt="" width="150px" height="150px"></td>
-                      <td><%= users[i].customerName %></td>
-                      <td><%= users[i].userName %></td>
-                      <td><%= users[i].userEmail %></td>
-                      <td><%= users[i].userMobile %></td>
-                      <td>
-                        <% if(users[i].is_blocked){ %>
-                          <a href="#" class="btn btn-danger btn-sm" onclick="confirmUnblock('<%= users[i]._id %>')">Blocked</a>
-                        <% } else { %>
-                          <a href="#" class="btn btn-success btn-sm" onclick="confirmBlock('<%= users[i]._id %>')">Active</a>
-                        <%} %>
-                      </td>
-                    </tr>
+              <div class="page-header">
+                  <h3 class="page-title">
+                      <span class="page-title-icon bg-gradient-primary text-white mr-2">
+                          <i class="mdi mdi-home"></i>
+                      </span> Users
+                  </h3>
+              </div>
+              <table class="table table-striped">
+                  <thead>
+                      <tr class="text-center">
+                          <th>Image</th>
+                          <th>Name</th>
+                          <th>Username</th>
+                          <th>Email</th>
+                          <th>Mobile</th>
+                          <th>Status</th>
+                      </tr>
+                  </thead>
+                  <tbody class="text-center">
+                      <% if(users.length > 0) { %>
+                          <% for(let i = 0; i < users.length; i++) { %>
+                              <tr>
+                                  <td><img src="<%= users[i].userImage ? `/static/userImages/${users[i].userImage}` : '/static/userImages/default.jpg' %>" alt="" width="150px" height="150px"></td>
+                                  <td><%= users[i].customerName %></td>
+                                  <td><%= users[i].userName %></td>
+                                  <td><%= users[i].userEmail %></td>
+                                  <td><%= users[i].userMobile %></td>
+                                  <td>
+                                      <% if(users[i].is_blocked) { %>
+                                          <a href="#" class="btn btn-danger btn-sm" onclick="confirmUnblock('<%= users[i]._id %>')">Blocked</a>
+                                      <% } else { %>
+                                          <a href="#" class="btn btn-success btn-sm" onclick="confirmBlock('<%= users[i]._id %>')">Active</a>
+                                      <% } %>
+                                  </td>
+                              </tr>
+                          <% } %>
+                      <% } else { %>
+                          <tr>
+                              <td colspan="6" class="text-center">Users not found</td>
+                          </tr>
+                      <% } %>
+                  </tbody>
+              </table>
+              <div class="pagination d-flex justify-content-center align-items-center mt-3">
+                  <% if (currentPage > 1) { %>
+                      <a href="?page=<%= currentPage - 1 %>&limit=<%= limit %>" class="btn btn-info mr-1">&lt;</a>
                   <% } %>
-                <% } else { %>
-                  <tr>
-                    <td colspan="5" class="text-center">Users not found</td>
-                  </tr>
-                <% } %>
-              </tbody>
-            </table>
+                  <% for (let i = Math.max(1, currentPage - 1); i <= Math.min(currentPage + 1, totalPages); i++) { %>
+                      <a href="?page=<%= i %>&limit=<%= limit %>" class="btn btn-secondary <%= currentPage === i ? 'active' : '' %>"><%= i %></a>
+                  <% } %>
+                  <% if (currentPage < totalPages) { %>
+                      <a href="?page=<%= currentPage + 1 %>&limit=<%= limit %>" class="btn btn-info ml-1">&gt;</a>
+                  <% } %>
+              </div>
           </div>
-        </div>
+      </div>
       </div>
     </div>
     <!-- container-scroller -->
