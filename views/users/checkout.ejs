@@ -94,25 +94,23 @@
                         <div class="col-lg-8 col-md-6">
                             <h6 class="checkout__title">Billing Details</h6>
                             <div class="address address-container border mb-5">
-                                <% if(addresses && addresses.length> 0){ %>
-                                    <p><strong>Deliver to: </strong><span id="current-address">
-                                            <%= addresses[0].addressName %>, <%= addresses[0].addressEmail %>, <%=
-                                                        addresses[0].addressMobile %>,
-                                                        <%= addresses[0].addressHouse %>, <%= addresses[0].addressStreet
-                                                                %>, <%= addresses[0].addressPost %>,
-                                                                    <%= addresses[0].addressCity %>, <%=
-                                                                            addresses[0].addressDistrict %>, <%=
-                                                                                addresses[0].addressState %>,
-                                                                                <%= addresses[0].addressPin %>
-                                        </span><button id="change-address-btn"
-                                            class="btn1 btn btn-secondary ms-5 btn-sm">Change</button></p>
-                                    <% } else { %>
-                                        <div class="text-center">
-                                            <a href="#" id="add-address-link" class="text-decoration-none">Add address +
-                                            </a>
-                                        </div>
-                                        <% } %>
-                            </div>
+                                <% if (addresses && addresses.length > 0) { %>
+                                    <p>
+                                        <strong>Deliver to: </strong>
+                                        <span id="current-address">
+                                            <%= addresses[0].addressName %>, <%= addresses[0].addressEmail %>, <%= addresses[0].addressMobile %>,
+                                            <%= addresses[0].addressHouse %>, <%= addresses[0].addressStreet %>, <%= addresses[0].addressPost %>,
+                                            <%= addresses[0].addressCity %>, <%= addresses[0].addressDistrict %>, <%= addresses[0].addressState %>,
+                                            <%= addresses[0].addressPin %>
+                                        </span>
+                                    </p>
+                                <% } %>
+                                <div class="text-center">
+                                    <button id="change-address-btn" class="btn1 btn btn-secondary btn-sm">
+                                        <%= addresses && addresses.length > 0 ? 'Change' : 'Add' %>
+                                    </button>
+                                </div>
+                            </div>                            
                             <div class="shopping__cart__table">
                                 <table>
                                     <thead>

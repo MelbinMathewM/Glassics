@@ -107,7 +107,7 @@
               </span>Products <span class="text-small text-secondary">&gt; &nbsp;Edit Product</span>
             </h3>
           </div>
-          <form id="editProductForm" action="" method="POST" enctype="multipart/form-data">
+          <form id="editProductForm" action="" method="POST" enctype="multipart/form-data" class="p-5" style="background-color: white;">
             <input type="hidden" name="productId" value="<%= product._id %>">
             <div class="form group row mb-3">
               <div class="col">
@@ -226,13 +226,13 @@
                   <label for="specialFeatures">Special Features:</label>
                   <select class="form-control" name="specialFeatures">
                     <option value="">Select Special Features</option>
-                    <option value="Anti-Reflective Coating" <%= product.specialFeatures === ' Anti-Reflective Coating'
+                    <option value="Anti-Reflective Coating" <%=product.specialFeatures=== 'Anti-Reflective Coating'
                       ? ' selected' : '' %>>Anti-Reflective Coating</option>
-                    <option value="Blue Light Blocking" <%= product.specialFeatures === ' Blue Light Blocking ' ? ' selected '
+                    <option value="Blue Light Blocking" <%=product.specialFeatures=== 'Blue Light Blocking ' ? ' selected '
                       : '' %>>Blue Light Blocking</option>
-                    <option value="Scratch Resistant" <%= product.specialFeatures ==='Scratch Resistant' ? ' selected ' : ''
+                    <option value="Scratch Resistant" <%=product.specialFeatures==='Scratch Resistant' ? ' selected ' : ''
                       %>>Scratch Resistant</option>
-                    <option value="UV Protection" <%= product.specialFeatures ===' UV Protection' ? ' selected ' : '' %>>UV
+                    <option value="UV Protection" <%=product.specialFeatures==='UV Protection' ? ' selected ' : '' %>>UV
                       Protection</option>
                   </select>
                 </div>

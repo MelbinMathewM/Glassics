@@ -205,7 +205,6 @@ const deleteAddress = async (req, res) => {
     try {
         const addressId = req.query.id;
         const addressData = await Address.findByIdAndDelete(addressId);
-
         if (!addressData) {
             return res.status(404).json({ message: 'Address not found' });
         }
@@ -246,6 +245,11 @@ const loadWallet = async (req,res) => {
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).send('User not found');
+        }
+        let wallet = await Wallet.findOne({ user: userId });
+        if (!wallet) {
+            wallet = new Wallet({ user: userId });
+            await wallet.save();
         }
         const walletBalance = await getBalance(userId);
         const transactions = await getTransactions(userId);

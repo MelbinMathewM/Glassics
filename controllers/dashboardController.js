@@ -8,6 +8,7 @@ const Offer = require('../model/offerModel');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const PDFDocument = require('pdfkit');
+const puppeteer = require('puppeteer');
 const xlsx = require('xlsx');
 const fs = require('fs');
 const path = require('path');
@@ -396,6 +397,7 @@ const downloadPDF = async (req, res) => {
     try {
         const { salesReport, overallReport } = await getSalesReport(req);
         const pdfPath = await generatePDF({ salesReport, overallReport }, 'sales_report');
+        console.log(pdfPath);
         res.download(pdfPath, 'sales_report.pdf');
     } catch (error) {
         console.error('Error downloading sales report:', error);
@@ -404,60 +406,93 @@ const downloadPDF = async (req, res) => {
 };
 
 const generatePDF = async ({ salesReport, overallReport }, filename) => {
-    return new Promise((resolve, reject) => {
-        const doc = new PDFDocument();
-        const outputPath = path.join(__dirname, '..', 'public', 'pdf', `${filename}.pdf`);
-        // Ensure the directory exists
-        const directory = path.dirname(outputPath);
-        if (!fs.existsSync(directory)) {
-            fs.mkdirSync(directory, { recursive: true });
-        }
-        const stream = fs.createWriteStream(outputPath);
-        doc.pipe(stream);
-        // PDF content generation
-        doc.font('Helvetica').fontSize(24);
-        doc.text('Sales Report', { align: 'center' }).moveDown();
-        // Overall Report
-        doc.fontSize(20);
-        doc.text('Overall Report', { align: 'left' }).moveDown();
-        doc.fontSize(16);
-        doc.text(`Total Sales: ${overallReport.totalSales.toFixed(2)}`);
-        doc.text(`Total Discount: ${overallReport.totalDiscount.toFixed(2)}`);
-        doc.text(`Total Coupons: ${overallReport.totalCoupons.toFixed(2)}`);
-        doc.text(`Total Orders: ${overallReport.totalOrders}`);
-        doc.text(`Total Quantity: ${overallReport.totalQuantity}`).moveDown();
-        // Sales Report Details
-        doc.fontSize(16);
-        doc.text('Sales Report Details', { align: 'left' }).moveDown();
-        salesReport.forEach(item => {
-            doc.fontSize(16);
-            doc.text(`Product: ${item.product}`).moveDown();
+    try {
+        // Launch Puppeteer
+        const browser = await puppeteer.launch({ timeout: 0 }); // Set timeout to 0 for no timeout
+        const page = await browser.newPage();
 
-            doc.fontSize(14);
-            if (item.day) {
-                doc.text(`Date: ${item.year}-${item.month}-${item.day}`);
-            } else if (item.week) {
-                doc.text(`Week: ${item.year}-W${item.week}`);
-            } else if (item.month) {
-                doc.text(`Month: ${item.year}-${item.month}`);
-            } else {
-                doc.text(`Year: ${item.year}`);
-            }
-            doc.text(`Total Quantity: ${item.totalQuantity}`);
-            doc.text(`Total Sales: ${item.totalSales.toFixed(2)}`);
-            doc.text(`Total Discount: ${item.totalDiscount.toFixed(2)}`);
-            doc.text(`Total Coupons: ${item.totalCoupons.toFixed(2)}`);
-            doc.text(`Total Orders: ${item.totalOrders}`);
-            doc.moveDown();
-        });
-        doc.end();
-        stream.on('finish', () => {
-            resolve(outputPath);
-        });
-        stream.on('error', (err) => {
-            reject(err);
-        });
-    });
+        // Define content to be rendered in HTML
+        const htmlContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <style>
+                    body {
+                        font-family: Helvetica, Arial, sans-serif;
+                        margin: 50px;
+                    }
+                    h1 {
+                        text-align: center;
+                    }
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 20px;
+                    }
+                    th, td {
+                        border: 1px solid #dddddd;
+                        text-align: left;
+                        padding: 8px;
+                    }
+                    th {
+                        background-color: #f2f2f2;
+                    }
+                </style>
+            </head>
+            <body>
+                <h1>Sales Report</h1>
+                
+                <h2>Overall Report</h2>
+                <p>Total Sales: ${overallReport.totalSales.toFixed(2)}</p>
+                <p>Total Discount: ${overallReport.totalDiscount.toFixed(2)}</p>
+                <p>Total Coupons: ${overallReport.totalCoupons.toFixed(2)}</p>
+                <p>Total Orders: ${overallReport.totalOrders}</p>
+                <p>Total Quantity: ${overallReport.totalQuantity}</p>
+                
+                <h2>Sales Report Details</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Date</th>
+                            <th>Total Quantity</th>
+                            <th>Total Sales</th>
+                            <th>Total Discount</th>
+                            <th>Total Coupons</th>
+                            <th>Total Orders</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${salesReport.map(item => `
+                            <tr>
+                                <td>${item.product}</td>
+                                <td>${item.date}</td>
+                                <td>${item.totalQuantity}</td>
+                                <td>&#8377;${item.totalSales.toFixed(2)}</td>
+                                <td>&#8377;${item.totalDiscount.toFixed(2)}</td>
+                                <td>&#8377;${item.totalCoupons.toFixed(2)}</td>
+                                <td>${item.totalOrders}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </body>
+            </html>
+        `;
+
+        // Set content and generate PDF
+        await page.setContent(htmlContent);
+        const pdfPath = path.join(__dirname, '..', 'public', 'pdf', `${filename}.pdf`);
+        await page.pdf({ path: pdfPath, format: 'A4', printBackground: true });
+
+        // Close browser
+        await browser.close();
+
+        return pdfPath;
+    } catch (error) {
+        console.error('Error generating PDF:', error);
+        throw error;
+    }
 };
 
 const downloadExcel = async (req, res) => {

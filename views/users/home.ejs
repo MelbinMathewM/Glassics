@@ -1,167 +1,168 @@
 <%- include('../partials/header') %>
-<div class="container-scroller w-100">
-    <!-- Header Section Begin -->
-    <header class="header border-bottom">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-3 col-md-3 col-6">
-                    <div class="header__logo">
-                        <a class="text-decoration-none" href="/">
-                            <h1 class="fw-bold" style="font-style: italic;">Glassics</h1>
-                        </a>
+    <div class="container-scroller w-100">
+        <!-- Header Section Begin -->
+        <header class="header border-bottom">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-3 col-md-3 col-6">
+                        <div class="header__logo">
+                            <a class="text-decoration-none" href="/">
+                                <h1 class="fw-bold" style="font-style: italic;">Glassics</h1>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 d-none d-md-block">
+                        <nav class="header__menu mobile-menu">
+                            <ul>
+                                <li class="active"><a class="text-decoration-none" href="/">Home</a></li>
+                                <li><a class="text-decoration-none" href="/shop">Shop</a></li>
+                                <% if (isAuthenticated) { %>
+                                    <li><a class="text-decoration-none" href='/account/profile'>Account</a></li>
+                                    <% } else { %>
+                                        <li><a class="text-decoration-none" href="/login">Sign In</a></li>
+                                        <% } %>
+                                            <li><a class="text-decoration-none" href="./blog.html">Blog</a></li>
+                                            <li><a class="text-decoration-none" href="./contact.html">Contacts</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-6 d-flex justify-content-end align-items-center">
+                        <div class="header__nav__option mb-3">
+                            <a href="#" class="search-switch"><img src="/static/img/icon/search.png" alt=""></a>
+                            <a href="#"><img src="/static/img/icon/heart.png" alt=""></a>
+                            <a href="/cart"><img src="/static/img/icon/cart.png" alt=""></a>
+                        </div>
+                        <button class="navbar-toggler d-md-none ml-auto mt-1 me-3" type="button" data-toggle="collapse"
+                            data-target="#navbarNav">
+                            <span class="navbar-toggler-icon fa fa-bars"></span>
+                        </button>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6 d-none d-md-block">
-                    <nav class="header__menu mobile-menu">
-                        <ul>
-                            <li class="active"><a class="text-decoration-none" href="/">Home</a></li>
-                            <li><a class="text-decoration-none" href="/shop">Shop</a></li>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <nav class="navbar-nav active">
+                        <ul class="navbar-nav">
+                            <li><a class="nav-link" href="/" style="color: red;">Home</a></li>
+                            <li><a class="nav-link" href="/shop">Shop</a></li>
                             <% if (isAuthenticated) { %>
                                 <li><a class="text-decoration-none" href='/account/profile'>Account</a></li>
-                            <% } else { %>
-                                <li><a class="text-decoration-none" href="/login">Sign In</a></li>
-                            <% } %>
-                            <li><a class="text-decoration-none" href="./blog.html">Blog</a></li>
-                            <li><a class="text-decoration-none" href="./contact.html">Contacts</a></li>
+                                <% } else { %>
+                                    <li><a class="text-decoration-none" href="/login">Sign In</a></li>
+                                    <% } %>
+                                        <li><a class="nav-link" href="./blog.html">Blog</a></li>
+                                        <li><a class="nav-link" href="./contact.html">Contacts</a></li>
                         </ul>
                     </nav>
                 </div>
-                <div class="col-lg-3 col-md-3 col-6 d-flex justify-content-end align-items-center">
-                    <div class="header__nav__option mb-3">
-                        <a href="#" class="search-switch"><img src="/static/img/icon/search.png" alt=""></a>
-                        <a href="#"><img src="/static/img/icon/heart.png" alt=""></a>
-                        <a href="/cart"><img src="/static/img/icon/cart.png" alt=""></a>
-                    </div>
-                    <button class="navbar-toggler d-md-none ml-auto mt-1 me-3" type="button" data-toggle="collapse"
-                        data-target="#navbarNav">
-                        <span class="navbar-toggler-icon fa fa-bars"></span>
-                    </button>
-                </div>
             </div>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <nav class="navbar-nav active">
-                    <ul class="navbar-nav">
-                        <li><a class="nav-link" href="/" style="color: red;">Home</a></li>
-                        <li><a class="nav-link" href="/shop">Shop</a></li>
-                        <% if (isAuthenticated) { %>
-                            <li><a class="text-decoration-none"
-                                    href='/account/profile'>Account</a></li>
-                        <% } else { %>
-                            <li><a class="text-decoration-none" href="/login">Sign In</a></li>
-                        <% } %>
-                        <li><a class="nav-link" href="./blog.html">Blog</a></li>
-                        <li><a class="nav-link" href="./contact.html">Contacts</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </header>
-    <!-- Header Section End -->
+        </header>
+        <!-- Header Section End -->
 
-    <!-- Hero Section Begin -->
-    <section class="hero mt-5 pt-4">
-        <div class="hero__slider owl-carousel mt-4">
-            <div class="hero__items set-bg" style="background-image: url('/static/img/hero/hero-3.jpg');">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-xl-5 col-lg-7 col-md-8">
-                            <div class="hero__text">
-                                <h6>Summer Collection</h6>
-                                <h2>Fall - Winter Collections 2030</h2>
-                                <p>A specialist label creating luxury essentials. Ethically crafted with an unwavering
-                                    commitment to exceptional quality.</p>
-                                <a href="/shop" class="primary-btn">Shop now </a>
-                                <div class="hero__social">
-                                    <a href="#"><i class="fa fa-facebook"></i></a>
-                                    <a href="#"><i class="fa fa-twitter"></i></a>
-                                    <a href="#"><i class="fa fa-pinterest"></i></a>
-                                    <a href="#"><i class="fa fa-instagram"></i></a>
+        <!-- Hero Section Begin -->
+        <section class="hero mt-5 pt-4">
+            <div class="hero__slider owl-carousel mt-4">
+                <div class="hero__items set-bg" style="background-image: url('/static/img/hero/hero-3.jpg');">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-xl-5 col-lg-7 col-md-8">
+                                <div class="hero__text">
+                                    <h6>Summer Collection</h6>
+                                    <h2>Fall - Winter Collections 2030</h2>
+                                    <p>A specialist label creating luxury essentials. Ethically crafted with an
+                                        unwavering
+                                        commitment to exceptional quality.</p>
+                                    <a href="/shop" class="primary-btn">Shop now </a>
+                                    <div class="hero__social">
+                                        <a href="#"><i class="fa fa-facebook"></i></a>
+                                        <a href="#"><i class="fa fa-twitter"></i></a>
+                                        <a href="#"><i class="fa fa-pinterest"></i></a>
+                                        <a href="#"><i class="fa fa-instagram"></i></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <!-- Hero Section End -->
+        </section>
+        <!-- Hero Section End -->
 
-    <!-- Banner Section Begin -->
-    <section class="banner spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-7 offset-lg-4">
-                    <div class="banner__item">
-                        <div class="banner__item__pic">
-                            <img src="/static/img/banner/ba-3.jpg" alt="" width="400px">
-                        </div>
-                        <div class="banner__item__text">
-                            <h2>Glasses Collections 2030</h2>
-                            <a href="/shop" class="text-decoration-none text-dark">Shop now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-5">
-                    <div class="banner__item banner__item--middle">
-                        <div class="banner__item__pic">
-                            <img src="/static/img/banner/ba-1.webp" alt="">
-                        </div>
-                        <div class="banner__item__text">
-                            <h2>Accessories</h2>
-                            <a href="/shop" class="text-decoration-none text-dark">Shop now</a>
+        <!-- Banner Section Begin -->
+        <section class="banner spad">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-7 offset-lg-4">
+                        <div class="banner__item">
+                            <div class="banner__item__pic">
+                                <img src="/static/img/banner/ba-3.jpg" alt="" width="400px">
+                            </div>
+                            <div class="banner__item__text">
+                                <h2>Glasses Collections 2030</h2>
+                                <a href="/shop" class="text-decoration-none text-dark">Shop now</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-7">
-                    <div class="banner__item banner__item--last">
-                        <div class="banner__item__pic">
-                            <img src="/static/img/banner/ba-4.jpg" alt="" width="500px">
+                    <div class="col-lg-5">
+                        <div class="banner__item banner__item--middle">
+                            <div class="banner__item__pic">
+                                <img src="/static/img/banner/ba-1.webp" alt="">
+                            </div>
+                            <div class="banner__item__text">
+                                <h2>Accessories</h2>
+                                <a href="/shop" class="text-decoration-none text-dark">Shop now</a>
+                            </div>
                         </div>
-                        <div class="banner__item__text">
-                            <h2>Glasses Spring 2030</h2>
-                            <a href="/shop" class="text-decoration-none text-dark">Shop now</a>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="banner__item banner__item--last">
+                            <div class="banner__item__pic">
+                                <img src="/static/img/banner/ba-4.jpg" alt="" width="500px">
+                            </div>
+                            <div class="banner__item__text">
+                                <h2>Glasses Spring 2030</h2>
+                                <a href="/shop" class="text-decoration-none text-dark">Shop now</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <!-- Banner Section End -->
+        </section>
+        <!-- Banner Section End -->
 
-    <!-- Product Section Begin -->
-    <section class="product spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-
-                    <h2 class="active text-center fw-bold mt-3" data-filter="*">Best Sellers</h2>
-
+        <!-- Product Section Begin -->
+        <section class="product spad">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ul class="filter__controls">
+                            <li class="active" onclick="toggleSection('best-sellers')">Best Sellers</li>
+                            <li onclick="toggleSection('new-arrivals')">New Arrivals</li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <% products.slice(0,8).forEach(product=> { %>
-                    <div class="col-lg-3 col-md-6 col-sm-6">
-                        <div class="product__item"><a href="/product_details/<%= product._id %>">
-                                <div class="product__item__pic set-bg"
-                                    style="background-image: url('/static/productImages/<%= product.variants[0].images[0] %>');"
-                                    id="product-image-<%= product._id %>">
-                                    <ul class="product__hover">
-                                        <li><a href=""><img src="/static/img/icon/heart.png"
-                                                    data-product-id="<%= product._id %>" class="add-wishlist" alt=""
-                                                    style="background: transparent;"><span>Wishlist</span></a>
-                                        </li>
-                                        <li><a href="#"><img src="/static/img/icon/compare.png" alt=""
-                                                    style="background: transparent;"> <span>Compare</span></a>
-                                        </li>
-                                        <li><a href="/product_details/<%= product._id %>"><img
-                                                    src="/static/img/icon/search.png" alt=""
-                                                    style="background: transparent;"><span>Details</span></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="product__item__text" style="background-color: whitesmoke;">
+
+                <!-- Best Sellers Section -->
+                <div id="best-sellers" class="row product__filter">
+                    <% bestSellers.forEach(bestSeller=> { %>
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="product__item">
+                                <a href="/product_details/<%= bestSeller._id %>">
+                                    <div id="product-image-<%= bestSeller._id %>" class="product__item__pic set-bg"
+                                        style="background-image: url('/static/productImages/<%= bestSeller.variants[0].images[0] %>');">
+                                        <ul class="product__hover">
+                                            <li><a href="#"><img src="/static/img/icon/heart.png"
+                                                        data-product-id="<%= bestSeller._id %>" class="add-wishlist"
+                                                        alt=""><span>Wishlist</span></a></li>
+                                            <li><a href="#"><img src="/static/img/icon/compare.png"
+                                                        alt=""><span>Compare</span></a></li>
+                                            <li><a href="/product_details/<%= bestSeller._id %>"><img
+                                                        src="/static/img/icon/search.png"
+                                                        alt=""><span>Details</span></a></li>
+                                        </ul>
+                                    </div>
+                                </a>
+                                <div class="product__item__text">
                                     <h5 class="ps-4 pname">
-                                        <%= product.productName %>
+                                        <%= bestSeller.productName %>
                                     </h5>
                                     <div class="rating ms-4">
                                         <% for (let i=0; i < 5; i++) { %>
@@ -169,25 +170,25 @@
                                             <% } %>
                                     </div>
                                     <h5 class="product-price ps-4">
-                                        <span id="product-disc-price-<%= product._id %>">
-                                            <%= product.productDiscPrice %>
-                                        </span>
-                                        &nbsp;&nbsp;<del class="product-old-price text-muted text-small"
-                                            id="product-price-<%= product._id %>">
-                                            &#8377;<%= product.productPrice %>
+                                        <span id="bestSeller-disc-price-<%= bestSeller._id %>">&#8377;<%=
+                                                bestSeller.productDiscPrice %></span>
+                                        &nbsp;&nbsp;
+                                        <del class="product-old-price text-muted text-small"
+                                            id="bestSeller-price-<%= bestSeller._id %>">
+                                            &#8377;<%= bestSeller.productPrice %>
                                         </del>
                                     </h5>
-                                    <a href="" class="add-cart ps-4 text-decoration-none"
-                                        data-product-id="<%= product._id %>">+ Add To Cart</a><br>
-                                    <a href="/product_details/<%= product._id %>"
+                                    <a href="#" class="add-cart ps-4 text-decoration-none"
+                                        data-product-id="<%= bestSeller._id %>">+ Add To Cart</a><br>
+                                    <a href="/product_details/<%= bestSeller._id %>"
                                         class="mt-4 ps-4 text-decoration-none">&gt; Details</a>
                                     <div class="product__color__select me-4 mb-3">
-                                        <% product.variants.forEach((variant, index)=> { %>
-                                            <label for="pc-<%= product._id %>-<%= index %>"
+                                        <% bestSeller.variants.forEach((variant, index)=> { %>
+                                            <label for="pc-<%= bestSeller._id %>-<%= index %>"
                                                 class="<%= index === 0 ? 'active' : '' %>"
                                                 style="background-color: <%= variant.color %>">
-                                                <input type="radio" name="color-<%= product._id %>"
-                                                    id="pc-<%= product._id %>-<%= index %>"
+                                                <input type="radio" name="color-bestSeller-<%= bestSeller._id %>"
+                                                    id="pc-<%= bestSeller._id %>-<%= index %>"
                                                     data-image-url="/static/productImages/<%= variant.images[0] %>"
                                                     data-price="<%= variant.price %>"
                                                     data-disc-price="<%= variant.discountPrice %>" <%=index===0
@@ -196,64 +197,125 @@
                                             <% }); %>
                                     </div>
                                 </div>
+                            </div>
                         </div>
-                    </div>
-                    <% }); %>
-            </div>
-        </div>
-    </section>
-    <!-- Product Section End -->
+                        <% }); %>
+                </div>
 
-    <!-- Categories Section Begin -->
-    <section class="categories spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3">
-                    <div class="categories__text">
-                        <h2>Glasses Hot <br /> <span>Glasses Collection</span> <br /> Accessories</h2>
-                    </div>
+                <!-- New Arrivals Section -->
+                <div id="new-arrivals" class="row product__filter" style="display: none;">
+                    <% newArrivals.forEach(newArrival=> { %>
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="product__item">
+                                <a href="/product_details/<%= newArrival._id %>">
+                                    <div id="product-image-<%= newArrival._id %>" class="product__item__pic set-bg"
+                                        style="background-image: url('/static/productImages/<%= newArrival.variants[0].images[0] %>');">
+                                        <ul class="product__hover">
+                                            <li><a href="#"><img src="/static/img/icon/heart.png"
+                                                        data-product-id="<%= newArrival._id %>" class="add-wishlist"
+                                                        alt=""><span>Wishlist</span></a></li>
+                                            <li><a href="#"><img src="/static/img/icon/compare.png"
+                                                        alt=""><span>Compare</span></a></li>
+                                            <li><a href="/product_details/<%= newArrival._id %>"><img
+                                                        src="/static/img/icon/search.png"
+                                                        alt=""><span>Details</span></a></li>
+                                        </ul>
+                                    </div>
+                                </a>
+                                <div class="product__item__text">
+                                    <h5 class="ps-4 pname">
+                                        <%= newArrival.productName %>
+                                    </h5>
+                                    <div class="rating ms-4">
+                                        <% for (let i=0; i < 5; i++) { %>
+                                            <i class="fa fa-star"></i>
+                                            <% } %>
+                                    </div>
+                                    <h5 class="product-price ps-4">
+                                        <span id="newArrival-disc-price-<%= newArrival._id %>">&#8377;<%=
+                                                newArrival.productDiscPrice %></span>
+                                        &nbsp;&nbsp;
+                                        <del class="product-old-price text-muted text-small"
+                                            id="newArrival-price-<%= newArrival._id %>">
+                                            &#8377;<%= newArrival.productPrice %>
+                                        </del>
+                                    </h5>
+                                    <a href="#" class="add-cart ps-4 text-decoration-none"
+                                        data-product-id="<%= newArrival._id %>">+ Add To Cart</a><br>
+                                    <a href="/product_details/<%= newArrival._id %>"
+                                        class="mt-4 ps-4 text-decoration-none">&gt; Details</a>
+                                    <div class="product__color__select me-4 mb-3">
+                                        <% newArrival.variants.forEach((variant, index)=> { %>
+                                            <label for="pc-<%= newArrival._id %>-<%= index %>"
+                                                class="<%= index === 0 ? 'active' : '' %>"
+                                                style="background-color: <%= variant.color %>">
+                                                <input type="radio" name="color-newArrival-<%= newArrival._id %>"
+                                                    id="pc-<%= newArrival._id %>-<%= index %>"
+                                                    data-image-url="/static/productImages/<%= variant.images[0] %>"
+                                                    data-price="<%= variant.price %>"
+                                                    data-disc-price="<%= variant.discountPrice %>" <%=index===0
+                                                    ? 'checked' : '' %>>
+                                            </label>
+                                            <% }); %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <% }); %>
                 </div>
-                <div class="col-lg-4">
-                    <div class="categories__hot__deal">
-                        <img src="/static/img/banner/ba-6.jpg" alt="">
-                        <div class="hot__deal__sticker">
-                            <span>Sale Of</span>
-                            <h5>&#8377;999</h5>
+
+        </section>
+
+        <!-- Categories Section Begin -->
+        <section class="categories spad">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="categories__text">
+                            <h2>Glasses Hot <br /> <span>Glasses Collection</span> <br /> Accessories</h2>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-4 offset-lg-1">
-                    <div class="categories__deal__countdown">
-                        <span>Deal Of The Week</span>
-                        <h2>High index lenses</h2>
-                        <div class="categories__deal__countdown__timer" id="countdown">
-                            <div class="cd-item">
-                                <span>3</span>
-                                <p>Days</p>
-                            </div>
-                            <div class="cd-item">
-                                <span>1</span>
-                                <p>Hours</p>
-                            </div>
-                            <div class="cd-item">
-                                <span>50</span>
-                                <p>Minutes</p>
-                            </div>
-                            <div class="cd-item">
-                                <span>18</span>
-                                <p>Seconds</p>
+                    <div class="col-lg-4">
+                        <div class="categories__hot__deal">
+                            <img src="/static/img/banner/ba-6.jpg" alt="">
+                            <div class="hot__deal__sticker">
+                                <span>Sale Of</span>
+                                <h5>&#8377;999</h5>
                             </div>
                         </div>
-                        <a href="#" class="primary-btn text-decoration-none">Shop now</a>
+                    </div>
+                    <div class="col-lg-4 offset-lg-1">
+                        <div class="categories__deal__countdown">
+                            <span>Deal Of The Week</span>
+                            <h2>High index lenses</h2>
+                            <div class="categories__deal__countdown__timer" id="countdown">
+                                <div class="cd-item">
+                                    <span>3</span>
+                                    <p>Days</p>
+                                </div>
+                                <div class="cd-item">
+                                    <span>1</span>
+                                    <p>Hours</p>
+                                </div>
+                                <div class="cd-item">
+                                    <span>50</span>
+                                    <p>Minutes</p>
+                                </div>
+                                <div class="cd-item">
+                                    <span>18</span>
+                                    <p>Seconds</p>
+                                </div>
+                            </div>
+                            <a href="#" class="primary-btn text-decoration-none">Shop now</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <!-- Categories Section End -->
+        </section>
+        <!-- Categories Section End -->
 
-    <!-- Instagram Section Begin -->
-    <!-- <section class="instagram spad">
+        <!-- Instagram Section Begin -->
+        <!-- <section class="instagram spad">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8">
@@ -277,119 +339,137 @@
             </div>
         </div>
     </section> -->
-    <!-- Instagram Section End -->
+        <!-- Instagram Section End -->
 
-    <!-- Latest Blog Section Begin -->
-    <section class="latest spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="section-title">
-                        <span>Latest News</span>
-                        <h2>Fashion New Trends</h2>
+        <!-- Latest Blog Section Begin -->
+        <section class="latest spad">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="section-title">
+                            <span>Latest News</span>
+                            <h2>Fashion New Trends</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="blog__item">
+                            <div class="blog__item__pic set-bg"
+                                style="background-image: url(/static/img/banner/ba-8.webp);"></div>
+                            <div class="blog__item__text">
+                                <span><img src="img/icon/calendar.png" alt=""> 16 February 2020</span>
+                                <h5>What Curling Irons Are The Best Ones</h5>
+                                <a href="#" class="text-decoration-none">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="blog__item">
+                            <div class="blog__item__pic set-bg"
+                                style="background-image: url(/static/img/blog/blog-2.jpg);">
+                            </div>
+                            <div class="blog__item__text">
+                                <span><img src="img/icon/calendar.png" alt=""> 21 February 2020</span>
+                                <h5>Eternity Bands Do Last Forever</h5>
+                                <a href="#" class="text-decoration-none">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="blog__item">
+                            <div class="blog__item__pic set-bg"
+                                style="background-image: url(/static/img/blog/blog-3.jpg);">
+                            </div>
+                            <div class="blog__item__text">
+                                <span><img src="img/icon/calendar.png" alt=""> 28 February 2020</span>
+                                <h5>The Health Benefits Of Sunglasses</h5>
+                                <a href="#" class="text-decoration-none">Read More</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-4 col-md-6 col-sm-6">
-                    <div class="blog__item">
-                        <div class="blog__item__pic set-bg"
-                            style="background-image: url(/static/img/banner/ba-8.webp);"></div>
-                        <div class="blog__item__text">
-                            <span><img src="img/icon/calendar.png" alt=""> 16 February 2020</span>
-                            <h5>What Curling Irons Are The Best Ones</h5>
-                            <a href="#" class="text-decoration-none">Read More</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-sm-6">
-                    <div class="blog__item">
-                        <div class="blog__item__pic set-bg" style="background-image: url(/static/img/blog/blog-2.jpg);">
-                        </div>
-                        <div class="blog__item__text">
-                            <span><img src="img/icon/calendar.png" alt=""> 21 February 2020</span>
-                            <h5>Eternity Bands Do Last Forever</h5>
-                            <a href="#" class="text-decoration-none">Read More</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-sm-6">
-                    <div class="blog__item">
-                        <div class="blog__item__pic set-bg" style="background-image: url(/static/img/blog/blog-3.jpg);">
-                        </div>
-                        <div class="blog__item__text">
-                            <span><img src="img/icon/calendar.png" alt=""> 28 February 2020</span>
-                            <h5>The Health Benefits Of Sunglasses</h5>
-                            <a href="#" class="text-decoration-none">Read More</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Latest Blog Section End -->
+        </section>
+        <!-- Latest Blog Section End -->
 
-    <!-- Footer Section Begin -->
-    <footer class="footer" style="background-color: rgb(12, 10, 10);">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="footer__about">
-                        <div class="footer__logo">
-                            <a class="text-decoration-none" href="/"><h1 class="fw-bold" style="font-style: italic;color: white;">Glassics</h1></a>
+        <!-- Footer Section Begin -->
+        <footer class="footer" style="background-color: rgb(12, 10, 10);">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="footer__about">
+                            <div class="footer__logo">
+                                <a class="text-decoration-none" href="/">
+                                    <h1 class="fw-bold" style="font-style: italic;color: white;">Glassics</h1>
+                                </a>
+                            </div>
+                            <p>The customer is at the heart of our unique business model, which includes design.</p>
+                            <a href="#"><img src="img/payment.png" alt=""></a>
                         </div>
-                        <p>The customer is at the heart of our unique business model, which includes design.</p>
-                        <a href="#"><img src="img/payment.png" alt=""></a>
                     </div>
-                </div>
-                <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
-                    <div class="footer__widget">
-                        <h6>Shopping</h6>
-                        <ul>
-                            <li><a class="text-decoration-none" href="#">Glasses Store</a></li>
-                            <li><a class="text-decoration-none" href="#">Trending Glasses</a></li>
-                            <li><a class="text-decoration-none" href="#">Accessories</a></li>
-                            <li><a class="text-decoration-none" href="#">Sale</a></li>
-                        </ul>
+                    <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
+                        <div class="footer__widget">
+                            <h6>Shopping</h6>
+                            <ul>
+                                <li><a class="text-decoration-none" href="#">Glasses Store</a></li>
+                                <li><a class="text-decoration-none" href="#">Trending Glasses</a></li>
+                                <li><a class="text-decoration-none" href="#">Accessories</a></li>
+                                <li><a class="text-decoration-none" href="#">Sale</a></li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <div class="footer__widget">
-                        <h6>Enquiry</h6>
-                        <ul>
-                            <li><a class="text-decoration-none" href="#">Contact Us</a></li>
-                            <li><a class="text-decoration-none" href="#">Payment Methods</a></li>
-                            <li><a class="text-decoration-none" href="#">Delivery</a></li>
-                            <li><a class="text-decoration-none" href="#">Return & Exchanges</a></li>
-                        </ul>
+                    <div class="col-lg-2 col-md-3 col-sm-6">
+                        <div class="footer__widget">
+                            <h6>Enquiry</h6>
+                            <ul>
+                                <li><a class="text-decoration-none" href="#">Contact Us</a></li>
+                                <li><a class="text-decoration-none" href="#">Payment Methods</a></li>
+                                <li><a class="text-decoration-none" href="#">Delivery</a></li>
+                                <li><a class="text-decoration-none" href="#">Return & Exchanges</a></li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
-                    <div class="footer__widget">
-                        <h6>NewLetter</h6>
-                        <div class="footer__newslatter">
-                            <p>Be the first to know about new arrivals, look books, sales & promos!</p>
-                            <form action="#">
-                                <input type="text" placeholder="Your email">
-                                <button type="submit"><span class="icon_mail_alt"></span></button>
-                            </form>
+                    <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
+                        <div class="footer__widget">
+                            <h6>NewLetter</h6>
+                            <div class="footer__newslatter">
+                                <p>Be the first to know about new arrivals, look books, sales & promos!</p>
+                                <form action="#">
+                                    <input type="text" placeholder="Your email">
+                                    <button type="submit"><span class="icon_mail_alt"></span></button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </footer>
-    <!-- Footer Section End -->
-</div>
-<!-- container-scroller -->
+        </footer>
+        <!-- Footer Section End -->
+    </div>
+    <!-- container-scroller -->
     <style>
         header {
             position: fixed;
-            top:0;
+            top: 0;
             width: 100%;
             z-index: 999;
         }
     </style>
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function toggleSection(sectionId) {
+            const sections = ['best-sellers', 'new-arrivals'];
+            sections.forEach(section => {
+                document.getElementById(section).style.display = section === sectionId ? 'flex' : 'none';
+            });
+
+            document.querySelectorAll('.filter__controls li').forEach(li => {
+                li.classList.toggle('active', li.getAttribute('onclick').includes(sectionId));
+            });
+        }
+
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const colorSelectors = document.querySelectorAll('.product__color__select input[type="radio"]');
@@ -397,57 +477,133 @@
             colorSelectors.forEach(radio => {
                 radio.addEventListener('change', function () {
                     if (this.checked) {
-                        const productImageElement = document.getElementById(`product-image-${this.closest('.product__item').querySelector('.add-cart').dataset.productId}`);
+                        const productItem = this.closest('.product__item');
+                        const productId = productItem.querySelector('.add-cart').dataset.productId;
+                        const section = this.name.split('-')[1];
+                        const productImageElement = productItem.querySelector('.product__item__pic');
                         productImageElement.style.backgroundImage = `url('${this.dataset.imageUrl}')`;
-
-                        // Remove 'active' class from all labels in the same group
                         this.closest('.product__color__select').querySelectorAll('label').forEach(label => label.classList.remove('active'));
-
-                        // Add 'active' class to the selected label
                         this.closest('label').classList.add('active');
+                        updatePrice(productItem, section, productId, this.dataset.price, this.dataset.discPrice);
                     }
                 });
             });
 
-            function updatePrice(productId) {
-                const selectedVariant = document.querySelector(`input[name="color-${productId}"]:checked`);
-                if (selectedVariant) {
-                    const newPrice = selectedVariant.dataset.price;
-                    const newDiscPrice = selectedVariant.dataset.discPrice;
+            function updatePrice(productItem, section, productId, newPrice, newDiscPrice) {
+                console.log(`Section: ${section}, ProductId: ${productId}`);
 
-                    console.log(`Updating price for product ${productId} to ${newDiscPrice} and ${newPrice}`);
+                const priceElement = productItem.querySelector(`#${section}-price-${productId}`);
+                const discPriceElement = productItem.querySelector(`#${section}-disc-price-${productId}`);
+                console.log(priceElement);
+                console.log(discPriceElement);
 
-                    const priceElement = document.querySelector(`#product-price-${productId}`);
-                    const discPriceElement = document.querySelector(`#product-disc-price-${productId}`);
-
-                    if (priceElement && discPriceElement) {
-                        discPriceElement.textContent = `₹${newDiscPrice}`;
-                        priceElement.textContent = `₹${newPrice}`;
-                    } else {
-                        console.error(`Price elements not found for product ${productId}`);
-                    }
+                if (priceElement && discPriceElement) {
+                    discPriceElement.textContent = `₹${newDiscPrice}`;
+                    priceElement.textContent = `₹${newPrice}`;
                 } else {
-                    console.error(`Selected variant not found for product ${productId}`);
+                    console.error(`Price elements not found for product ${productId}`);
                 }
             }
 
-            document.querySelectorAll('input[type="radio"][name^="color-"]').forEach(radio => {
-                radio.addEventListener('change', (e) => {
-                    const productId = e.target.name.split('-')[1];
-                    updatePrice(productId);
+            // Initialize prices for all products
+            document.querySelectorAll('input[type="radio"][name^="color-"]:checked').forEach(radio => {
+                const productItem = radio.closest('.product__item');
+                const section = radio.name.split('-')[1];
+                const productId = radio.name.split('-')[2];
+                updatePrice(productItem, section, productId, radio.dataset.price, radio.dataset.discPrice);
+            });
+
+            document.querySelectorAll('.add-cart').forEach(button => {
+                button.addEventListener('click', async (event) => {
+                    event.preventDefault();
+
+                    const productId = button.getAttribute('data-product-id');
+                    console.log(productId);
+                    const quantity = 1;
+
+                    const selectedColorElement = document.querySelector(`input[name="color-${productId}"]:checked`);
+                    console.log(selectedColorElement);
+                    if (!selectedColorElement) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Please select a color'
+                        });
+                        return;
+                    }
+
+                    const selectedColor = selectedColorElement.value;
+                    const variantData = JSON.parse(selectedColorElement.getAttribute('data-variant'));
+                    const subVariantData = variantData.subVariants[0]; // Use the first size of the selected variant
+
+                    const availableQuantity = subVariantData.quantity;
+
+                    if (availableQuantity > 0) {
+                        try {
+                            const response = await fetch('/add_cart', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    productId,
+                                    quantity,
+                                    color: selectedColor,
+                                    size: subVariantData.size,
+                                    productImage: variantData.images[0],
+                                    productPrice: variantData.price,
+                                    productDiscPrice: variantData.discountPrice
+                                })
+                            });
+
+                            if (!response.ok) {
+                                throw new Error('Failed to add item to cart');
+                            }
+
+                            const data = await response.json();
+                            if (data && data.message) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Added to Cart',
+                                    text: data.message,
+                                    showConfirmButton: true,
+                                    confirmButtonText: 'Go to Cart'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = '/cart';
+                                    }
+                                });
+                            } else if (data && data.error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: data.error
+                                });
+                            } else {
+                                throw new Error('Invalid response format');
+                            }
+                        } catch (error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: error.message
+                            });
+                        }
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Product is out of stock'
+                        });
+                    }
                 });
             });
-
-            document.querySelectorAll('input[type="radio"][name^="color-"]:checked').forEach(radio => {
-                const productId = radio.name.split('-')[1];
-                updatePrice(productId);
-            });
-
-        })
+        });
 
     </script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <%- include('../partials/footer') %>

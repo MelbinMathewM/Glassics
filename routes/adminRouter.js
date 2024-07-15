@@ -55,11 +55,11 @@ a_route.get('/login',adminAuth.isLogout,adminController.loadLogin);
 a_route.post('/login',adminController.verifyAdmin);
 
 //dashboard management
-a_route.get('/dashboard',dashboardController.loadDashboard);
-a_route.get('/dashboard/sales_data',dashboardController.loadSalesData);
-a_route.get('/dashboard/top_products',dashboardController.getTopProducts);
-a_route.get('/dashboard/top_categories',dashboardController.getTopCategories);
-a_route.get('/dashboard/top_brands',dashboardController.getTopBrands);
+a_route.get('/dashboard',adminAuth.isLogin,dashboardController.loadDashboard);
+a_route.get('/dashboard/sales_data',adminAuth.isLogin,dashboardController.loadSalesData);
+a_route.get('/dashboard/top_products',adminAuth.isLogin,dashboardController.getTopProducts);
+a_route.get('/dashboard/top_categories',adminAuth.isLogin,dashboardController.getTopCategories);
+a_route.get('/dashboard/top_brands',adminAuth.isLogin,dashboardController.getTopBrands);
 
 //product management
 a_route.get('/products',adminAuth.isLogin,productController.loadProducts);
@@ -81,7 +81,7 @@ a_route.get('/users/unblock_user',adminAuth.isLogin,adminController.unblockUser)
 a_route.get('/orders',adminAuth.isLogin,adminController.loadOrder);
 a_route.get('/orders/order_details',adminAuth.isLogin,adminController.loadOrderDetail);
 a_route.post('/orders/order_details/change_status',adminController.changeStatusOrder);
-a_route.get('/orders/returned_orders',adminController.getReturnedOrder);
+a_route.get('/orders/returned_orders',adminAuth.isLogin,adminController.getReturnedOrder);
 
 //category management
 a_route.get('/categories',adminAuth.isLogin,productController.loadCategory);
@@ -106,13 +106,13 @@ a_route.post('/coupons/edit',adminController.updateCoupon);
 a_route.get('/coupons/delete',adminAuth.isLogin,adminController.deleteCoupon);
 
 //offer management
-a_route.get('/offers',adminController.loadOffer);
+a_route.get('/offers',adminAuth.isLogin,adminController.loadOffer);
 a_route.post('/offers/add',adminController.insertOffer);
 a_route.put('/offers/edit/:id',adminController.updateOffer);
 a_route.delete('/offers/delete/:id',adminController.deleteOffer);
 
 //sales report
-a_route.get('/dashboard/sales_report',dashboardController.loadSalesReport);
+a_route.get('/dashboard/sales_report',adminAuth.isLogin,dashboardController.loadSalesReport);
 a_route.get('/dashboard/sales_report/pdf',adminAuth.isLogin,dashboardController.downloadPDF);
 a_route.get('/dashboard/sales_report/excel',adminAuth.isLogin,dashboardController.downloadExcel);
 

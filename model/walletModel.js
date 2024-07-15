@@ -13,7 +13,7 @@ const transactionSchema = new Schema({
 
 const walletSchema = new Schema({
     user: { 
-        type : Schema.Types.ObjectId, 
+        type : Schema.Types.ObjectId,
         ref : 'Customer', 
         required : true 
     },

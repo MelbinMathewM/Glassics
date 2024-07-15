@@ -29,10 +29,6 @@ const VariantSchema = new Schema({
     },
     discountPrice: Number,
     subVariants: [SubVariantSchema],
-    offer: { 
-        type: Schema.Types.ObjectId, 
-        ref: 'Offer' 
-    }
 });
 
 // Product Schema

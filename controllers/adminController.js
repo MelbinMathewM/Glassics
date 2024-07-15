@@ -155,15 +155,15 @@ const changeStatusOrder = async (req, res) => {
             }
             subvariant.quantity += item.quantity;
             await product.save();
-            if (newStatus === 'Canceled' && order.paymentMethod === 'Razorpay') {
+            if (order.paymentMethod === 'RazorPay' || order.paymentMethod === 'wallet') {
                 const wallet = await Wallet.findOne({user : order.customer_id });
                 if (!wallet) {
                     return res.json({ success: false, message: 'User not found.' });
                 }
-                wallet.balance += item.price * item.quantity;
+                wallet.balance += item.productDiscPrice * item.quantity;
                 wallet.transactions.push({
                     description: 'Order canceled',
-                    amount: item.price * item.quantity,
+                    amount: item.productDiscPrice * item.quantity,
                     balance: wallet.balance
                 });
                 await wallet.save();

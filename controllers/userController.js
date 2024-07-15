@@ -10,9 +10,23 @@ const mongoose = require('mongoose');
 
 const loadHome = async (req, res) => {
     try {
-        const products = await Product.find({ is_delete: false });
-        res.render('home', { products: products });
+        // Fetch best sellers
+        const bestSellers = await Product.find({ is_delete: false })
+            .sort({ orderCount: -1 })
+            .limit(8);
+
+        // Fetch new arrivals
+        const newArrivals = await Product.find({ is_delete: false })
+            .sort({ createdAt: -1 })
+            .limit(8);
+
+        // Render the home page with data
+        res.render('home', { 
+            bestSellers: bestSellers,
+            newArrivals: newArrivals,
+        });
     } catch (error) {
+        // Handle errors
         res.send(error);
     }
 };

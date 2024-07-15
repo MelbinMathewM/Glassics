@@ -230,7 +230,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 updateOrderStatus(itemId, newStatus);
-                location.reload();
+                //location.reload();
             }
         });
     }
@@ -255,6 +255,7 @@
                     'success'
                 );
             } else {
+                console.error('Server error:', data.message);
                 Swal.fire(
                     'Error!',
                     data.message,

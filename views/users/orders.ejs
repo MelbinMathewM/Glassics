@@ -276,7 +276,7 @@
                                     razorpayOrderId: response.razorpay_order_id,
                                     razorpaySignature: response.razorpay_signature
                                 };
-                                const verifyResponse = await fetch('/verify_razorpay_payment', {
+                                const verifyResponse = await fetch('/verify_continue_payment', {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json'

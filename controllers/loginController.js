@@ -1,4 +1,5 @@
 const User = require('../model/userModel');
+const Wallet = require('../model/walletModel');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const nodemailer = require('nodemailer');
@@ -63,7 +64,7 @@ const insertUser = async (req, res) => {
             return res.render('register', { message: "Email already in use" });
         }
         const otp = generateOTP();
-        req.session.otp = otp;
+        req.session.otp = { value: otp, expires: Date.now() + 60000 };
         req.session.userData = {
             customerName: req.body.customerName,
             userName: req.body.userName,
@@ -94,13 +95,16 @@ const loadOTP = async (req, res) => {
 
 const verifyOTP = async (req, res) => {
     try {
-        const otp = req.body.otp;
-        const sessionOTP = req.session.otp;
-
+        const { otp } = req.body;
+        const sessionOTP = req.session.otp.value;
         if (!sessionOTP) {
-            return res.render('otp_validation', { message: "Session expired" });
+            return res.status(400).json({ success: false, message: "Session expired" });
         }
-
+        const currentTime = Date.now();
+        if (currentTime > sessionOTP.expires) {
+            req.session.otp = null;
+            return res.status(400).json({ success: false, message: "OTP expired" });
+        }
         if (sessionOTP === otp) {
             req.session.otp = null;
             const userData = req.session.userData;
@@ -108,12 +112,12 @@ const verifyOTP = async (req, res) => {
             user.isOTPVerified = true;
             await user.save();
             req.session.userData = null;
-            res.render('login', { message: "Registration successful" });
+            return res.status(201).json({ success: true, message: "Registration successful" });
         } else {
-            res.render('otp_validation', { message: "Invalid OTP" });
+            return res.status(400).json({ success: false, message: "Invalid OTP" });
         }
     } catch (error) {
-        res.status(500).send(error.message);
+        res.status(500).json({ success: false, message: error.message });
     }
 };
 
@@ -121,18 +125,19 @@ const resendOTP = async (req, res) => {
     try {
         const userData = req.session.userData;
         if (!userData) {
-            return res.render('register', { message: "Session expired, please register again" });
+            return res.status(400).json({ success: false, message: "Session expired, please register again" });
         }
 
-        const newOTP = generateOTP();
-        req.session.otp = newOTP;
-        await sendOTPViaEmail(userData.userEmail, newOTP);
+        const otp = generateOTP();
+        req.session.otp = { value: otp, expires: Date.now() + 60000 };
+        await sendOTPViaEmail(userData.userEmail, otp);
 
-        res.redirect(`/otp_validation`);
+        res.status(200).json({ success: true, message: "OTP resent successfully" });
     } catch (error) {
-        res.status(500).send(error.message);
+        res.status(500).json({ success: false, message: error.message });
     }
 };
+
 
 const loadLogin = async (req,res) => {
     try{

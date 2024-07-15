@@ -2,7 +2,8 @@ require('dotenv').config()
 
 //mongodb require
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/ecompro1');
+const mongoURI = process.env.mongo_uri
+mongoose.connect(mongoURI);
 
 //express require
 const express = require('express');

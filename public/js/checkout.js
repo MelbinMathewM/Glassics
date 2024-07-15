@@ -9,10 +9,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
 });
 
-
 const modalc = document.getElementById("myModalc");
 const addAddressModal = document.getElementById("addAddressModal");
-const couponModal = document.getElementById("couponModal")
+const couponModal = document.getElementById("couponModal");
 const btn = document.getElementById("change-address-btn");
 const spanCloseModalc = document.querySelector("#myModalc .close");
 const spanCloseAddAddressModal = document.querySelector("#addAddressModal .close");
@@ -33,11 +32,11 @@ if (addAddressLink) {
     addAddressLink.addEventListener('click', function (e) {
         e.preventDefault();
         if (modalc.style.display = "none") {
-            modalc.style.display = 'block'
-        };
+            modalc.style.display = 'block';
+        }
         addAddressModal.style.display = "block";
     });
-};
+}
 
 btnOpenModal.onclick = function () {
     couponModal.style.display = 'block';
@@ -66,11 +65,11 @@ window.onclick = function (event) {
 };
 
 var addAddressForm = document.getElementById("add-address-form");
-addAddressForm.onsubmit = function (event) {
+addAddressForm.onsubmit = async function (event) {
     event.preventDefault();
 
     var errorMessagesDiv = document.getElementById("error-messages");
-    errorMessagesDiv.innerHTML = '';
+    errorMessagesDiv.innerHTML = ''; // Clear previous error messages
 
     const addressName = document.getElementById("addressName").value.trim();
     const addressEmail = document.getElementById("addressEmail").value.trim();
@@ -132,9 +131,10 @@ addAddressForm.onsubmit = function (event) {
     }
 
     if (errors.length > 0) {
-        errorMessagesDiv.innerHTML = errors[0];
+        errorMessagesDiv.innerHTML = errors.join('<br>');
         return;
     }
+
     var newAddress = {
         addressName: addressName,
         addressEmail: addressEmail,
@@ -148,44 +148,45 @@ addAddressForm.onsubmit = function (event) {
         addressState: addressState,
         addressPin: addressPin
     };
-    fetch('/checkout/add_address', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newAddress)
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Address Added',
-                    text: data.message,
-                });
-                addAddressModal.style.display = "none";
-                addAddressToList(newAddress);
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: data.message,
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
+
+    try {
+        const response = await fetch('/checkout/add_address', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newAddress)
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+
+        if (data.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Address Added',
+                text: data.message,
+            });
+            addAddressToList(newAddress);
+        addAddressModal.style.display = "none"; // Close the add address modal
+        } else {
             Swal.fire({
                 icon: 'error',
-                title: 'Unexpected Error',
-                text: 'An unexpected error occurred. Please try again later.',
+                title: 'Error',
+                text: data.message,
             });
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Unexpected Error',
+            text: 'An unexpected error occurred. Please try again later.',
         });
+    }
 };
 
 selectBtn.onclick = function () {
@@ -207,7 +208,9 @@ selectBtn.onclick = function () {
 
 function addAddressToList(address) {
     var addressList = document.getElementById("address-list");
-    var index = addressList.children.length;
+    var index = addressList.children.length; // Calculate index based on current length
+    console.log(index);
+
     var listItem = document.createElement("li");
     listItem.innerHTML = `
         <div class="row mb-2">
@@ -223,19 +226,40 @@ function addAddressToList(address) {
                 </label>
             </div>
         </div>`;
+
     addressList.appendChild(listItem);
 
+    // Rebind select button click event to handle dynamically added addresses
+    selectBtn.onclick = function () {
+        var selectedAddressRadio = document.querySelector('input[name="address"]:checked');
+        if (selectedAddressRadio) {
+            var selectedAddressIndex = selectedAddressRadio.value;
+            var selectedAddress = document.querySelector('label[for="address-' + selectedAddressIndex + '"]').innerText;
+            document.getElementById("addressDetails").value = selectedAddressIndex;
+            currentAddress.innerText = "Current Address: " + selectedAddress;
+            modalc.style.display = "none";
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'No Address Selected',
+                text: 'Please select an address.',
+            });
+        }
+    };
+
+    // Automatically select the newly added address
     var newAddressRadio = document.getElementById(`address-${index}`);
     newAddressRadio.checked = true;
-    document.getElementById("addressDetails").value = index;
     var selectedAddress = document.querySelector('label[for="address-' + index + '"]').innerText;
-    document.getElementById("current-address").innerText = "Current Address: " + selectedAddress;
+    document.getElementById("addressDetails").value = index;
+    currentAddress.innerText = "Current Address: " + selectedAddress;
 
     newAddressRadio.onclick = function () {
         document.getElementById("addressDetails").value = index;
-        document.getElementById("current-address").innerText = "Current Address: " + selectedAddress;
+        currentAddress.innerText = "Current Address: " + selectedAddress;
     };
 }
+
 
 function formatPrice(price) {
     return `₹${price.toFixed(2)}`;
@@ -402,9 +426,10 @@ document.getElementById('checkout-form').onsubmit = async function (event) {
                             orderCreationId: data.razorpayOrderId,
                             razorpayPaymentId: response.razorpay_payment_id,
                             razorpayOrderId: response.razorpay_order_id,
-                            razorpaySignature: response.razorpay_signature
+                            razorpaySignature: response.razorpay_signature,
+                            orderData: data.orderData
                         };
-                        try{
+                        try {
                             const verifyResponse = await fetch('/verify_razorpay_payment', {
                                 method: 'POST',
                                 headers: {
@@ -428,13 +453,13 @@ document.getElementById('checkout-form').onsubmit = async function (event) {
                                     text: verifyData.error,
                                 });
                             }
-                        }catch(error){
+                        } catch (error) {
                             console.error('Error verifying payment:', error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Payment Verification Error',
-                            text: 'Failed to verify payment. Please contact support.',
-                        });
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Payment Verification Error',
+                                text: 'Failed to verify payment. Please contact support.',
+                            });
                         }
                     },
                     prefill: {
@@ -458,7 +483,7 @@ document.getElementById('checkout-form').onsubmit = async function (event) {
                             headers: {
                                 'Content-Type': 'application/json'
                             },
-                            body: JSON.stringify({ orderID: data.orderID })
+                            body: JSON.stringify({ orderData: data.orderData })
                         });
                         window.location.href = '/shop';
                     });
@@ -480,7 +505,7 @@ document.getElementById('checkout-form').onsubmit = async function (event) {
             });
         }
     } else if (selectedPaymentMethod.value === 'COD') {
-        if(finalPrice > 1000){
+        if (finalPrice > 1000) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Maximum limit for COD',

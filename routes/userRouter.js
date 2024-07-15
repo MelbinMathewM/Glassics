@@ -112,9 +112,10 @@ u_route.delete('/account/wishlist/delete/:id',userController.removeWishlist);
 //order routes
 u_route.get('/account/orders',userAuth.isLogin,orderController.loadOrder);
 u_route.post('/continue_payment',orderController.continuePay);
+u_route.post('/verify_continue_payment',orderController.verifyContinuePayment);
 u_route.get('/account/orders/order_details',userAuth.isLogin,orderController.loadOrderDetail);
 u_route.post('/account/orders/order_details/cancel_order',orderController.cancelOrder);
-u_route.get('/account/orders/order_details/invoice',orderController.getInvoice);
+u_route.get('/account/orders/order_details/invoice',userAuth.isLogin,orderController.getInvoice);
 u_route.post('/account/orders/order_details/return_order',orderController.returnOrder);
 
 //address routes
