@@ -135,23 +135,55 @@
                                                         <td class="p-4">&#8377;<%= totalPrice.toFixed(2) %></td>
                                                         <td class="p-4"><%= itemsCount %></td>
                                                         <td class="pe-4 pt-3">
-                                                            <% let statusText = ''; %>
-                                                            <% order.items.forEach(item => { %>
-                                                                <% if (item.orderStatus.toLowerCase() === 'returned') { %>
-                                                                    <% statusText = 'Returned'; %>
-                                                                <% } else if (item.orderStatus.toLowerCase() === 'return requested') { %>
-                                                                    <% statusText = 'Requested'; %>
-                                                                <% } %>
-                                                                <% if (statusText) return; %>
-                                                            <% }); %>
-                                                            <% if (statusText === 'Returned') { %>
+                                                            <% 
+                                                            let statusCounts = {
+                                                                delivered: 0,
+                                                                canceled: 0,
+                                                                returned: 0,
+                                                                returnrequested: 0,
+                                                                pending: 0,
+                                                                processing: 0,
+                                                                dispatched: 0,
+                                                            };
+                                                        
+                                                            order.items.forEach(item => {
+                                                                statusCounts[item.orderStatus.toLowerCase().replace(' ', '')]++;
+                                                            });
+                                                        
+                                                            let statusText = '';
+                                                            if (statusCounts.delivered === order.items.length) {
+                                                                statusText = 'Delivered';
+                                                            } else if (statusCounts.canceled === order.items.length) {
+                                                                statusText = 'Canceled';
+                                                            } else if (statusCounts.returned === order.items.length) {
+                                                                statusText = 'Returned';
+                                                            } else if (statusCounts.returnrequested === order.items.length) {
+                                                                statusText = 'Return Requested';
+                                                            } else if (statusCounts.processing > 0) {
+                                                                statusText = 'Processing';
+                                                            } else if (statusCounts.dispatched > 0) {
+                                                                statusText = 'Dispatched';
+                                                            } else {
+                                                                statusText = 'Pending';
+                                                            }
+                                                            %>
+                                                        
+                                                            <% if (statusText === 'Delivered') { %>
+                                                                <p class="text-success"><%= statusText %></p>
+                                                            <% } else if (statusText === 'Canceled') { %>
+                                                                <p class="text-danger"><%= statusText %></p>
+                                                            <% } else if (statusText === 'Returned') { %>
                                                                 <p class="text-secondary"><%= statusText %></p>
-                                                            <% } else if (statusText === 'Requested') { %>
+                                                            <% } else if (statusText === 'Return Requested') { %>
                                                                 <p class="text-warning"><%= statusText %></p>
+                                                            <% } else if (statusText === 'Processing') { %>
+                                                                <p class="text-info"><%= statusText %></p>
+                                                            <% } else if (statusText === 'Dispatched') { %>
+                                                                <p class="text-primary"><%= statusText %></p>
                                                             <% } else { %>
                                                                 <p>Pending</p>
                                                             <% } %>
-                                                        </td>
+                                                        </td>                                                 
                                                         <td class="p-4">
                                                             <a href="/admin/orders/order_details?id=<%= order._id %>" class="btn btn-primary btn-sm">Details</a>
                                                         </td>

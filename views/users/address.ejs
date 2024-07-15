@@ -24,8 +24,6 @@
                     </div>
                     <div class="col-lg-3 col-md-3 col-6 d-flex justify-content-end align-items-center">
                         <div class="header__nav__option mb-3">
-                            <a href="#" class="search-switch"><img src="/static/img/icon/search.png" alt=""></a>
-                            <a href="#"><img src="/static/img/icon/heart.png" alt=""></a>
                             <a href="/cart"><img src="/static/img/icon/cart.png" alt=""></a>
                         </div>
                         <button class="navbar-toggler d-md-none ml-auto mt-1" type="button" data-toggle="collapse"
@@ -111,10 +109,8 @@
                                 <div class="breadcrumb__text ps-4">
                                     <h4 class="mt-3">Address</h4>
                                     <div>
-                                        <a class="text-decoration-none text-dark fw-bold"
-                                            href="/">Home&nbsp;&gt;&nbsp;</a>
-                                        <a class="text-decoration-none text-dark fw-bold"
-                                            href="/account/profile">Account</a>
+                                        <a class="text-decoration-none text-dark fw-bold" href="/">Home&nbsp;&gt;&nbsp;</a>
+                                        <a class="text-decoration-none text-dark fw-bold" href="/account/profile">Account</a>
                                         <span>&nbsp;&gt;&nbsp;Address</span>
                                     </div>
                                 </div>
@@ -128,9 +124,9 @@
                         <!-- Heading and Add Address Button -->
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h2 class="mb-0">My Addresses</h2>
-                            <a href="/account/address/add_address"><button class="btn btn-success">Add Address</button></a>
+                            <button class="btn btn-success" onclick="openAddAddressModal()">Add New Address</button>
                         </div>
-                        
+            
                         <!-- Address List -->
                         <div id="address-list">
                             <div class="row">
@@ -145,21 +141,149 @@
                                                 <%= address.addressCity %>, <%= address.addressDistrict %> <%= address.addressState %><br>
                                                 <%= address.addressPin %>
                                             </p>
-                                            <a href="/account/address/edit_address?id=<%= address._id %>"><button class="btn btn-primary btn-sm">Edit</button></a>
-                                            <button class="btn btn-danger btn-sm" onclick="deleteAddress('<%= address._id %>')">Delete</button>
+                                            <!-- Button to open Edit Address Modal -->
+                                            <button class="btn btn-primary" onclick="openEditAddressModal('<%= address._id %>')">Edit</button>
+                                            <button class="btn btn-danger" onclick="deleteAddress('<%= address._id %>')">Delete</button>
+                                            <!-- Edit Address modal -->
+                                            <div id="addressModal_<%= address._id %>" class="modal">
+                                                <div class="modal-content">
+                                                    <span class="close" onclick="closeEditAddressModal('<%= address._id %>')">&times;</span>
+                                                    <h3 id="addressModalTitle_<%= address._id %>" class="mb-3 text-center">Edit Address</h3>
+                                                    <div id="addressMessageContainer_<%= address._id %>" class="message-container text-center fw-bold"></div>
+                                                    <form id="addressForm_<%= address._id %>" onsubmit="handleEditAddressFormSubmit(event)">
+                                                        <div id="addressErrors_<%= address._id %>" class="text-warning fw-bold text-center"></div>
+                                                        <div class="row form-group mb-3">
+                                                            <div class="col">
+                                                                <label for="addressName">Name</label>
+                                                                <input type="text" name="addressName" class="form-control" id="addressName_<%= address._id %>" value="<%= address.addressName %>">
+                                                            </div>
+                                                            <div class="col">
+                                                                <label for="addressEmail">Email</label>
+                                                                <input type="email" name="addressEmail" class="form-control" id="addressEmail_<%= address._id %>" value="<%= address.addressEmail %>">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row form-group mb-3">
+                                                            <div class="col">
+                                                                <label for="addressMobile">Mobile</label>
+                                                                <input type="tel" name="addressMobile" class="form-control" id="addressMobile_<%= address._id %>" pattern="[0-9]{10}" value="<%= address.addressMobile %>">
+                                                            </div>
+                                                            <div class="col">
+                                                                <label for="addressHouse">House/Flat No.</label>
+                                                                <input type="text" name="addressHouse" class="form-control" id="addressHouse_<%= address._id %>" value="<%= address.addressHouse %>">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row form-group mb-3">
+                                                            <div class="col">
+                                                                <label for="addressStreet">Street</label>
+                                                                <input type="text" name="addressStreet" class="form-control" id="addressStreet_<%= address._id %>" value="<%= address.addressStreet %>">
+                                                            </div>
+                                                            <div class="col">
+                                                                <label for="addressPost">Post Office</label>
+                                                                <input type="text" name="addressPost" class="form-control" id="addressPost_<%= address._id %>" value="<%= address.addressPost %>">
+                                                            </div>
+                                                            <div class="col">
+                                                                <label for="addressCity">City</label>
+                                                            <input type="text" name="addressCity" class="form-control" id="addressCity_<%= address._id %>" value="<%= address.addressCity %>">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row form-group mb-3">
+                                                            <div class="col">
+                                                                <label for="addressDistrict">District</label>
+                                                                <select class="form-control text-black" name="addressDistrict" value="<%= address.addressDistrict %>" id="addressDistrict">
+                                                                    <option>Kannur</option>
+                                                                    <option>Kasargod</option>
+                                                                    <option>Kozhikode</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col">
+                                                                <label for="addressState">State</label>
+                                                                <select class="form-control text-black" name="addressState" value="<%= address.addressState %>" id="addressState">
+                                                                    <option>Kerala</option>
+                                                                    <option>Karnataka</option>
+                                                                    <option>Tamil Nadu</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col">
+                                                                <label for="addressPin">PIN Code</label>
+                                                            <input type="text" name="addressPin" class="form-control" id="addressPin_<%= address._id %>" pattern="[0-9]{6}" value="<%= address.addressPin %>">
+                                                            </div>
+                                                        </div>
+                                                        <input type="hidden" name="addressId" value="<%= address._id %>">
+                                                        <div class="form-group text-center">
+                                                            <button type="submit" class="btn btn-primary" id="addressSubmitBtn">Update Address</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <% }) %>
                             </div>
-                        </div>
+                        </div>                        
                     </div>
                 </div>
-              <!-- main-panel ends -->
+            </div>                  
         </div>
         <!-- page-body-wrapper ends -->
     </div>
     <!-- container-scroller -->
+
+    <!-- Address modal -->
+<div id="addAddressModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeAddAddressModal()">&times;</span>
+        <h3 id="addressModalTitle" class="mb-3 text-center">Add Address</h3>
+        <div id="addressMessageContainer" class="message-container text-center fw-bold"></div>
+        <form id="addressForm" onsubmit="handleAddAddressFormSubmit(event)">
+            <div id="addressErrors" class="text-warning fw-bold text-center"></div>
+            <div class="form-group mb-3">
+                <label for="addressName">Name</label>
+                <input type="text" name="addressName" class="form-control" id="addressName">
+            </div>
+            <div class="form-group mb-3">
+                <label for="addressEmail">Email</label>
+                <input type="email" name="addressEmail" class="form-control" id="addressEmail">
+            </div>
+            <div class="form-group mb-3">
+                <label for="addressMobile">Mobile</label>
+                <input type="tel" name="addressMobile" class="form-control" id="addressMobile">
+            </div>
+            <div class="form-group mb-3">
+                <label for="addressHouse">House/Flat No.</label>
+                <input type="text" name="addressHouse" class="form-control" id="addressHouse">
+            </div>
+            <div class="form-group mb-3">
+                <label for="addressStreet">Street</label>
+                <input type="text" name="addressStreet" class="form-control" id="addressStreet">
+            </div>
+            <div class="form-group mb-3">
+                <label for="addressPost">Post Office</label>
+                <input type="text" name="addressPost" class="form-control" id="addressPost">
+            </div>
+            <div class="form-group mb-3">
+                <label for="addressCity">City</label>
+                <input type="text" name="addressCity" class="form-control" id="addressCity">
+            </div>
+            <div class="form-group mb-3">
+                <label for="addressDistrict">District</label>
+                <input type="text" name="addressDistrict" class="form-control" id="addressDistrict">
+            </div>
+            <div class="form-group mb-3">
+                <label for="addressState">State</label>
+                <input type="text" name="addressState" class="form-control" id="addressState">
+            </div>
+            <div class="form-group mb-3">
+                <label for="addressPin">PIN Code</label>
+                <input type="text" name="addressPin" class="form-control" id="addressPin">
+            </div>
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-primary" id="addressSubmitBtn">Save Address</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 
     <style>
         header {
@@ -193,6 +317,40 @@
         }
         .editref:hover {
             color: red;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -240,7 +398,210 @@
             });
         }
     </script>
-   
+   <script>
+
+function openEditAddressModal(addressId) {
+    const modal = document.getElementById(`addressModal_${addressId}`);
+    modal.style.display = 'block';
+    const modalTitle = document.getElementById(`addressModalTitle_${addressId}`);
+    const submitBtn = document.getElementById(`addressSubmitBtn_${addressId}`); 
+}
+
+// Function to open the add address modal
+function openAddAddressModal() {
+    const modal = document.getElementById('addAddressModal');
+    modal.style.display = 'block';
+}
+
+// Function to close the edit address modal
+function closeEditAddressModal(addressId) {
+    const modal = document.getElementById(`addressModal_${addressId}`);
+    modal.style.display = 'none';
+}
+
+// Function to close the add address modal
+function closeAddAddressModal() {
+    const modal = document.getElementById('addAddressModal');
+    modal.style.display = 'none';
+}
+
+// Function to handle edit address form submission
+async function handleEditAddressFormSubmit(event) {
+    event.preventDefault();
+    const addressId = event.target.addressId.value;
+
+    // Collect form data
+    const formData = {
+        addressName: event.target.addressName.value,
+        addressEmail: event.target.addressEmail.value,
+        addressMobile: event.target.addressMobile.value,
+        addressHouse: event.target.addressHouse.value,
+        addressStreet: event.target.addressStreet.value,
+        addressPost: event.target.addressPost.value,
+        addressCity: event.target.addressCity.value,
+        addressDistrict: event.target.addressDistrict.value,
+        addressState: event.target.addressState.value,
+        addressPin: event.target.addressPin.value
+    };
+
+    // Validate form fields
+    const errors = validateForm(formData);
+    const errorContainer = document.getElementById(`addressErrors_${addressId}`);
+    if (errors.length > 0) {
+        errorContainer.textContent = errors[0];
+        return;
+    } else {
+        errorContainer.textContent = '';
+    }
+
+    const messageContainer = document.getElementById(`addressMessageContainer_${addressId}`);
+    try {
+        const url = `/account/address/edit/${addressId}`;
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+        const data = await response.json();
+        if (response.ok) { 
+            messageContainer.textContent = data.message || 'Address updated successfully.';
+            messageContainer.style.color = 'green';
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            messageContainer.textContent = data.message;
+            messageContainer.style.color = 'red';
+        }
+    } catch (error) {
+        messageContainer.textContent = data.message;
+        messageContainer.style.color = 'red';
+    }
+}
+
+// Function to handle add address form submission
+async function handleAddAddressFormSubmit(event) {
+    event.preventDefault();
+
+    // Collect form data
+    const formData = {
+        addressName: event.target.addressName.value,
+        addressEmail: event.target.addressEmail.value,
+        addressMobile: event.target.addressMobile.value,
+        addressHouse: event.target.addressHouse.value,
+        addressStreet: event.target.addressStreet.value,
+        addressPost: event.target.addressPost.value,
+        addressCity: event.target.addressCity.value,
+        addressDistrict: event.target.addressDistrict.value,
+        addressState: event.target.addressState.value,
+        addressPin: event.target.addressPin.value
+    };
+    console.log(formData);
+
+    const errors = validateForm(formData);
+    const errorContainer = document.getElementById('addressErrors');
+    if (errors.length > 0) {
+        errorContainer.textContent = errors[0];
+        return;
+    } else {
+        errorContainer.textContent = '';
+    }
+
+    const messageContainer = document.getElementById('addressMessageContainer');
+    try {
+        const url = `/account/address/add`;
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+        const data = await response.json();
+        if (response.ok) {
+            messageContainer.textContent = data.message || 'Address updated successfully.';
+            messageContainer.style.color = 'green';
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            messageContainer.textContent = data.message;
+            messageContainer.style.color = 'red';
+        }
+    } catch (error) {
+        messageContainer.textContent = data.message;
+        messageContainer.style.color = 'red';
+    }
+}
+
+// Function to validate form fields
+function validateForm(formData) {
+    const errors = [];
+
+    if (!formData.addressName) {
+        errors.push('Name is required.');
+    }
+
+    if (!formData.addressEmail) {
+        errors.push('Email is required.');
+    } else if (!isValidEmail(formData.addressEmail)) {
+        errors.push('Please enter a valid email address.');
+    }
+
+    if (!formData.addressMobile) {
+        errors.push('Mobile number is required.');
+    } else if (!isValidMobile(formData.addressMobile)) {
+        errors.push('Please enter a valid 10-digit mobile number.');
+    }
+
+    if (!formData.addressHouse) {
+        errors.push('House/Flat No. is required.');
+    }
+
+    if (!formData.addressStreet) {
+        errors.push('Street is required.');
+    }
+
+    if (!formData.addressPost) {
+        errors.push('Post Office name is required.');
+    }
+
+    if (!formData.addressCity) {
+        errors.push('City is required.');
+    }
+
+    if (!formData.addressDistrict) {
+        errors.push('District is required.');
+    }
+
+    if (!formData.addressState) {
+        errors.push('State is required.');
+    }
+
+    if (!formData.addressPin) {
+        errors.push('PIN Code is required.');
+    } else if (!isValidPin(formData.addressPin)) {
+        errors.push('Please enter a valid 6-digit PIN Code.');
+    }
+
+    return errors;
+}
+
+// Function to validate email format
+function isValidEmail(email) {
+    return /^\S+@\S+\.\S+$/.test(email);
+}
+
+// Function to validate 10-digit mobile number
+function isValidMobile(mobile) {
+    return /^[1-9][0-9]{9}$/.test(mobile);
+}
+
+// Function to validate 6-digit PIN code
+function isValidPin(pin) {
+    return /^[0-9]{6}$/.test(pin);
+}
+
+</script>
+
    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

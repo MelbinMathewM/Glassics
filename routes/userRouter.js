@@ -120,10 +120,8 @@ u_route.post('/account/orders/order_details/return_order',orderController.return
 
 //address routes
 u_route.get('/account/address',userAuth.isLogin,accountController.loadAddress);
-u_route.get('/account/address/add_address',userAuth.isLogin,userAuth.isLogin,accountController.loadAddAddress);
-u_route.post('/account/address/add_address',accountController.insertAddress);
-u_route.get('/account/address/edit_address',userAuth.isLogin,userAuth.isLogin,accountController.loadEditAddress);
-u_route.post('/account/address/edit_address',accountController.updateAddress);
+u_route.post('/account/address/add',accountController.insertAddress);
+u_route.put('/account/address/edit/:id',accountController.updateAddress);
 u_route.get('/account/address/delete_address',userAuth.isLogin,accountController.deleteAddress);
 
 //wallet routes

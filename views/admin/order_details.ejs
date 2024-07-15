@@ -211,67 +211,99 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function confirmUpdateOrderStatus(itemId, newStatus, currentStatus) {
-        if (currentStatus === 'Canceled' || currentStatus === 'Delivered' && newStatus !== 'Returned') {
-            Swal.fire({
-                icon: 'error',
-                title: 'Update Failed',
-                text: 'Cannot update status because the order is already canceled, delivered or returned.'
-            });
-            return;
-        }
+    const statusOrder = {
+        'Pending': 0,
+        'Processing': 1,
+        'Dispatched': 2,
+        'Delivered': 3,
+        'Canceled': 4,
+        'Return requested': 5,
+        'Returned': 6
+    };
+
+    const currentStatusOrder = statusOrder[currentStatus];
+    const newStatusOrder = statusOrder[newStatus];
+
+    if(currentStatus === 'Canceled'){
         Swal.fire({
-            title: 'Are you sure?',
-            text: `You are about to change the status to "${newStatus}".`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, change it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                updateOrderStatus(itemId, newStatus);
-                //location.reload();
-            }
+            icon: 'error',
+            title: 'Update failed',
+            text: 'Cannot change status of canceled orders'
         });
+        return
     }
 
-    function updateOrderStatus(itemId, newStatus) {
-        fetch('/admin/orders/order_details/change_status', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ itemId, newStatus })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const statusElement = document.getElementById(`status-${itemId}`).querySelector('span:nth-child(2)');
-                statusElement.innerText = data.newStatus;
-                statusElement.className = `status-${data.newStatus.toLowerCase()}`;
-                Swal.fire(
-                    'Updated!',
-                    'Order status has been updated.',
-                    'success'
-                );
-            } else {
-                console.error('Server error:', data.message);
-                Swal.fire(
-                    'Error!',
-                    data.message,
-                    'error'
-                );
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
+    if (newStatusOrder < currentStatusOrder) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Update Failed',
+            text: 'Cannot update to a previous status.'
+        });
+        return;
+    }
+
+    if ((currentStatus === 'Delivered' || currentStatus === 'Returned') && newStatus === 'Canceled') {
+        Swal.fire({
+            icon: 'error',
+            title: 'Update Failed',
+            text: 'Cannot cancel a delivered or returned order.'
+        });
+        return;
+    }
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: `You are about to change the status to "${newStatus}".`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, change it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            updateOrderStatus(itemId, newStatus);
+        }
+    });
+}
+
+function updateOrderStatus(itemId, newStatus) {
+    fetch('/admin/orders/order_details/change_status', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ itemId, newStatus })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const statusElement = document.getElementById(`status-${itemId}`).querySelector('span:nth-child(2)');
+            statusElement.innerText = data.newStatus;
+            statusElement.className = `status-${data.newStatus.toLowerCase()}`;
+            Swal.fire(
+                'Updated!',
+                'Order status has been updated.',
+                'success'
+            );
+        } else {
+            console.error('Server error:', data.message);
             Swal.fire(
                 'Error!',
-                'Failed to update the order status.',
+                data.message,
                 'error'
             );
-        });
-    }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire(
+            'Error!',
+            'Failed to update the order status.',
+            'error'
+        );
+    });
+}
+
 </script>
 <!-- Include Bootstrap JS and dependencies -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.bundle.min.js"></script>

@@ -55,6 +55,7 @@ a_route.get('/login',adminAuth.isLogout,adminController.loadLogin);
 a_route.post('/login',adminController.verifyAdmin);
 
 //dashboard management
+a_route.get('/',adminAuth.isLogin,dashboardController.loadDashboard);
 a_route.get('/dashboard',adminAuth.isLogin,dashboardController.loadDashboard);
 a_route.get('/dashboard/sales_data',adminAuth.isLogin,dashboardController.loadSalesData);
 a_route.get('/dashboard/top_products',adminAuth.isLogin,dashboardController.getTopProducts);

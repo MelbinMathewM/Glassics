@@ -128,37 +128,65 @@ const loadOrderDetail = async (req, res) => {
 const changeStatusOrder = async (req, res) => {
     try {
         const { itemId, newStatus } = req.body;
-        const validStatuses = ['Pending', 'Processing', 'Dispatched', 'Delivered', 'Canceled','Returned','Return requested'];
+        const validStatuses = ['Pending', 'Processing', 'Dispatched', 'Delivered', 'Canceled', 'Returned', 'Return requested'];
+        
         if (!validStatuses.includes(newStatus)) {
             return res.status(400).json({ success: false, message: 'Invalid status' });
         }
+
+        const statusOrder = {
+            'Pending': 0,
+            'Processing': 1,
+            'Dispatched': 2,
+            'Delivered': 3,
+            'Canceled': 4,
+            'Return requested': 5,
+            'Returned': 6
+        };
+
         const order = await Order.findOne({ 'items._id': itemId });
         if (!order) {
-            return res.json({ success: false, message: 'Could not find order' });
+            return res.status(404).json({ success: false, message: 'Could not find order' });
         }
+        
         const item = order.items.id(itemId);
         if (!item) {
-            return res.json({ success: false, message: 'Could not find item' });
+            return res.status(404).json({ success: false, message: 'Could not find item' });
         }
+
+        const currentStatusOrder = statusOrder[item.orderStatus];
+        const newStatusOrder = statusOrder[newStatus];
+
+        if (newStatusOrder < currentStatusOrder) {
+            return res.status(400).json({ success: false, message: 'Cannot update to a previous status.' });
+        }
+
+        if ((item.orderStatus === 'Delivered' || item.orderStatus === 'Returned') && newStatus === 'Canceled') {
+            return res.status(400).json({ success: false, message: 'Cannot cancel a delivered or returned order.' });
+        }
+
         if (newStatus === 'Canceled' || newStatus === 'Returned') {
             const product = await Product.findById(item.product_id);
             if (!product) {
-                return res.json({ success: false, message: 'Could not find product' });
+                return res.status(404).json({ success: false, message: 'Could not find product' });
             }
             const variant = product.variants.find(v => v.color === item.productColor);
             if (!variant) {
-                return res.json({ success: false, message: 'Could not find variant' });
+                return res.status(404).json({ success: false, message: 'Could not find variant' });
             }
             const subvariant = variant.subVariants.find(s => s.size === item.productSize);
             if (!subvariant) {
-                return res.json({ success: false, message: 'Could not find subvariant' });
+                return res.status(404).json({ success: false, message: 'Could not find subvariant' });
             }
             subvariant.quantity += item.quantity;
             await product.save();
+            
             if (order.paymentMethod === 'RazorPay' || order.paymentMethod === 'wallet') {
-                const wallet = await Wallet.findOne({user : order.customer_id });
+                const wallet = await Wallet.findOne({ user: order.customer_id });
                 if (!wallet) {
-                    return res.json({ success: false, message: 'User not found.' });
+                    wallet = new Wallet({
+                        user: order.customer_id
+                    });
                 }
                 wallet.balance += item.productDiscPrice * item.quantity;
                 wallet.transactions.push({
@@ -169,19 +197,21 @@ const changeStatusOrder = async (req, res) => {
                 await wallet.save();
             }
         }
+
         item.orderStatus = newStatus;
-        if(item.orderStatus === 'Delivered'){
+        if (item.orderStatus === 'Delivered') {
             item.deliveryDate = Date.now();
-        }
-        if(item.orderStatus === 'Canceled'){
+        } else if (item.orderStatus === 'Canceled') {
             item.deliveryDate = null;
         }
         await order.save();
         res.json({ success: true, message: 'Order status updated successfully.', newStatus });
     } catch (error) {
+        console.error('Error updating order status:', error);
         res.status(500).json({ success: false, message: 'Failed to update the order status.' });
     }
 };
+
 
 const getReturnedOrder = async (req, res) => {
     try {

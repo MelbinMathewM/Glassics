@@ -198,12 +198,12 @@
                                                                         <% } %>
                                                                         <% if (item.orderStatus === 'Delivered') { %>
                                                                             <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#returnModal" onclick="openReturnModal('<%= order._id %>','<%= item._id %>')">Return</button>
-                                                                        <% } else if (item.orderStatus !== 'Canceled' || item.orderStatus !== 'Returned' || item.orderStatus !== 'Return requested') { %>
+                                                                        <% } else if (item.orderStatus !== 'Canceled' && item.orderStatus !== 'Returned' && item.orderStatus !== 'Return requested') { %>
                                                                             <button class="btn btn-danger btn-sm" onclick="cancelOrder('<%= item._id %>')">Cancel</button>
-                                                                        <% } %>                                                                        
+                                                                        <% } %>
                                                                         <% if (item.orderStatus === 'Return requested' || item.orderStatus === 'Returned') { %>
                                                                             <p>Return Reason: <%= item.returnReason %></p>
-                                                                        <% } %>
+                                                                        <% } %>                                                                        
                                                                     </div>
                                                                 </div>
                                                             </div>

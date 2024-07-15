@@ -122,14 +122,6 @@ const loadAddress = async (req, res) => {
     }
 };
 
-const loadAddAddress = async (req, res) => {
-    try {
-        res.render('add_address');
-    } catch (error) {
-        res.send(error);
-    }
-};
-
 const insertAddress = async (req, res) => {
     try {
         const { addressName, addressEmail, addressMobile, addressHouse, addressStreet, addressPost, addressMark, addressCity, addressDistrict, addressState, addressPin } = req.body;
@@ -150,56 +142,44 @@ const insertAddress = async (req, res) => {
         });
         const addressData = await address.save();
         if (addressData) {
-            return res.redirect(`/account/address`);
+            res.status(201).json({ message: 'Address added successfully.' });
         } else {
-            return res.render('address', { message: "Couldn't insert Address!" })
+            res.status(404).json({ message: "Couldn't insert address." });
         }
     } catch (error) {
-        res.send(error);
-    }
-};
-
-const loadEditAddress = async (req, res) => {
-    try {
-        const id = req.query.id;
-        const addressData = await Address.findById({ _id: id });
-        if (addressData) {
-            res.render('edit_address', { address: addressData })
-        } else {
-            res.render('address');
-        }
-    } catch (error) {
-        res.send(error);
+        res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
     }
 };
 
 const updateAddress = async (req, res) => {
     try {
-        const id = req.query.id;
+        const id = req.params.id;
+        const { addressName, addressEmail, addressMobile, addressHouse, addressStreet, addressPost, addressMark, addressCity, addressDistrict, addressState, addressPin } = req.body;
         const addressData = await Address.findByIdAndUpdate({ _id: id }, {
             $set: {
-                addressName: req.body.addressName,
-                addressEmail: req.body.addressEmail,
-                addressMobile: req.body.addressMobile,
-                addressHouse: req.body.addressHouse,
-                addressStreet: req.body.addressStreet,
-                addressPost: req.body.addressPost,
-                addressMark: req.body.addressMark,
-                addressCity: req.body.addressCity,
-                addressDistrict: req.body.addressDistrict,
-                addressState: req.body.addressState,
-                addressPin: req.body.addressPin
+                addressName: addressName,
+                addressEmail: addressEmail,
+                addressMobile: addressMobile,
+                addressHouse: addressHouse,
+                addressStreet: addressStreet,
+                addressPost: addressPost,
+                addressMark: addressMark,
+                addressCity: addressCity,
+                addressDistrict: addressDistrict,
+                addressState: addressState,
+                addressPin: addressPin
             }
         });
         if (addressData) {
-            return res.redirect(`/account/address`);
+            res.status(201).json({ message: 'Address updated successfully.' });
         } else {
-            return res.render('edit_address', { message: "Couldn't update address" });
+            res.status(404).json({ message: "Couldn't update address." });
         }
     } catch (error) {
-        res.send(error);
+        res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
     }
 };
+
 
 const deleteAddress = async (req, res) => {
     try {
@@ -307,9 +287,7 @@ module.exports = {
     loadEditDetail,
     updateDetail,
     loadAddress,
-    loadAddAddress,
     insertAddress,
-    loadEditAddress,
     updateAddress,
     deleteAddress,
     loadWallet,

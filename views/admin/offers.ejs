@@ -591,6 +591,7 @@
                 errorElement.textContent = 'An unexpected error occurred. Please try again later.';
             }
         }
+        
         function handleEditOfferTypeChange(offerId) {
             const offerType = document.getElementById('offerType_' + offerId).value;
             document.getElementById('categorySection_' + offerId).style.display = offerType === 'categoryOffer' ? 'block' : 'none';
