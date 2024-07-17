@@ -83,7 +83,6 @@ const OrderSchema = new Schema({
     },
     razorpayOrderId : {
         type : String,
-        unique : true
     }
 });
 

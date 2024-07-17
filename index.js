@@ -3,7 +3,9 @@ require('dotenv').config()
 //mongodb require
 const mongoose = require('mongoose');
 const mongoURI = process.env.mongo_uri
-mongoose.connect(mongoURI);
+mongoose.connect(mongoURI)
+.then(() => console.log('mongo connected'))
+.catch((err) => console.log(err))
 
 //express require
 const express = require('express');

@@ -27,12 +27,12 @@ const verifyAdmin = async (req, res) => {
             const passwordMatch = await bcrypt.compare(apassword, adminData.apassword);
             if (passwordMatch) {
                 req.session.admin_id = adminData._id;
-                res.redirect('/admin/dashboard');
+                res.status(201).json({ message : 'Verified successfully'});
             } else {
-                res.render('login', { message: "Incorrect Password" });
+                res.status(404).json({ message : 'Password is incorrect'});
             }
         } else {
-            res.render('login', { message: "User not found" });
+            res.status(404).json({ message : 'User not found'});
         }
     } catch (error) {
         res.send(error);

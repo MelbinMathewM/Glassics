@@ -1,36 +1,32 @@
 <%- include('../partials/header') %>
 
 <div class="container-scroller">
-  <!-- partial:partials/_navbar.html -->
-  <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-      <a class="text-decoration-none" href="/"><h1 class="fw-bold" style="font-style: italic;">Glassics</h1></a>
+        <a class="navbar-brand text-decoration-none" href="/">
+            <h1 class="fw-bold" style="font-style: italic;">Glassics</h1>
+        </a>
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-stretch">
-      <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-        <span class="mdi mdi-menu"></span>
-      </button>
-      <div class="search-field d-none d-md-block">
-        <form class="d-flex align-items-center h-100" action="#">
-          <div class="input-group">
-            <div class="input-group-prepend bg-transparent">
-              <i class="input-group-text border-0 mdi mdi-magnify"></i>
-            </div>
-            <input type="text" class="form-control bg-transparent border-0" placeholder="Search projects">
-          </div>
-        </form>
-      </div>
-      <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-        <span class="mdi mdi-menu"></span>
-      </button>
+
+        <div class="collapse navbar-collapse" id="sidebar">
+            <form class="d-flex ms-auto">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+            <span class="mdi mdi-menu"></span>
+        </button>
     </div>
   </nav>
   <!-- partial -->
-  <div class="container-fluid page-body-wrapper">
+  <div class="container-fluid page-body-wrapper pe-0">
     <!-- partial:partials/_sidebar.html -->
     <nav class="sidebar sidebar-offcanvas" id="sidebar">
       <ul class="nav">
-        <li class="nav-item">
+        <li class="nav-item mt-3">
           <a class="nav-link" href="/admin/dashboard">
             <span class="menu-title">Dashboard</span>
             <i class="mdi mdi-home menu-icon"></i>
@@ -110,44 +106,64 @@
             </span> Unlisted Products
           </h3>
         </div>
-        <table class="table table-striped">
-          <thead>
-            <tr class="text-center">
-              <th>Image</th>
-              <th>Name</th>
-              <th>Qty</th>
-              <th>Price</th>
-              <th>Category</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody class="text-center">
-            <% if(products.length > 0) { %>
-              <% for(let i=0; i<products.length; i++) { %>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr class="text-center">
+                <th>Image</th>
+                <th>Name</th>
+                <th>Brand</th>
+                <th>Category</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody class="text-center">
+              <% if(products.length > 0) { %>
+                <% for(let i=0; i<products.length; i++) { %>
+                  <tr>
+                    <td><img src="/productImages/<%= products[i].variants[0].images[0] %>" alt="" width="150px" height="150px"></td>
+                    <td><%= products[i].productName %></td>
+                    <td><%= products[i].productBrand %></td>
+                    <td><%= products[i].productCategory %></td>
+                    <td>
+                      <a href="#" class="btn btn-danger btn-sm" onclick="confirmReAdd('<%= products[i]._id %>')">Add</a>
+                    </td>
+                  </tr>
+                <% } %>
+              <% } else { %>
                 <tr>
-                  <td><img src="/productImages/<%= products[i].variants[0].images[0] %>" alt="" width="150px" height="150px"></td>
-                  <td><%= products[i].productName %></td>
-                  <td><%= products[i].productQuantity %></td>
-                  <td><%= products[i].productPrice %></td>
-                  <td><%= products[i].productCategory %></td>
-                  <td>
-                    <a href="#" class="btn btn-danger btn-sm" onclick="confirmReAdd('<%= products[i]._id %>')">Add</a>
-                  </td>
+                  <td colspan="5" class="text-center">Products not found</td>
                 </tr>
               <% } %>
-            <% } else { %>
-              <tr>
-                <td colspan="5" class="text-center">Products not found</td>
-              </tr>
-            <% } %>
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
 </div>
 <!-- container-scroller -->
+<style>
+  .page-body-wrapper{
+      position: relative;
+    }
+    .sidebar {
+            position: absolute;
+            position: fixed;
+            bottom: 100;
+            z-index: 999;
+        }
+        @media (min-width : 992px) {
+            .main-panel {
+                margin-left: 260px;
+                
+            }
 
+            .sidebar {
+                margin-top: 12.3px;
+            }
+        }
+</style>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
     function confirmReAdd(productId) {
@@ -195,8 +211,15 @@
   </script>
   
 
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  $(document).ready(function () {
+      $('[data-toggle="offcanvas"]').click(function () {
+          $('.sidebar-offcanvas').toggleClass('active');
+      });
+  });
+</script>
 
 <%- include('../partials/footer') %>

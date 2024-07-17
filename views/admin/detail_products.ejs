@@ -1,54 +1,153 @@
 <%- include('../partials/header') %>
 
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <h1><%= product.productName %></h1>
-        </div>
-        <div class="col text-right">
-            <a href="/admin/products" class="text-light text-decoration-none"><button class="btn btn-primary">Go
-                Back</button></a>
-        </div>
-    </div>
-    <div class="product-info">
-        <p><strong>Description:</strong> <%= product.productDescription %></p>
-        <p><strong>Brand:</strong> <%= product.productBrand %></p>
-        <p><strong>Category:</strong> <%= product.productCategory %></p>
-        <p><strong>Frame material:</strong> <%= product.frameMaterial %></p>
-        <p><strong>Frame shape:</strong> <%= product.frameShape %></p>
-        <p><strong>Frame style:</strong> <%= product.frameStyle %></p>
-        <p><strong>Lens type:</strong> <%= product.lensType %></p>
-        <p><strong>Special features:</strong> <%= product.specialFeatures %></p>
-    </div>
+<div class="container-scroller">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+          <a class="navbar-brand text-decoration-none" href="/">
+              <h1 class="fw-bold" style="font-style: italic;">Glassics</h1>
+          </a>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-stretch">
 
-    <!-- Display Variants -->
-    <h2>Variants:</h2>
-    <% product.variants.forEach((variant, variantIndex) => { %>
-        <div class="variant">
-            <h3>Variant <%= variantIndex + 1 %></h3>
-            <p><strong>Color:</strong> <%= variant.color %></p>
-            <p><strong>Price:</strong> <%= variant.price %></p>
-            <% if (variant.discountPrice) { %>
-                <p><strong>Discount Price:</strong> <%= variant.discountPrice %></p>
-            <% } %>
-            <!-- Display Images for Variant -->
-            <div class="variant-images">
-                <% variant.images.forEach((image, imageIndex) => { %>
-                    <img src="/static/productImages/<%= image %>" alt="Variant Image">
+          <div class="collapse navbar-collapse" id="sidebar">
+              <form class="d-flex ms-auto">
+                  <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                  <button class="btn btn-outline-success" type="submit">Search</button>
+              </form>
+          </div>
+          <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+              <span class="mdi mdi-menu"></span>
+          </button>
+      </div>
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper pe-0">
+      <!-- partial:partials/_sidebar.html -->
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <ul class="nav">
+
+          <li class="nav-item mt-3">
+            <a class="nav-link" href="/admin/dashboard">
+              <span class="menu-title">Dashboard</span>
+              <i class="mdi mdi-home menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/admin/products">
+              <span class="menu-title">Products</span>
+              <i class="menu-arrow"></i>
+              <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/users">
+              <span class="menu-title">Users</span>
+              <i class="mdi mdi-contacts menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/orders">
+              <span class="menu-title">Orders</span>
+              <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/categories">
+              <span class="menu-title">Categories</span>
+              <i class="mdi mdi-chart-bar menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/brands">
+              <span class="menu-title">Brands</span>
+              <i class="mdi mdi-table-large menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/coupons">
+              <span class="menu-title">Coupons</span>
+              <i class="menu-arrow"></i>
+              <i class="mdi mdi-medical-bag menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/offers">
+              <span class="menu-title">Offers</span>
+              <i class="menu-arrow"></i>
+              <i class="mdi mdi-medical-bag menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/logout">
+              <span class="menu-title">Logout</span>
+              <i class="menu-arrow"></i>
+              <i class="mdi mdi-medical-bag menu-icon"></i>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <h2><%= product.productName %></h2>
+                    </div>
+                    <div class="col text-right">
+                        <a href="/admin/products" class="text-light text-decoration-none"><button class="btn btn-primary">Go
+                            Back</button></a>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <p><strong>Description:</strong> <%= product.productDescription %></p>
+                    <p><strong>Brand:</strong> <%= product.productBrand %></p>
+                    <p><strong>Category:</strong> <%= product.productCategory %></p>
+                    <p><strong>Frame material:</strong> <%= product.frameMaterial %></p>
+                    <p><strong>Frame shape:</strong> <%= product.frameShape %></p>
+                    <p><strong>Frame style:</strong> <%= product.frameStyle %></p>
+                    <p><strong>Lens type:</strong> <%= product.lensType %></p>
+                    <p><strong>Special features:</strong> <%= product.specialFeatures %></p>
+                </div>
+            
+                <!-- Display Variants -->
+                <h2>Variants:</h2>
+                <% product.variants.forEach((variant, variantIndex) => { %>
+                    <div class="variant">
+                        <h3>Variant <%= variantIndex + 1 %></h3>
+                        <p><strong>Color:</strong> <%= variant.color %></p>
+                        <p><strong>Price:</strong> <%= variant.price %></p>
+                        <% if (variant.discountPrice) { %>
+                            <p><strong>Discount Price:</strong> <%= variant.discountPrice %></p>
+                        <% } %>
+                        <!-- Display Images for Variant -->
+                        <div class="variant-images">
+                            <% variant.images.forEach((image, imageIndex) => { %>
+                                <img src="/static/productImages/<%= image %>" alt="Variant Image">
+                            <% }) %>
+                        </div>
+                        <!-- Display Sub-Variants -->
+                        <h4>Sub-Variants:</h4>
+                        <% variant.subVariants.forEach((subVariant, subVariantIndex) => { %>
+                            <div class="sub-variant">
+                                <p class="pe-4"><strong>Size:</strong> <%= subVariant.size %></p>
+                                <p><strong>Quantity:</strong> <%= subVariant.quantity %></p>
+                                <hr>
+                            </div>
+                        <% }) %>
+                    </div>
                 <% }) %>
             </div>
-            <!-- Display Sub-Variants -->
-            <h4>Sub-Variants:</h4>
-            <% variant.subVariants.forEach((subVariant, subVariantIndex) => { %>
-                <div class="sub-variant">
-                    <p class="pe-4"><strong>Size:</strong> <%= subVariant.size %></p>
-                    <p><strong>Quantity:</strong> <%= subVariant.quantity %></p>
-                    <hr>
-                </div>
-            <% }) %>
         </div>
-    <% }) %>
-</div>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -101,6 +200,34 @@
         display: flex;
         flex-direction: row;
     }
-</style>
+    .page-body-wrapper{
+      position: relative;
+    }
+    .sidebar {
+            position: absolute;
+            position: fixed;
+            bottom: 100;
+            z-index: 999;
+        }
+        @media (min-width : 992px) {
+            .main-panel {
+                margin-left: 260px;
+                
+            }
 
+            .sidebar {
+                margin-top: 12.3px;
+            }
+        }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  $(document).ready(function () {
+      $('[data-toggle="offcanvas"]').click(function () {
+          $('.sidebar-offcanvas').toggleClass('active');
+      });
+  });
+</script>
 <%- include('../partials/footer') %>

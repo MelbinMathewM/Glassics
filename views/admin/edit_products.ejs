@@ -1,49 +1,34 @@
 <%- include('../partials/header') %>
 
   <div class="container-scroller">
-    <!-- partial:partials/_navbar.html -->
-    <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
       <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <a class="text-decoration-none" href="/">
-          <h1 class="fw-bold" style="font-style: italic;">Glassics</h1>
-        </a>
+          <a class="navbar-brand text-decoration-none" href="/">
+              <h1 class="fw-bold" style="font-style: italic;">Glassics</h1>
+          </a>
       </div>
       <div class="navbar-menu-wrapper d-flex align-items-stretch">
-        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-          <span class="mdi mdi-menu"></span>
-        </button>
-        <div class="search-field d-none d-md-block">
-          <form class="d-flex align-items-center h-100" action="#">
-            <div class="input-group">
-              <div class="input-group-prepend bg-transparent">
-                <i class="input-group-text border-0 mdi mdi-magnify"></i>
-              </div>
-              <input type="text" class="form-control bg-transparent border-0 mt-2" placeholder="Search">
-            </div>
-          </form>
+        <div class="d-flex ms-auto mt-3">
+          <a href="/admin/products"><button class="btn btn-outline-success">Go Back</button></a>
         </div>
-        <ul class="navbar-nav navbar-nav-right">
-          <a href="/admin/products" class="text-light text-decoration-none"><button class="btn btn-primary">Go
-              Back</button></a>
-        </ul>
-        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
-          data-toggle="offcanvas">
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
           <span class="mdi mdi-menu"></span>
         </button>
       </div>
     </nav>
     <!-- partial -->
-    <div class="container-fluid page-body-wrapper">
+    <div class="container-fluid page-body-wrapper pe-0">
       <!-- partial:partials/_sidebar.html -->
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
-          <li class="nav-item">
+          <li class="nav-item mt-3">
             <a class="nav-link" href="/admin/dashboard">
               <span class="menu-title">Dashboard</span>
               <i class="mdi mdi-home menu-icon"></i>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link" href="/admin/products">
               <span class="menu-title">Products</span>
               <i class="menu-arrow"></i>
@@ -348,7 +333,7 @@
     }
 
     .radio-group label {
-      padding: 10px 20px;
+      padding: 10px 10px;
       border: 1px solid #ccc;
       border-radius: 5px;
       cursor: pointer;
@@ -420,6 +405,25 @@
       max-width: 150px;
       max-height: 150px;
     }
+    .page-body-wrapper{
+      position: relative;
+    }
+    .sidebar {
+            position: absolute;
+            position: fixed;
+            bottom: 100;
+            z-index: 999;
+        }
+        @media (min-width : 992px) {
+            .main-panel {
+                margin-left: 260px;
+                
+            }
+
+            .sidebar {
+                margin-top: 12.3px;
+            }
+        }
   </style>
   <!-- plugins:js -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
@@ -781,5 +785,15 @@
     });
   </script>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  $(document).ready(function () {
+      $('[data-toggle="offcanvas"]').click(function () {
+          $('.sidebar-offcanvas').toggleClass('active');
+      });
+  });
+</script>
 
   <%- include('../partials/footer') %>

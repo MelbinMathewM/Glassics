@@ -57,11 +57,11 @@ const insertUser = async (req, res) => {
     try {
         const existingUser = await User.findOne({ userName: req.body.userName });
         if (existingUser) {
-            return res.render('register', { message: "Username already taken" });
+            return res.status(400).json({ message: "Username already taken" });
         }
         const existingEmail = await User.findOne({ userEmail: req.body.userEmail });
         if (existingEmail) {
-            return res.render('register', { message: "Email already in use" });
+            return res.status(400).json({ message: "Email already in use" });
         }
         const otp = generateOTP();
         req.session.otp = { value: otp, expires: Date.now() + 60000 };
@@ -76,11 +76,12 @@ const insertUser = async (req, res) => {
             is_blocked: 0
         };
         await sendOTPViaEmail(req.body.userEmail, otp);
-        res.redirect(`/otp_validation`);
+        res.status(200).json({ redirectUrl: '/otp_validation' });
     } catch (error) {
-        res.status(500).send(error.message);
+        res.status(500).json({ message: error.message });
     }
 };
+
 
 const loadOTP = async (req, res) => {
     try {
@@ -137,7 +138,6 @@ const resendOTP = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
-
 
 const loadLogin = async (req,res) => {
     try{

@@ -1,0 +1,50 @@
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1><%= product.productName %></h1>
+        </div>
+        <div class="col text-right">
+            <a href="/admin/products" class="text-light text-decoration-none"><button class="btn btn-primary">Go
+                Back</button></a>
+        </div>
+    </div>
+    <div class="product-info">
+        <p><strong>Description:</strong> <%= product.productDescription %></p>
+        <p><strong>Brand:</strong> <%= product.productBrand %></p>
+        <p><strong>Category:</strong> <%= product.productCategory %></p>
+        <p><strong>Frame material:</strong> <%= product.frameMaterial %></p>
+        <p><strong>Frame shape:</strong> <%= product.frameShape %></p>
+        <p><strong>Frame style:</strong> <%= product.frameStyle %></p>
+        <p><strong>Lens type:</strong> <%= product.lensType %></p>
+        <p><strong>Special features:</strong> <%= product.specialFeatures %></p>
+    </div>
+
+    <!-- Display Variants -->
+    <h2>Variants:</h2>
+    <% product.variants.forEach((variant, variantIndex) => { %>
+        <div class="variant">
+            <h3>Variant <%= variantIndex + 1 %></h3>
+            <p><strong>Color:</strong> <%= variant.color %></p>
+            <p><strong>Price:</strong> <%= variant.price %></p>
+            <% if (variant.discountPrice) { %>
+                <p><strong>Discount Price:</strong> <%= variant.discountPrice %></p>
+            <% } %>
+            <!-- Display Images for Variant -->
+            <div class="variant-images">
+                <% variant.images.forEach((image, imageIndex) => { %>
+                    <img src="/static/productImages/<%= image %>" alt="Variant Image">
+                <% }) %>
+            </div>
+            <!-- Display Sub-Variants -->
+            <h4>Sub-Variants:</h4>
+            <% variant.subVariants.forEach((subVariant, subVariantIndex) => { %>
+                <div class="sub-variant">
+                    <p class="pe-4"><strong>Size:</strong> <%= subVariant.size %></p>
+                    <p><strong>Quantity:</strong> <%= subVariant.quantity %></p>
+                    <hr>
+                </div>
+            <% }) %>
+        </div>
+    <% }) %>
+</div>

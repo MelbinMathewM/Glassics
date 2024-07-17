@@ -1,175 +1,189 @@
 <%- include('../partials/header') %>
 
-<div class="container text-center pt-5 mt-5 border w-50">
-    <div class="header__logo">
-        <a class="text-decoration-none"><h1 class="fw-bold" style="font-style: italic;">Glassics</h1></a>
-    </div>
-    <h3 class="pt-3 pb-3">OTP Verification</h3>
-    <h5>Please enter the OTP below</h5>
-    <p id="message" class="text-danger fw-bold"></p>
-    <div class="otp-input pt-3">
-        <form id="otp-form">
-            <div class="form-group text-center mb-3">
-                <input type="text" class="otp-input" maxlength="1">
-                <input type="text" class="otp-input" maxlength="1">
-                <input type="text" class="otp-input" maxlength="1">
-                <input type="text" class="otp-input" maxlength="1">
-                <input type="text" class="otp-input" maxlength="1">
-                <input type="text" class="otp-input" maxlength="1">
+    <div class="container text-center pt-5 mt-5 border w-50">
+        <div class="header__logo">
+            <a class="text-decoration-none">
+                <h1 class="fw-bold" style="font-style: italic;">Glassics</h1>
+            </a>
+        </div>
+        <h3 class="pt-3 pb-3">OTP Verification</h3>
+        <h5>Please enter the OTP below</h5>
+        <p id="message" class="text-danger fw-bold"></p>
+        <div class="otp-input pt-3">
+            <form id="otp-form">
+                <div class="form-group text-center mb-3 d-flex justify-content-center">
+                    <input type="text" class="otp-input form-control text-center mx-1" maxlength="1"
+                        style="width: 40px;">
+                    <input type="text" class="otp-input form-control text-center mx-1" maxlength="1"
+                        style="width: 40px;">
+                    <input type="text" class="otp-input form-control text-center mx-1" maxlength="1"
+                        style="width: 40px;">
+                    <input type="text" class="otp-input form-control text-center mx-1" maxlength="1"
+                        style="width: 40px;">
+                    <input type="text" class="otp-input form-control text-center mx-1" maxlength="1"
+                        style="width: 40px;">
+                    <input type="text" class="otp-input form-control text-center mx-1" maxlength="1"
+                        style="width: 40px;">
+                </div>
+                <button class="btn btn-secondary" type="submit">Verify OTP</button>
+            </form>
+        </div>
+        <p>Not received the code? You can Resend code after 1 minute</p>
+        <div class="text-center mb-3">
+            <div class="d-flex justify-content-center">
+                <button id="resend-otp" class="btn btn-primary me-3" style="display:none;">Resend OTP</button>
+                <span id="otp-timer" class="otp-timer text-danger btn btn-warning fw-bold">01:00</span>
             </div>
-            <button class="btn btn-secondary" type="submit">Verify OTP</button>
-        </form>
-    </div>
-    <p>Not received the code? You can Resend code after 1 minute</p>
-    <div class="text-center mb-3">
-        <div class="d-flex justify-content-center">
-            <button id="resend-otp" class="btn btn-primary me-3" style="display:none;">Resend OTP</button>
-            <span id="otp-timer" class="otp-timer text-danger btn btn-warning fw-bold">01:00</span>  
         </div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    let otpDurationSeconds = 60;
-    const otpTimerElement = document.getElementById('otp-timer');
-    const otpForm = document.getElementById('otp-form');
-    const resendOTPBtn = document.getElementById('resend-otp');
-    const messageElement = document.getElementById('message');
-    let timerInterval;
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        let otpDurationSeconds = 60;
+        const otpTimerElement = document.getElementById('otp-timer');
+        const otpForm = document.getElementById('otp-form');
+        const resendOTPBtn = document.getElementById('resend-otp');
+        const messageElement = document.getElementById('message');
+        let timerInterval;
 
-    document.addEventListener("DOMContentLoaded", function() {
-        loadPage(); // Call loadPage on page load
-        resendOTPBtn.addEventListener('click', resendOTP);
-    });
+        document.addEventListener("DOMContentLoaded", function () {
+            loadPage();
+            resendOTPBtn.addEventListener('click', resendOTP);
+        });
 
-    function updateOTPTimer() {
-        const elapsedTime = Math.floor((Date.now() - parseInt(sessionStorage.getItem('otpStartTime'))) / 1000);
-        const remainingTime = otpDurationSeconds - elapsedTime;
+        function updateOTPTimer() {
+            const otpStartTime = parseInt(sessionStorage.getItem('otpStartTime'));
+            const elapsedTime = Math.floor((Date.now() - otpStartTime) / 1000);
+            const remainingTime = otpDurationSeconds - elapsedTime;
 
-        if (remainingTime <= 0) {
-            clearInterval(timerInterval);
-            otpTimerElement.textContent = '00:00';
-            resendOTPBtn.style.display = 'block';
-            otpForm.reset();
-            return;
+            if (remainingTime <= 0) {
+                clearInterval(timerInterval);
+                otpTimerElement.textContent = '00:00';
+                resendOTPBtn.style.display = 'block';
+                otpForm.reset();
+                return;
+            }
+
+            const minutes = Math.floor(remainingTime / 60);
+            const seconds = remainingTime % 60;
+            otpTimerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
 
-        const minutes = Math.floor(remainingTime / 60);
-        const seconds = remainingTime % 60;
-        otpTimerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    }
-
-    function startOTPTimer() {
-        updateOTPTimer();
-        timerInterval = setInterval(updateOTPTimer, 1000);
-    }
-
-    async function loadPage() {
-        const time = localStorage.getItem('otpTimer');
-
-        if (time !== null) {
-            otpDurationSeconds = parseInt(time);
-            startOTPTimer();
-        } else {
-            startOTPTimer();
+        function startOTPTimer() {
+            sessionStorage.setItem('otpStartTime', Date.now());
+            updateOTPTimer();
+            timerInterval = setInterval(updateOTPTimer, 1000);
         }
-    }
 
-    async function resendOTP() {
-        try {
-            const response = await fetch('/otp_resend', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
+        function loadPage() {
+            const otpStartTime = sessionStorage.getItem('otpStartTime');
+
+            if (otpStartTime !== null) {
+                updateOTPTimer();
+                timerInterval = setInterval(updateOTPTimer, 1000);
+            } else {
+                startOTPTimer();
+            }
+        }
+
+        async function resendOTP() {
+            try {
+                const response = await fetch('/otp_resend', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+                messageElement.textContent = data.message;
+
+                if (response.ok) {
+                    sessionStorage.setItem('otpStartTime', Date.now());
+                    otpDurationSeconds = 60;
+                    clearInterval(timerInterval);
+                    startOTPTimer();
+                    resendOTPBtn.style.display = 'none';
+                } else {
+                    messageElement.textContent = 'Error resending OTP';
+                }
+            } catch (error) {
+                messageElement.textContent = 'Error resending OTP';
+            }
+        }
+
+        otpForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const otpInputs = document.querySelectorAll('.otp-input');
+            let otp = '';
+
+            otpInputs.forEach(input => {
+                if (input.value) {
+                    otp += input.value.trim();
+                }
+            });
+            if (otp2.length !== 6) {
+                messageElement.textContent = "Please enter a valid OTP";
+                return;
+            } else {
+                messageElement.textContent = '';
+            }
+
+            try {
+                const response = await fetch('/otp_validation', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ otp })
+                });
+
+                const data = await response.json();
+                messageElement.textContent = data.message;
+
+                if (response.ok) {
+                    sessionStorage.removeItem('otpStartTime');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'OTP Verified',
+                        text: data.message,
+                    }).then(() => {
+                        setTimeout(() => location.href = '/login', 1500);
+                    });
+                } else {
+                    messageElement.textContent = data.message;
+                }
+            } catch (error) {
+                messageElement.textContent = 'Error validating OTP';
+            }
+        });
+
+        document.querySelectorAll('.otp-input').forEach((input, index, inputs) => {
+            input.addEventListener('input', () => {
+                if (input.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
                 }
             });
 
-            const data = await response.json();
-            messageElement.textContent = data.message;
-
-            if (response.ok) {
-                sessionStorage.setItem('otpStartTime', Date.now());
-                otpDurationSeconds = 60;
-                clearInterval(timerInterval);
-                startOTPTimer();
-                resendOTPBtn.style.display = 'none';
-            } else {
-                messageElement.textContent = 'Error resending OTP';
-            }
-        } catch (error) {
-            messageElement.textContent = 'Error resending OTP';
-        }
-    }
-
-    otpForm.addEventListener('submit', async function(event) {
-        event.preventDefault();
-
-        const otpInputs = document.querySelectorAll('.otp-input');
-        let otp = '';
-        otpInputs.forEach(input => otp += input.value.trim());
-
-        if (otp.length < 6) {
-            messageElement.textContent = "Please enter a valid OTP";
-            return;
-        } else {
-            messageElement.textContent = '';
-        }
-
-        try {
-            const response = await fetch('/otp_validation', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ otp })
+            input.addEventListener('keyup', (e) => {
+                if (e.key === 'Backspace' && input.value.length === 0 && index > 0) {
+                    inputs[index - 1].focus();
+                }
             });
 
-            const data = await response.json();
-            messageElement.textContent = data.message;
-
-            if (response.ok) {
-                sessionStorage.removeItem('otpStartTime');
-                Swal.fire({
-                    icon: 'success',
-                    title: 'OTP Verified',
-                    text: data.message,
-                }).then(() => {
-                    setTimeout(() => location.href = '/login', 1500);
-                });
-            } else {
-                messageElement.textContent = data.message;
-            }
-        } catch (error) {
-            messageElement.textContent = 'Error validating OTP';
-        }
-    });
-
-    document.querySelectorAll('.otp-input').forEach((input, index, inputs) => {
-        input.addEventListener('keyup', (e) => {
-            if (e.target.value.length === 1 && index < inputs.length - 1) {
-                inputs[index + 1].focus();
-            }
-
-            if (e.key === 'Backspace' && e.target.value.length === 0 && index > 0) {
-                inputs[index - 1].focus();
-            }
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const paste = (e.clipboardData || window.clipboardData).getData('text');
+                const pastedData = paste.slice(0, inputs.length);
+                for (let i = 0; i < pastedData.length; i++) {
+                    inputs[i].value = pastedData[i];
+                    if (i < inputs.length - 1 && inputs[i].value.length === 1) {
+                        inputs[i + 1].focus();
+                    }
+                }
+            });
         });
+    </script>
 
-        input.addEventListener('paste', (e) => {
-            e.preventDefault();
-            const paste = (e.clipboardData || window.clipboardData).getData('text');
-            const pastedData = paste.slice(0, inputs.length);
-            for (let i = 0; i < pastedData.length; i++) {
-                inputs[i].value = pastedData[i];
-            }
-
-            const lastFilledIndex = pastedData.length - 1;
-            if (lastFilledIndex < inputs.length - 1) {
-                inputs[lastFilledIndex + 1].focus();
-            }
-        });
-    });
-</script>
-
-<%- include('../partials/footer') %>
+    <%- include('../partials/footer') %>

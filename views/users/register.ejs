@@ -6,32 +6,34 @@
             <a class="text-decoration-none" href="/"><h1 class="fw-bold" style="font-style: italic;">Glassics</h1></a>
         </div>
         <div class="title regtit">
-            <h2 class="pb-3 pt-3">Registration Form</h2>
+            <h2 class="pb-1 pt-1">Registration Form</h2>
             <% if(locals.message) { %>
                 <span id="message" class="alert text-warning text-center message" role="alert"><%= message %></span>
             <% } %>
             <div id="error" class="text-warning fw-bold text-center"></div>
-            <form action="/register" method="post" enctype="multipart/form-data" id="form">
+            <form id="form">
                 <div class="form-group mb-3">
-                    <input type="text" name="customerName" class="form-control" placeholder="Enter Name" id="customerName">
+                    <input type="text" name="customerName" class="form-control" placeholder="Enter Name" id="customerName" required>
                 </div>
                 <div class="form-group mb-3">
-                    <input type="text" name="userName" class="form-control" placeholder="Enter Username" id="userName">
+                    <input type="text" name="userName" class="form-control" placeholder="Enter Username" id="userName" required>
                 </div>
                 <div class="form-group mb-3">
-                    <input type="email" name="userEmail" class="form-control" placeholder="Enter Email" id="userEmail">
+                    <input type="email" name="userEmail" class="form-control" placeholder="Enter Email" id="userEmail" required>
                 </div>
                 <div class="form-group mb-3">
-                    <input type="text" name="userMobile" class="form-control" placeholder="Enter Mobile Number" id="userMobile">
+                    <input type="text" name="userMobile" class="form-control" placeholder="Enter Mobile Number" id="userMobile" required>
                 </div>
                 <div class="form-group mb-3">
-                    <input type="file" name="userImage" class="form-control" placeholder="Upload Image" id="userImage">
+                    <input type="file" name="userImage" class="form-control" id="userImage">
                 </div>
-                <div class="form-group mb-3">
-                    <input type="password" name="password" class="form-control" placeholder="Enter Password" id="password">
+                <div class="form-group mb-3 position-relative">
+                    <input type="password" name="password" class="form-control" placeholder="Enter Password" id="password" required>
+                    <i class="fa fa-eye position-absolute top-50 end-0 translate-middle-y me-2 cursor-pointer" id="togglePassword"></i>
                 </div>
-                <div class="form-group mb-3">
-                    <input type="password" name="cpassword" class="form-control" placeholder="Confirm Password" id="cpassword">
+                <div class="form-group mb-3 position-relative">
+                    <input type="password" name="cpassword" class="form-control" placeholder="Confirm Password" id="cpassword" required>
+                    <i class="fa fa-eye position-absolute top-50 end-0 translate-middle-y me-2 cursor-pointer" id="toggleCPassword"></i>
                 </div>
                 <button type="submit" class="btn btn-secondary rounded-pill mb-2">Get OTP</button>
                 <hr>
@@ -43,7 +45,7 @@
     </div>
 </div>
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" integrity="sha384-4oXz3VZtCjHtq17T+xZ5gQF6uQmM1ohV/gjvs5U2o2KA6+fa54Q7T8yKrWeD+NiD" crossorigin="anonymous"></script>
 
 <script>
     setTimeout(() => {
@@ -52,94 +54,122 @@
             messageDiv.remove();
         }
     }, 5000);
-</script>
-<script>
-    let form = document.getElementById("form");
-    let error = document.getElementById("error");
-    let message = [];
-    let name_reg = /^[a-zA-Z ]+$/;
-    let uname_reg = /^[A-Za-z][A-Za-z0-9_]*$/;
-    let mobile_reg = /^[1-9][0-9]{9}$/;
-    let mob_zero = /^0{10}$/;
-    let password_reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-    form.addEventListener("submit", (e) => {
-        message = [];
-        const customerName = document.getElementById("customerName").value.trim();
-        const userName = document.getElementById('userName').value.trim();
-        const userEmail = document.getElementById("userEmail").value.trim();
-        const userMobile = document.getElementById("userMobile").value.trim();
-        const password = document.getElementById("password").value.trim();
-        const cpassword = document.getElementById('cpassword').value.trim();
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('form');
+        const errorDiv = document.getElementById('error');
+        const togglePassword = document.getElementById('togglePassword');
+        const toggleCPassword = document.getElementById('toggleCPassword');
+        const passwordField = document.getElementById('password');
+        const cpasswordField = document.getElementById('cpassword');
+        
+        togglePassword.addEventListener('click', () => {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            togglePassword.classList.toggle('fa-eye-slash');
+        });
 
-        if(customerName === ''){
-            message.push("Name is required");
-        }else if(!name_reg.test(customerName)) {
-            message.push("Enter a valid Name");
-        }
+        toggleCPassword.addEventListener('click', () => {
+            const type = cpasswordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            cpasswordField.setAttribute('type', type);
+            toggleCPassword.classList.toggle('fa-eye-slash');
+        });
 
-        if(userName === ''){
-            message.push("Name is required");
-        }else if(!uname_reg.test(userName)) {
-            message.push("Enter a valid username. Username must start with an alphabet and can only include uppercase letters, lowercase letters, numbers, and underscores.");
-        }
-
-        if(userEmail === ''){
-            message.push("Email is required");
-        }else{
-            email_validate(userEmail);
-        }
-
-        if (!mobile_reg.test(userMobile)) {
-            message.push("Mobile Number should be 10 digit numbers and first number cannot be zero");
-        } else if (mob_zero.test(userMobile)) {
-            message.push("Mobile number cannot be 10 consecutive zeros.");
-        }
-
-        let passwordErrors = validatePassword(password);
-        if (passwordErrors.length > 0) {
-            message.push(...passwordErrors);
-        }
-
-        if (cpassword === ''){
-            message.push("Please confirm password");
-        } else if (cpassword !== password) {
-            message.push("Passwords do not match.");
-        }
-
-        if (message.length > 0) {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            error.innerText = message[0];
+            errorDiv.innerText = '';
+            const formData = new FormData(form);
+            const data = {
+                customerName: formData.get('customerName').trim(),
+                userName: formData.get('userName').trim(),
+                userEmail: formData.get('userEmail').trim(),
+                userMobile: formData.get('userMobile').trim(),
+                password: formData.get('password').trim(),
+                cpassword: formData.get('cpassword').trim()
+            };
+
+            const errors = validateForm(data);
+            if (errors.length > 0) {
+                errorDiv.innerText = errors[0];
+                return;
+            }
+
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    window.location.href = result.redirectUrl;
+                } else {
+                    errorDiv.innerText = result.message;
+                }
+            } catch (err) {
+                errorDiv.innerText = 'An error occurred. Please try again later.';
+            }
+        });
+
+        function validateForm(data) {
+            let errors = [];
+            const name_reg = /^[a-zA-Z ]+$/;
+            const uname_reg = /^[A-Za-z][A-Za-z0-9_]*$/;
+            const mobile_reg = /^[1-9][0-9]{9}$/;
+            const mob_zero = /^0{10}$/;
+            const password_reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+            if (data.customerName === '') {
+                errors.push('Name is required');
+            } else if (!name_reg.test(data.customerName)) {
+                errors.push('Enter a valid Name');
+            }
+
+            if (data.userName === '') {
+                errors.push('Username is required');
+            } else if (!uname_reg.test(data.userName)) {
+                errors.push('Enter a valid username. Username must start with an alphabet and can only include uppercase letters, lowercase letters, numbers, and underscores.');
+            }
+
+            if (data.userEmail === '') {
+                errors.push('Email is required');
+            } else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(data.userEmail)) {
+                errors.push('Invalid Email');
+            }
+
+            if (!mobile_reg.test(data.userMobile)) {
+                errors.push('Mobile Number should be 10 digit numbers and first number cannot be zero');
+            } else if (mob_zero.test(data.userMobile)) {
+                errors.push('Mobile number cannot be 10 consecutive zeros.');
+            }
+
+            if (data.password.length < 8) {
+                errors.push('Password must be at least 8 characters long.');
+            } else {
+                if (!/(?=.*[a-z])/.test(data.password)) {
+                    errors.push('Password must contain at least one lowercase letter.');
+                }
+                if (!/(?=.*[A-Z])/.test(data.password)) {
+                    errors.push('Password must contain at least one uppercase letter.');
+                }
+                if (!/(?=.*\d)/.test(data.password)) {
+                    errors.push('Password must contain at least one number.');
+                }
+                if (!/(?=.*[@$!%*?&])/.test(data.password)) {
+                    errors.push('Password must contain at least one special character.');
+                }
+            }
+
+            if (data.cpassword === '') {
+                errors.push('Please confirm password');
+            } else if (data.cpassword !== data.password) {
+                errors.push('Passwords do not match.');
+            }
+
+            return errors;
         }
     });
-
-    function email_validate(email) {
-        let reg = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-        let result = reg.test(email);
-        if (!result) {
-            message.push("Invalid Email");
-        }
-    }
-
-    function validatePassword(password) {
-        let errors = [];
-        if (password.length < 8) {
-            errors.push("Password must be at least 8 characters long.");
-        }
-        if (!/(?=.*[a-z])/.test(password)) {
-            errors.push("Password must contain at least one lowercase letter.");
-        }
-        if (!/(?=.*[A-Z])/.test(password)) {
-            errors.push("Password must contain at least one uppercase letter.");
-        }
-        if (!/(?=.*\d)/.test(password)) {
-            errors.push("Password must contain at least one number.");
-        }
-        if (!/(?=.*[@$!%*?&])/.test(password)) {
-            errors.push("Password must contain at least one special character.");
-        }
-        return errors;
-    }
 </script>
 
 <%- include('../partials/footer.ejs') %>
