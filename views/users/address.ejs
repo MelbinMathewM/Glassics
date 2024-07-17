@@ -237,45 +237,53 @@
         <div id="addressMessageContainer" class="message-container text-center fw-bold"></div>
         <form id="addressForm" onsubmit="handleAddAddressFormSubmit(event)">
             <div id="addressErrors" class="text-warning fw-bold text-center"></div>
-            <div class="form-group mb-3">
-                <label for="addressName">Name</label>
-                <input type="text" name="addressName" class="form-control" id="addressName">
+            <div class="row form-group mb-3">
+                <div class="col">
+                    <label for="addressName">Name</label>
+                    <input type="text" name="addressName" class="form-control" id="addressName">
+                </div>
+                <div class="col">
+                    <label for="addressEmail">Email</label>
+                    <input type="email" name="addressEmail" class="form-control" id="addressEmail">
+                </div>
             </div>
-            <div class="form-group mb-3">
-                <label for="addressEmail">Email</label>
-                <input type="email" name="addressEmail" class="form-control" id="addressEmail">
+            <div class="row form-group mb-3">
+               <div class="col">
+                    <label for="addressMobile">Mobile</label>
+                    <input type="tel" name="addressMobile" class="form-control" id="addressMobile">
+               </div>
+               <div class="col">
+                    <label for="addressHouse">House/Flat No.</label>
+                    <input type="text" name="addressHouse" class="form-control" id="addressHouse">
+               </div>
             </div>
-            <div class="form-group mb-3">
-                <label for="addressMobile">Mobile</label>
-                <input type="tel" name="addressMobile" class="form-control" id="addressMobile">
+            <div class="row form-group mb-3">
+                <div class="col">
+                    <label for="addressStreet">Street</label>
+                    <input type="text" name="addressStreet" class="form-control" id="addressStreet">
+                </div>
+                <div class="col">
+                    <label for="addressPost">Post Office</label>
+                    <input type="text" name="addressPost" class="form-control" id="addressPost">
+                </div>
+                <div class="col">
+                    <label for="addressCity">City</label>
+                    <input type="text" name="addressCity" class="form-control" id="addressCity">
+                </div>
             </div>
-            <div class="form-group mb-3">
-                <label for="addressHouse">House/Flat No.</label>
-                <input type="text" name="addressHouse" class="form-control" id="addressHouse">
-            </div>
-            <div class="form-group mb-3">
-                <label for="addressStreet">Street</label>
-                <input type="text" name="addressStreet" class="form-control" id="addressStreet">
-            </div>
-            <div class="form-group mb-3">
-                <label for="addressPost">Post Office</label>
-                <input type="text" name="addressPost" class="form-control" id="addressPost">
-            </div>
-            <div class="form-group mb-3">
-                <label for="addressCity">City</label>
-                <input type="text" name="addressCity" class="form-control" id="addressCity">
-            </div>
-            <div class="form-group mb-3">
-                <label for="addressDistrict">District</label>
-                <input type="text" name="addressDistrict" class="form-control" id="addressDistrict">
-            </div>
-            <div class="form-group mb-3">
-                <label for="addressState">State</label>
-                <input type="text" name="addressState" class="form-control" id="addressState">
-            </div>
-            <div class="form-group mb-3">
-                <label for="addressPin">PIN Code</label>
-                <input type="text" name="addressPin" class="form-control" id="addressPin">
+            <div class="row form-group mb-3">
+                <div class="col">
+                    <label for="addressDistrict">District</label>
+                    <input type="text" name="addressDistrict" class="form-control" id="addressDistrict">
+                </div>
+                <div class="col">
+                    <label for="addressState">State</label>
+                    <input type="text" name="addressState" class="form-control" id="addressState">
+                </div>
+                <div class="col">
+                    <label for="addressPin">PIN Code</label>
+                    <input type="text" name="addressPin" class="form-control" id="addressPin">
+                </div>
             </div>
             <div class="form-group text-center">
                 <button type="submit" class="btn btn-primary" id="addressSubmitBtn">Save Address</button>
