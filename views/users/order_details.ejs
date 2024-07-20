@@ -64,40 +64,37 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/account/wishlist">
                             <span class="menu-title">Wishlist</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                            <i class="mdi mdi-heart menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item active bg-gradient-info">
                         <a class="nav-link" href="/account/orders">
                             <span class="menu-title font-weight-bold text-white">Orders</span>
-                            <i class="mdi mdi-contacts menu-icon"></i>
+                            <i class="mdi mdi-format-list-bulleted menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/account/address">
                             <span class="menu-title">Address</span>
-                            <i class="mdi mdi-chart-bar menu-icon"></i>
+                            <i class="mdi mdi-google-maps menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/account/wallet">
                             <span class="menu-title">Wallet</span>
-                            <i class="mdi mdi-table-large menu-icon"></i>
+                            <i class="mdi mdi-wallet menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/account/coupons">
                             <span class="menu-title">Coupons</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                            <i class="mdi mdi-ticket menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/logout">
                             <span class="menu-title">Logout</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                            <i class="mdi mdi-logout menu-icon"></i>
                         </a>
                     </li>
                 </ul>
@@ -197,9 +194,9 @@
                                                                             </div>
                                                                         <% } %>
                                                                         <% if (item.orderStatus === 'Delivered') { %>
-                                                                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#returnModal" onclick="openReturnModal('<%= order._id %>','<%= item._id %>')">Return</button>
+                                                                            <button class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#returnModal" onclick="openReturnModal('<%= order._id %>','<%= item._id %>')">Return</button>
                                                                         <% } else if (item.orderStatus !== 'Canceled' && item.orderStatus !== 'Returned' && item.orderStatus !== 'Return requested') { %>
-                                                                            <button class="btn btn-danger btn-sm" onclick="cancelOrder('<%= item._id %>')">Cancel</button>
+                                                                            <button class="btn btn-outline-danger btn-sm" onclick="cancelOrder('<%= item._id %>')">Cancel</button>
                                                                         <% } %>
                                                                         <% if (item.orderStatus === 'Return requested' || item.orderStatus === 'Returned') { %>
                                                                             <p>Return Reason: <%= item.returnReason %></p>

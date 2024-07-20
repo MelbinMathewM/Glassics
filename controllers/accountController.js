@@ -33,47 +33,31 @@ const loadProfile = async (req, res) => {
     }
 };
 
-const loadEditPassword = async (req, res) => {
-    try {
-        const userId = req.session.user_id;
-        const user = await User.findById(userId);
-        res.render('edit_password', { user: user })
-    } catch (error) {
-        res.send(error);
-    }
-};
-
 const updatePassword = async (req, res) => {
     try {
-        const { password } = req.body;
+        const { opassword, password } = req.body;
         const userId = req.session.user_id;
-        const npassword = await securePassword(password)
         const uData = await User.findById(userId);
         if (!uData) {
-            return res.render('edit_password', { message: "User not found" });
+            return res.status(404).json({ success : false, message: "User not found" });
         }
+        const passwordMatch = await bcrypt.compare(opassword,uData.password);
+        if(!passwordMatch){
+            return res.status(400).json({ success : false, message : 'Your old password is incorrect!'});
+        }
+        const npassword = await securePassword(password);
         const userData = await User.findByIdAndUpdate(userId, {
             $set: {
                 password: npassword
             }
         }, { new: true });
         if (userData) {
-            res.redirect(`/account/profile`);
+            res.status(200).json({ success : true, message : 'Password updated successfully'});
         } else {
-            res.render('edit_password', { message: "Couldn't update password" });
+            res.status(400).json({ message: "Couldn't update password" });
         }
     } catch (error) {
-        res.send(error);
-    }
-};
-
-const loadEditDetail = async (req, res) => {
-    try {
-        const userId = req.session.user_id
-        const user = await User.findById(userId);
-        res.render('edit_details', { user: user })
-    } catch (error) {
-        res.send(error);
+        res.status(500).json(error);
     }
 };
 
@@ -83,11 +67,11 @@ const updateDetail = async (req, res) => {
         const userId = req.session.user_id;
         const existingUserName = await User.findOne({ userName: userName, _id : { $ne : userId } });
         if (existingUserName) {
-            return res.render('edit_details', { message: "Username already exists" })
+            return res.status(400).json({ success : false, message: "Username already exists" })
         }
         const uData = await User.findById(userId);
         if (!uData) {
-            return res.render('edit_details', { message: "User not found" });
+            return res.status(404).json({ success : false, message: "User not found" });
         }
         const passwordMatch = await bcrypt.compare(password, uData.password);
         if (passwordMatch) {
@@ -99,15 +83,15 @@ const updateDetail = async (req, res) => {
                 }
             }, { new: true });
             if (userData) {
-                res.redirect(`/account/profile`);
+                res.status(200).json({ success : true, message : 'User details updated'});
             } else {
-                return res.redirect(`/account/profile/edit_details`);
+                res.status(400).json({ success : false, message : "Didn\'t update details"});
             }
         } else {
-            return res.render('edit_details',{ message : "Incorrect Password!"});
+            res.status(400).json({ success : false, message : "Incorrect Password!"});
         }
     } catch (error) {
-        res.send(error);
+        res.status(500).json({ success : false, error : "Some error occured"});
     }
 };
 
@@ -282,9 +266,7 @@ const verifyPayment = async (req, res) => {
 
 module.exports = {
     loadProfile,
-    loadEditPassword,
     updatePassword,
-    loadEditDetail,
     updateDetail,
     loadAddress,
     insertAddress,

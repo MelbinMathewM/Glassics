@@ -58,6 +58,7 @@ a_route.post('/login',adminController.verifyAdmin);
 a_route.get('/',adminAuth.isLogin,dashboardController.loadDashboard);
 a_route.get('/dashboard',adminAuth.isLogin,dashboardController.loadDashboard);
 a_route.get('/dashboard/sales_data',adminAuth.isLogin,dashboardController.loadSalesData);
+a_route.get('/dashboard/weekly_data',adminAuth.isLogin,dashboardController.loadWeeklyData);
 a_route.get('/dashboard/top_products',adminAuth.isLogin,dashboardController.getTopProducts);
 a_route.get('/dashboard/top_categories',adminAuth.isLogin,dashboardController.getTopCategories);
 a_route.get('/dashboard/top_brands',adminAuth.isLogin,dashboardController.getTopBrands);

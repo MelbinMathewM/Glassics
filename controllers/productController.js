@@ -8,28 +8,55 @@ const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Types;
 const path = require('path');
 
+
 const loadProducts = async (req, res) => {
     try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
+        const { search = '', page = 1, limit = 10 } = req.query;
         const skip = (page - 1) * limit;
-        const productData = await Product.find({ is_delete: false })
-            .populate('productCategory')
-            .populate('productBrand')
+        const searchRegex = new RegExp(search, 'i');
+
+        const matchingCategories = await Category.find({ categoryName: { $regex: searchRegex } });
+        const matchingBrands = await Brand.find({ brandName: { $regex: searchRegex } });
+
+        const categoryIds = matchingCategories.map(category => category._id);
+        const brandIds = matchingBrands.map(brand => brand._id);
+
+        const query = {
+            is_delete: false,
+            $or: [
+                { productName: { $regex: searchRegex } },
+                { productDescription: { $regex: searchRegex } },
+                { frameMaterial: { $regex: searchRegex } },
+                { frameShape: { $regex: searchRegex } },
+                { frameStyle: { $regex: searchRegex } },
+                { lensType: { $regex: searchRegex } },
+                { specialFeatures: { $regex: searchRegex } },
+                ...(categoryIds.length ? [{ productCategory: { $in: categoryIds } }] : []),
+                ...(brandIds.length ? [{ productBrand: { $in: brandIds } }] : [])
+            ]
+        };
+
+        const products = await Product.find(query)
+            .populate('productCategory', 'categoryName')
+            .populate('productBrand', 'brandName')
             .sort({ createdAt: -1 })
-            .skip((page - 1) * limit)
-            .limit(limit);
-        const totalProducts = await Product.countDocuments({ is_delete: false });
-        res.render('products', { 
-            products: productData,
-            currentPage: page,
+            .skip(skip)
+            .limit(parseInt(limit));
+
+        const totalProducts = await Product.countDocuments(query);
+
+        res.render('products', {
+            products,
+            currentPage: parseInt(page),
             totalPages: Math.ceil(totalProducts / limit),
-            limit: limit 
+            limit,
+            search
         });
     } catch (error) {
-        res.send(error);
+        res.status(500).send(error);
     }
 };
+
 
 const loadAddProducts = async (req, res) => {
     try {
@@ -242,8 +269,18 @@ const reAddProduct = async (req, res) => {
 
 const loadCategory = async (req, res) => {
     try {
-        const categoryData = await Category.find({ is_delete: false });
-        return res.render('categories', { categories: categoryData });
+        const { search = '', page = 1, limit = 8 } = req.query;
+        const skip = ( page - 1) * limit;
+        const searchRegex = new RegExp(search, 'i');
+        const query = {
+            is_delete : false,
+            $or : [
+                { categoryName : { $regex : searchRegex } }
+            ]
+        }
+        const categoryData = await Category.find(query).skip(skip).limit(parseInt(limit));
+        const totalCategories = await Category.countDocuments(query); 
+        return res.render('categories', { categories: categoryData,currentPage : parseInt(page), totalPages : Math.ceil(totalCategories/limit), limit, search });
     } catch (error) {
         res.send(error);
     }
@@ -334,8 +371,19 @@ const reAddCategory = async (req, res) => {
 
 const loadBrand = async (req, res) => {
     try {
-        const brandData = await Brand.find({ is_delete: false });
-        return res.render('brands', { brands: brandData });
+        const { search = '', page = 1, limit = 8} = req.query;
+        const skip = (page - 1) * limit;
+        const searchRegex = new RegExp(search, 'i');
+        const query = {
+            is_delete : false,
+            $or : [
+                { brandName : { $regex : searchRegex } }
+            ]
+        }
+
+        const brandData = await Brand.find(query).skip(skip).limit(parseInt(limit));
+        const totalBrands = await Brand.countDocuments(query);
+        return res.render('brands', { brands: brandData, currentPage : parseInt(page), totalPages : Math.ceil(totalBrands/limit), search, limit });
     } catch (error) {
         res.send(error);
     }

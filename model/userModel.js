@@ -21,17 +21,9 @@ const User = new Schema({
         type : String,
         required : false
     },
-    userImage : {
-        type : String,
-        required : false
-    },
     password : {
         type : String,
         required : false
-    },
-    is_admin : {
-        type : Number,
-        default : 0
     },
     is_blocked : {
         type : Number,

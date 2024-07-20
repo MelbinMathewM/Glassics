@@ -4,21 +4,18 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
       <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-          <a class="navbar-brand text-decoration-none" href="/">
-              <h1 class="fw-bold" style="font-style: italic;">Glassics</h1>
-          </a>
+        <a class="navbar-brand text-decoration-none" href="/">
+          <h1 class="fw-bold" style="font-style: italic;">Glassics</h1>
+        </a>
       </div>
       <div class="navbar-menu-wrapper d-flex align-items-stretch">
-
-          <div class="collapse navbar-collapse" id="sidebar">
-              <form class="d-flex ms-auto">
-                  <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                  <button class="btn btn-outline-success" type="submit">Search</button>
-              </form>
-          </div>
-          <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-              <span class="mdi mdi-menu"></span>
-          </button>
+        <ul class="navbar-nav navbar-nav-right ml-auto">
+          <a href="/admin/dashboard/sales_report" class="btn btn-outline-secondary"><span></span>Sales Report</a>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+          data-toggle="offcanvas">
+          <span class="mdi mdi-menu text-secondary"></span>
+        </button>
       </div>
     </nav>
     <!-- partial -->
@@ -37,52 +34,53 @@
             <a class="nav-link" href="/admin/products">
               <span class="menu-title">Products</span>
               <i class="menu-arrow"></i>
-              <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+              <i class="mdi mdi-shopping menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/admin/users">
               <span class="menu-title">Users</span>
-              <i class="mdi mdi-contacts menu-icon"></i>
+              <i class="mdi mdi-face menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/admin/orders">
               <span class="menu-title">Orders</span>
+              <i class="menu-arrow"></i>
               <i class="mdi mdi-format-list-bulleted menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/admin/categories">
               <span class="menu-title">Categories</span>
-              <i class="mdi mdi-chart-bar menu-icon"></i>
+              <i class="menu-arrow"></i>
+              <i class="mdi mdi-group menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/admin/brands">
               <span class="menu-title">Brands</span>
-              <i class="mdi mdi-table-large menu-icon"></i>
+              <i class="menu-arrow"></i>
+              <i class="mdi mdi-grid menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/admin/coupons">
               <span class="menu-title">Coupons</span>
-              <i class="menu-arrow"></i>
-              <i class="mdi mdi-medical-bag menu-icon"></i>
+              <i class="mdi mdi-ticket menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/admin/offers">
               <span class="menu-title">Offers</span>
               <i class="menu-arrow"></i>
-              <i class="mdi mdi-medical-bag menu-icon"></i>
+              <i class="mdi mdi-percent menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/admin/logout">
               <span class="menu-title">Logout</span>
-              <i class="menu-arrow"></i>
-              <i class="mdi mdi-medical-bag menu-icon"></i>
+              <i class="mdi mdi-logout menu-icon"></i>
             </a>
           </li>
         </ul>
@@ -96,39 +94,34 @@
                 <i class="mdi mdi-home"></i>
               </span> Dashboard
             </h3>
-            <nav aria-label="breadcrumb">
-              <ul class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">
-                  <a href="/admin/dashboard/sales_report" class="text-decoration-none"><span></span>Sales Report</a>
-                </li>
-              </ul>
-            </nav>
           </div>
           <div class="row">
             <!-- Weekly Sales Card -->
-            <div id="weekly-sales-card" class="col-md-6 stretch-card grid-margin">
-                <div class="card bg-gradient-danger card-img-holder text-white">
-                    <div class="card-body">
-                        <img src="/static/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
-                        <h4 class="font-weight-normal mb-3">Weekly Sales <i class="mdi mdi-chart-line mdi-24px float-right"></i></h4>
-                        <h2 class="mb-5">$ 0</h2> <!-- Placeholder for dynamic data -->
-                        <h6 class="card-text">Increased by 0%</h6> <!-- Placeholder for dynamic data -->
-                    </div>
-                </div>
-            </div>
-        
-            <!-- Weekly Orders Card -->
-            <div id="weekly-orders-card" class="col-md-6 stretch-card grid-margin">
-                <div class="card bg-gradient-info card-img-holder text-white">
-                    <div class="card-body">
-                        <img src="/static/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
-                        <h4 class="font-weight-normal mb-3">Weekly Orders <i class="mdi mdi-bookmark-outline mdi-24px float-right"></i></h4>
-                        <h2 class="mb-5">0</h2> <!-- Placeholder for dynamic data -->
-                        <h6 class="card-text">Decreased by 0%</h6> <!-- Placeholder for dynamic data -->
-                    </div>
+            <div id="sales-card" class="col-md-6 stretch-card grid-margin">
+              <div class="card bg-gradient-danger card-img-holder text-white">
+                <div class="card-body">
+                  <img src="/static/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
+                  <h4 class="font-weight-normal mb-3">Weekly Sales <i
+                      class="mdi mdi-chart-line mdi-24px float-right"></i></h4>
+                  <h2 class="mb-5">$ 0</h2> <!-- Placeholder for dynamic data -->
+                  <h6 class="card-text">Increased by 0%</h6> <!-- Placeholder for dynamic data -->
                 </div>
               </div>
-        </div>
+            </div>
+
+            <!-- Weekly Orders Card -->
+            <div id="orders-card" class="col-md-6 stretch-card grid-margin">
+              <div class="card bg-gradient-info card-img-holder text-white">
+                <div class="card-body">
+                  <img src="/static/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
+                  <h4 class="font-weight-normal mb-3">Weekly Orders <i
+                      class="mdi mdi-bookmark-outline mdi-24px float-right"></i></h4>
+                  <h2 class="mb-5">0</h2> <!-- Placeholder for dynamic data -->
+                  <h6 class="card-text">Decreased by 0%</h6> <!-- Placeholder for dynamic data -->
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="row">
             <div class="col-md-12 grid-margin stretch-card">
               <div class="card">
@@ -138,7 +131,7 @@
                     <div id="visit-sale-chart-legend"
                       class="rounded-legend legend-horizontal legend-top-right float-right"></div>
                   </div>
-                  <div class="float-right mb-2">
+                  <div class="mb-2 ">
                     <label class="p-0">Sort</label>
                     <select id="filter-option" class="form-control">
                       <option value="daily">Daily</option>
@@ -147,11 +140,15 @@
                       <option value="yearly">Yearly</option>
                     </select>
                   </div>
-                  <canvas id="visit-sale-chart" class="mt-4"></canvas>
+                  <!-- Responsive Canvas Container -->
+                  <div class="mt-4">
+                    <canvas id="visit-sale-chart" class="w-100"></canvas>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+
           <!-- New sections for top products, categories, and brands -->
           <div class="row">
             <div class="col-md-12 grid-margin stretch-card">
@@ -187,200 +184,308 @@
           </div>
         </div>
         <!-- content-wrapper ends -->
-        <!-- partial:partials/_footer.html -->
-        <!-- partial -->
       </div>
       <!-- main-panel ends -->
     </div>
     <!-- page-body-wrapper ends -->
   </div>
   <!-- container-scroller -->
-   <style>
-    .page-body-wrapper{
+  <style>
+    .page-body-wrapper {
       position: relative;
     }
-    .sidebar {
-            position: absolute;
-            position: fixed;
-            bottom: 100;
-            z-index: 999;
-        }
-        @media (min-width : 992px) {
-            .main-panel {
-                margin-left: 260px;
-                
-            }
 
-            .sidebar {
-                margin-top: 12.3px;
-            }
-        }
-   </style>
+    .sidebar {
+      position: absolute;
+      position: fixed;
+      bottom: 100;
+      z-index: 999;
+    }
+
+    @media (min-width : 992px) {
+      .main-panel {
+        margin-left: 260px;
+
+      }
+
+      .sidebar {
+        margin-top: 12.3px;
+      }
+    }
+
+    canvas {
+      width: 100%;
+      height: auto;
+    }
+
+    #visit-sale-chart {
+      height: 300px;
+    }
+
+    .chart-weekly {
+      height: 400px;
+    }
+
+    .chart-monthly {
+      height: 400px;
+    }
+
+    .chart-yearly {
+      height: 500px;
+    }
+  </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const filterSelect = document.getElementById('filter-option');
+    document.addEventListener('DOMContentLoaded', function () {
+      const filterSelect = document.getElementById('filter-option');
+      const ctx = document.getElementById('visit-sale-chart').getContext('2d');
+      let chart;
+
+      const fetchData = async (filter) => {
+        try {
+          const response = await fetch(`/admin/dashboard/sales_data?filter=${filter}`);
+          if (!response.ok) {
+            throw new Error('Failed to fetch data');
+          }
+          const data = await response.json();
+          return data;
+        } catch (error) {
+          console.error('Error fetching sales data:', error);
+        }
+      };
+
+      const fetchTopItems = async (endpoint) => {
+        try {
+          const response = await fetch(endpoint);
+          if (!response.ok) {
+            throw new Error('Failed to fetch data');
+          }
+          const data = await response.json();
+          return data;
+        } catch (error) {
+          console.error(`Error fetching ${endpoint} data:`, error);
+        }
+      };
+
+      const createChart = (labels, totalSales, totalDiscount, totalQuantity, totalOrders) => {
         const ctx = document.getElementById('visit-sale-chart').getContext('2d');
-        let chart;
 
-        const fetchData = async (filter) => {
-            try {
-                const response = await fetch(`/admin/dashboard/sales_data?filter=${filter}`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch data');
+        // Destroy previous chart instance if it exists
+        if (window.chart) {
+          window.chart.destroy();
+        }
+        // Set the height class based on the filter
+        const filter = document.getElementById('filter-option').value;
+        const chartCanvas = document.getElementById('visit-sale-chart');
+
+        // Remove existing height classes
+        chartCanvas.classList.remove('chart-daily', 'chart-weekly', 'chart-monthly', 'chart-yearly');
+        switch (filter) {
+          case 'daily':
+            chartCanvas.classList.add('chart-daily');
+            break;
+          case 'weekly':
+            chartCanvas.classList.add('chart-weekly');
+            break;
+          case 'monthly':
+            chartCanvas.classList.add('chart-monthly');
+            break;
+          case 'yearly':
+            chartCanvas.classList.add('chart-yearly');
+            break;
+          default:
+            chartCanvas.classList.add('chart-daily');
+        }
+
+        window.chart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: 'Total Sales (in K)',
+                data: totalSales,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                fill: false,
+                tension: 0.1
+              },
+              {
+                label: 'Total Discount (in K)',
+                data: totalDiscount,
+                borderColor: 'rgba(255, 99, 132, 1)',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                fill: false,
+                tension: 0.1
+              },
+              {
+                label: 'Total Quantity',
+                data: totalQuantity,
+                borderColor: 'rgba(54, 162, 235, 1)',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                fill: false,
+                tension: 0.1
+              },
+              {
+                label: 'Total Orders',
+                data: totalOrders,
+                borderColor: 'rgba(153, 102, 255, 1)',
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                fill: false,
+                tension: 0.1
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: true,
+                position: 'top'
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (tooltipItem) {
+                    return tooltipItem.dataset.label + ': ' + tooltipItem.raw.toFixed(2);
+                  }
                 }
-                const data = await response.json();
-                return data;
-            } catch (error) {
-                console.error('Error fetching sales data:', error);
-            }
-        };
-
-        const fetchTopItems = async (endpoint) => {
-            try {
-                const response = await fetch(endpoint);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch data');
+              }
+            },
+            scales: {
+              x: {
+                type: 'category',
+                beginAtZero: false,
+                grid: {
+                  display: true
                 }
-                const data = await response.json();
-                return data;
-            } catch (error) {
-                console.error(`Error fetching ${endpoint} data:`, error);
-            }
-        };
-
-        const createChart = (labels, totalSales, totalDiscount, totalQuantity, totalOrders) => {
-            chart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Total Sales (in K)',
-                            data: totalSales,
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            fill: false,
-                            tension: 0.1
-                        },
-                        {
-                            label: 'Total Discount (in K)',
-                            data: totalDiscount,
-                            borderColor: 'rgba(255, 99, 132, 1)',
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            fill: false,
-                            tension: 0.1
-                        },
-                        {
-                            label: 'Total Quantity',
-                            data: totalQuantity,
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                            fill: false,
-                            tension: 0.1
-                        },
-                        {
-                            label: 'Total Orders',
-                            data: totalOrders,
-                            borderColor: 'rgba(153, 102, 255, 1)',
-                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                            fill: false,
-                            tension: 0.1
-                        }
-                    ]
+              },
+              y: {
+                beginAtZero: true,
+                min: 0,
+                grid: {
+                  display: true
                 },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: true
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
+                ticks: {
+                  callback: function (value) {
+                    return value.toLocaleString();
+                  }
                 }
-            });
-        };
-
-        const updateChart = (labels, totalSales, totalDiscount, totalQuantity, totalOrders) => {
-            chart.data.labels = labels;
-            chart.data.datasets[0].data = totalSales;
-            chart.data.datasets[1].data = totalDiscount;
-            chart.data.datasets[2].data = totalQuantity;
-            chart.data.datasets[3].data = totalOrders;
-            chart.update();
-        };
-
-        const renderList = (data, elementId) => {
-            const listElement = document.getElementById(elementId);
-            listElement.innerHTML = '';
-            data.forEach(item => {
-                const listItem = document.createElement('li');
-                listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
-                const name = item.product ? item.product.productName : (item.category ? item.category.categoryName : item.brand.brandName);
-                listItem.innerHTML = `
-                    ${name} 
-                    <span>
-                        <span class="badge badge-primary badge-pill">Sold: ${item.totalSold}</span>
-                        <span class="badge badge-secondary badge-pill">Revenue: ${(item.totalRevenue / 1000).toFixed(2)}k</span>
-                    </span>`;
-                listElement.appendChild(listItem);
-            });
-        };
-
-        const updateDashboard = async (filter) => {
-            const salesData = await fetchData(filter);
-            if (!chart) {
-                createChart(salesData.labels, salesData.totalSales, salesData.totalDiscount, salesData.totalQuantity, salesData.totalOrders);
-            } else {
-                updateChart(salesData.labels, salesData.totalSales, salesData.totalDiscount, salesData.totalQuantity, salesData.totalOrders);
+              }
             }
-
-            // Update Weekly Sales Card
-            const weeklySalesCard = document.querySelector('#weekly-sales-card');
-            weeklySalesCard.querySelector('h2').textContent = `₹${Math.ceil((salesData.totalSales.reduce((acc, val) => acc + val, 0)) * 100).toFixed(2)}`;
-            const previousSales = 100; // Example previous sales for comparison
-            const percentageChangeSales = ((salesData.totalSales.reduce((acc, val) => acc + val, 0) - previousSales) / previousSales) * 100;
-            weeklySalesCard.querySelector('.card-text').textContent = `Increased by ${percentageChangeSales.toFixed(2)}%`;
-
-            // Update Weekly Orders Card
-            const weeklyOrdersCard = document.querySelector('#weekly-orders-card');
-            weeklyOrdersCard.querySelector('h2').textContent = salesData.totalOrders.reduce((acc, val) => acc + val, 0);
-            const previousOrders = 50; // Example previous orders for comparison
-            const percentageChangeOrders = ((salesData.totalOrders.reduce((acc, val) => acc + val, 0) - previousOrders) / previousOrders) * 100;
-            weeklyOrdersCard.querySelector('.card-text').textContent = `Decreased by ${percentageChangeOrders.toFixed(2)}%`;
-
-            const topProducts = await fetchTopItems('/admin/dashboard/top_products');
-            renderList(topProducts, 'top-products-list');
-
-            const topCategories = await fetchTopItems('/admin/dashboard/top_categories');
-            renderList(topCategories, 'top-categories-list');
-
-            const topBrands = await fetchTopItems('/admin/dashboard/top_brands');
-            renderList(topBrands, 'top-brands-list');
-        };
-
-        filterSelect.addEventListener('change', async (event) => {
-            const filter = event.target.value;
-            await updateDashboard(filter);
+          }
         });
+      };
 
-        // Initial load
-        updateDashboard(filterSelect.value);
-    });
-</script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script>
-  $(document).ready(function () {
-      $('[data-toggle="offcanvas"]').click(function () {
-          $('.sidebar-offcanvas').toggleClass('active');
+      const updateChart = (labels, totalSales, totalDiscount, totalQuantity, totalOrders) => {
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = totalSales;
+        chart.data.datasets[1].data = totalDiscount;
+        chart.data.datasets[2].data = totalQuantity;
+        chart.data.datasets[3].data = totalOrders;
+        chart.update();
+      };
+
+      const renderList = (data, elementId) => {
+        const listElement = document.getElementById(elementId);
+        listElement.innerHTML = '';
+        data.forEach(item => {
+          const listItem = document.createElement('li');
+          listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+          const name = item.product ? item.product.productName : (item.category ? item.category.categoryName : item.brand.brandName);
+          listItem.innerHTML = `
+                ${name} 
+                <span>
+                    <span class="badge badge-primary badge-pill">Sold : ${item.totalSold}</span>
+                    <span class="badge badge-secondary badge-pill">Rev : ${(item.totalRevenue / 1000).toFixed(2)}k</span>
+                </span>`;
+          listElement.appendChild(listItem);
+        });
+      };
+
+      const updateDashboard = async (filter) => {
+        const salesData = await fetchData(filter);
+        if (!chart) {
+          createChart(salesData.labels, salesData.totalSales, salesData.totalDiscount, salesData.totalQuantity, salesData.totalOrders);
+        } else {
+          updateChart(salesData.labels, salesData.totalSales, salesData.totalDiscount, salesData.totalQuantity, salesData.totalOrders);
+        }
+        const topProducts = await fetchTopItems('/admin/dashboard/top_products');
+        renderList(topProducts, 'top-products-list');
+        const topCategories = await fetchTopItems('/admin/dashboard/top_categories');
+        renderList(topCategories, 'top-categories-list');
+        const topBrands = await fetchTopItems('/admin/dashboard/top_brands');
+        renderList(topBrands, 'top-brands-list');
+      };
+      filterSelect.addEventListener('change', async (event) => {
+        const filter = event.target.value;
+        await updateDashboard(filter);
       });
-  });
-</script>
+      // Initial load
+      updateDashboard(filterSelect.value);
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // Fetch weekly data
+      const fetchWeeklyData = async () => {
+        try {
+          const response = await fetch('/admin/dashboard/weekly_data');
+          if (!response.ok) throw new Error('Failed to fetch weekly data');
+          return await response.json();
+        } catch (error) {
+          console.error('Error fetching weekly data:', error);
+        }
+      };
+      // Update cards with weekly data
+      const updateCard = async () => {
+        try {
+          const weeklyData = await fetchWeeklyData();
+          if (!weeklyData) {
+            console.error('No weekly data available');
+            return;
+          }
+          const currentWeek = weeklyData.currentWeek;
+          const previousWeek = weeklyData.previousWeek;
+          const totalSalesCurrent = currentWeek.totalSales;
+          const totalOrdersCurrent = currentWeek.totalOrders;
+          const totalSalesPrevious = previousWeek.totalSales;
+          const totalOrdersPrevious = previousWeek.totalOrders;
+          const percentageChangeSales = totalSalesPrevious !== 0
+            ? ((totalSalesCurrent - totalSalesPrevious) / totalSalesPrevious) * 100
+            : totalSalesCurrent > 0
+              ? 100
+              : 0;
+          const percentageChangeOrders = totalOrdersPrevious !== 0
+            ? ((totalOrdersCurrent - totalOrdersPrevious) / totalOrdersPrevious) * 100
+            : totalOrdersCurrent > 0
+              ? 100
+              : 0;
+          const salesCard = document.querySelector('#sales-card');
+          salesCard.querySelector('h2').textContent = `₹${totalSalesCurrent.toFixed(2)}`;
+          salesCard.querySelector('.card-text').textContent = percentageChangeSales >= 0
+            ? `Increased by ${percentageChangeSales.toFixed(2)}% compared to last week`
+            : `Decreased by ${Math.abs(percentageChangeSales).toFixed(2)}% compared to last week`;
+          const ordersCard = document.querySelector('#orders-card');
+          ordersCard.querySelector('h2').textContent = totalOrdersCurrent;
+          ordersCard.querySelector('.card-text').textContent = percentageChangeOrders >= 0
+            ? `Increased by ${percentageChangeOrders.toFixed(2)}% compared to last week`
+            : `Decreased by ${Math.abs(percentageChangeOrders).toFixed(2)}% compared to last week`;
+        } catch (error) {
+          console.error('Error updating cards:', error);
+        }
+      };
+      updateCard();
+    });
+  </script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('[data-toggle="offcanvas"]').click(function () {
+        $('.sidebar-offcanvas').toggleClass('active');
+      });
+    });
+  </script>
 
   <%- include('../partials/footer') %>

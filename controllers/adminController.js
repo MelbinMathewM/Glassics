@@ -43,18 +43,28 @@ const loadUser = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
+        const search = req.query.search || '';
+        const skip = (page - 1) * limit;
+        const searchRegex = new RegExp(search , 'i');
 
-        const users = await User.find()
-            .skip((page - 1) * limit)
+        const query = {
+            $or : [
+                { userName : { $regex : searchRegex } },
+                { customerName : { $regex : searchRegex } },
+                { userEmail : { $regex : searchRegex } }
+            ]
+        }
+
+        const users = await User.find(query)
+            .skip(skip)
             .limit(limit);
-
-        const totalUsers = await User.countDocuments();
-
+        const totalUsers = await User.countDocuments(query);
         res.render('users', { 
             users: users, 
             currentPage: page, 
             totalPages: Math.ceil(totalUsers / limit),
-            limit: limit 
+            limit: limit,
+            search : search
         });
     } catch (error) {
         res.send(error);
@@ -93,24 +103,40 @@ const loadOrder = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
-        const orders = await Order.find()
+        const search = req.query.search || '';
+        const skip = (page - 1) * limit;
+        const searchRegex = new RegExp(search, 'i');
+        const customerIds = await User.find({ userName: { $regex: searchRegex } }).distinct('_id');
+        const query = {
+            $or: [
+                { orderID: { $regex: searchRegex } },
+                { 'items.orderStatus': { $regex: searchRegex } },
+                { customer_id: { $in: customerIds } }
+            ]
+        };
+        const orders = await Order.find(query)
+            .populate({
+                path: 'customer_id',
+                select: 'userName'
+            })
             .populate('address_id')
             .populate('items.product_id')
-            .populate('customer_id')
             .sort({ orderDate: -1 })
-            .skip((page - 1) * limit)
+            .skip(skip)
             .limit(limit);
-        const totalOrders = await Order.countDocuments();
+        const totalOrders = await Order.countDocuments(query);
         res.render('orders', {
             orders: orders,
             currentPage: page,
             totalPages: Math.ceil(totalOrders / limit),
-            limit: limit
+            limit: limit,
+            search: search
         });
     } catch (error) {
         res.send(error);
     }
 };
+
 
 const loadOrderDetail = async (req, res) => {
     try {
@@ -228,8 +254,24 @@ const getReturnedOrder = async (req, res) => {
 
 const loadCoupon = async (req, res) => {
     try {
-        const coupons = await Coupon.find();
-        res.render('coupons', { coupons: coupons });
+        const search = req.query.search;
+        const page = req.query.page || 1;
+        const limit = req.query.limit || 8;
+        const skip = (page - 1) * limit;
+        const searchNumber = parseFloat(search);
+        const searchRegex = new RegExp(search, 'i');
+        const query = {
+            $or : [
+                { code : { $regex : searchRegex } },
+                ...(isNaN(searchNumber) ? [] : [
+                    { discount: searchNumber },
+                    { minPurchase: searchNumber }
+                ])
+            ]
+        }
+        const coupons = await Coupon.find(query).skip(skip).limit(parseInt(limit));
+        const totalCoupons = await Coupon.countDocuments(query);
+        res.render('coupons', { coupons: coupons, currentPage : parseInt(page), totalPages : Math.ceil(totalCoupons/limit), limit, search });
     } catch (error) {
         res.send(error);
     }
@@ -295,14 +337,50 @@ const deleteCoupon = async (req, res) => {
 
 const loadOffer = async (req, res) => {
     try {
-        const offers = await Offer.find();
+        const search = req.query.search || '';
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 8;
+        const skip = (page - 1) * limit;
+
+        const searchNumber = parseFloat(search);
+        const searchRegex = new RegExp(search, 'i');
+
+        const query = {
+            $or: [
+                { offerName: { $regex: searchRegex } },
+                { offerDescription: { $regex: searchRegex } },
+                { offerType: { $regex: searchRegex } },
+                { typeName: { $regex: searchRegex } },
+                ...(isNaN(searchNumber) ? [] : [
+                    { discountPercentage: searchNumber }
+                ])
+            ]
+        };
+
+        const offers = await Offer.find(query)
+            .populate('productId')
+            .populate('categoryId')
+            .skip(skip)
+            .limit(limit);
+
+        const totalOffers = await Offer.countDocuments(query);
         const products = await Product.find();
         const categories = await Category.find();
-        res.render('offers', { offers: offers, products: products, categories: categories });
+
+        res.render('offers', {
+            offers: offers,
+            products: products,
+            categories: categories,
+            currentPage: page,
+            totalPages: Math.ceil(totalOffers / limit),
+            limit,
+            search
+        });
     } catch (error) {
         res.send(error);
     }
 };
+
 
 const insertOffer = async (req, res) => {
     try {

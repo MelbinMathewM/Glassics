@@ -1,61 +1,50 @@
 <%- include('../partials/header.ejs') %>
 
-<div class="text-center mt-5 mb-5">
-    <div class="container align-self- border regcon" style="max-width: 500px;">
-        <div class="header__logo">
-            <a class="text-decoration-none" href="/"><h1 class="fw-bold" style="font-style: italic;">Glassics</h1></a>
-        </div>
-        <div class="title regtit">
-            <h2 class="pb-1 pt-1">Registration Form</h2>
-            <% if(locals.message) { %>
-                <span id="message" class="alert text-warning text-center message" role="alert"><%= message %></span>
-            <% } %>
+<div class="text-center mt-5 mb-5 me-3 ms-3">
+    <div class="container align-self-center border" style="max-width: 500px;background-image: url('/static/img/instagram/bg2.avif');background-position: center; border-radius: 1%;">
+            <a class="text-decoration-none" href="/"><h1 class="fw-bold mt-4 mb-4" style="font-style: italic;">Glassics</h1></a>
+            <h3 class="pb-1">Registration Form</h3>
             <div id="error" class="text-warning fw-bold text-center"></div>
             <form id="form">
-                <div class="form-group mb-3">
-                    <input type="text" name="customerName" class="form-control" placeholder="Enter Name" id="customerName" required>
+                <div class="form-group mb-2">
+                    <input type="text" name="customerName" class="form-control" placeholder="Enter Name" id="customerName">
                 </div>
-                <div class="form-group mb-3">
-                    <input type="text" name="userName" class="form-control" placeholder="Enter Username" id="userName" required>
+                <div class="form-group mb-2">
+                    <input type="text" name="userName" class="form-control" placeholder="Enter Username" id="userName">
                 </div>
-                <div class="form-group mb-3">
-                    <input type="email" name="userEmail" class="form-control" placeholder="Enter Email" id="userEmail" required>
+                <div class="form-group mb-2">
+                    <input type="email" name="userEmail" class="form-control" placeholder="Enter Email" id="userEmail">
                 </div>
-                <div class="form-group mb-3">
-                    <input type="text" name="userMobile" class="form-control" placeholder="Enter Mobile Number" id="userMobile" required>
+                <div class="form-group mb-2">
+                    <input type="text" name="userMobile" class="form-control" placeholder="Enter Mobile Number" id="userMobile">
                 </div>
-                <div class="form-group mb-3">
-                    <input type="file" name="userImage" class="form-control" id="userImage">
-                </div>
-                <div class="form-group mb-3 position-relative">
-                    <input type="password" name="password" class="form-control" placeholder="Enter Password" id="password" required>
+                <div class="form-group mb-2 position-relative">
+                    <input type="password" name="password" class="form-control" placeholder="Enter Password" id="password">
                     <i class="fa fa-eye position-absolute top-50 end-0 translate-middle-y me-2 cursor-pointer" id="togglePassword"></i>
                 </div>
-                <div class="form-group mb-3 position-relative">
-                    <input type="password" name="cpassword" class="form-control" placeholder="Confirm Password" id="cpassword" required>
+                <div class="form-group mb-2 position-relative">
+                    <input type="password" name="cpassword" class="form-control" placeholder="Confirm Password" id="cpassword">
                     <i class="fa fa-eye position-absolute top-50 end-0 translate-middle-y me-2 cursor-pointer" id="toggleCPassword"></i>
                 </div>
-                <button type="submit" class="btn btn-secondary rounded-pill mb-2">Get OTP</button>
-                <hr>
+                <button type="submit" class="btn btn-outline-primary rounded-pill mb-3">Get OTP</button>
             </form>
-            <a href="/auth/google" class="w-75 btn btn-secondary rounded-pill mb-4">Continue with Google</a><br>
-            <span class="text-dark d-block">Already have an account? <a href="/login">Sign in!</a></span>
-            <div id="message"></div>
-        </div>
+            <a href="/auth/google" class="w-75 btn btn-outline-secondary rounded-pill"><i class="mdi mdi-google"></i> Continue with Google</a><br>
+            <span class="text-dark d-block mb-3 mt-3">Already have an account? <a href="/login" class="text-decoration-none">Login</a></span>
     </div>
 </div>
-
+<style>
+    .text-decoration-none:hover{
+        color:red;
+    }
+</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" integrity="sha384-4oXz3VZtCjHtq17T+xZ5gQF6uQmM1ohV/gjvs5U2o2KA6+fa54Q7T8yKrWeD+NiD" crossorigin="anonymous"></script>
 
 <script>
-    setTimeout(() => {
-        const messageDiv = document.getElementById('message');
-        if (messageDiv) {
-            messageDiv.remove();
-        }
-    }, 5000);
-
     document.addEventListener('DOMContentLoaded', () => {
+        clearSessionStorage();
+        function clearSessionStorage() {
+            sessionStorage.clear();
+        }
         const form = document.getElementById('form');
         const errorDiv = document.getElementById('error');
         const togglePassword = document.getElementById('togglePassword');
@@ -155,9 +144,6 @@
                 }
                 if (!/(?=.*\d)/.test(data.password)) {
                     errors.push('Password must contain at least one number.');
-                }
-                if (!/(?=.*[@$!%*?&])/.test(data.password)) {
-                    errors.push('Password must contain at least one special character.');
                 }
             }
 

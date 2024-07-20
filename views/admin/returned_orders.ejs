@@ -10,14 +10,20 @@
             </div>
             <div class="navbar-menu-wrapper d-flex align-items-stretch">
 
-                <div class="collapse navbar-collapse" id="sidebar">
-                    <form class="d-flex ms-auto">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <form class="d-flex ms-auto search-form">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
                 </div>
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSearchContent" aria-controls="navbarSearchContent" aria-expanded="false" aria-label="Toggle search">
+                    <span class="fa fa-search text-secondary"></span>
+                </button>
+                <ul class="navbar-nav navbar-nav-right ms-2">
+                  <a href="/admin/orders"><button class="btn btn-outline-primary">Go Back</button></a>
+                </ul>
                 <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-                    <span class="mdi mdi-menu"></span>
+                    <span class="mdi mdi-menu text-secondary"></span>
                 </button>
             </div>
         </nav>
@@ -34,20 +40,21 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/admin/products">
                             <span class="menu-title">Products</span>
-                            <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-shopping menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/admin/users">
                             <span class="menu-title">Users</span>
-                            <i class="mdi mdi-contacts menu-icon"></i>
+                            <i class="mdi mdi-face menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="" data-toggle="collapse" data-target="#orders">
                           <span class="menu-title">Orders</span>
                           <i class="menu-arrow"></i>
-                          <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                          <i class="mdi mdi-format-list-bulleted menu-icon"></i>
                         </a>
                         <div class="collapse show" id="orders">
                           <ul class="nav flex-column sub-menu">
@@ -64,42 +71,48 @@
                         <a class="nav-link" href="/admin/categories">
                             <span class="menu-title">Categories</span>
                             <i class="menu-arrow"></i>
-                            <i class="mdi mdi-chart-bar menu-icon"></i>
+                            <i class="mdi mdi-group menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/admin/brands">
                             <span class="menu-title">Brands</span>
                             <i class="menu-arrow"></i>
-                            <i class="mdi mdi-table-large menu-icon"></i>
+                            <i class="mdi mdi-grid menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/admin/coupons">
                             <span class="menu-title">Coupons</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                            <i class="mdi mdi-ticket menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/admin/offers">
                             <span class="menu-title">Offers</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                            <i class="mdi mdi-percent menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/admin/logout">
                             <span class="menu-title">Logout</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                            <i class="mdi mdi-logout menu-icon"></i>
                         </a>
                     </li>
                 </ul>
             </nav>
             <!-- Content Wrapper -->
             <div class="main-panel">
-                <div class="content-wrapper col-lg-12">
+                <div class="content-wrapper">
+                    <!-- Collapsible Search Bar -->
+          <div class="collapse" id="navbarSearchContent">
+            <div class="bg-light p-3 mb-3 d-md-none">
+                <form class="d-flex w-100 search-form">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+         </div>
                     <section class="shopping-cart spad pt-0">
                         <div class="container">
                             <div class="page-header">
@@ -170,7 +183,7 @@
                                                             </td>                                                                                                                       
                                                             <td class="p-4">
                                                                 <a href="/admin/orders/order_details?id=<%= order._id %>"
-                                                                    class="btn btn-primary btn-sm">Details</a>
+                                                                    class="btn btn-outline-primary btn-sm">Details</a>
                                                             </td>
                                                         </tr>
                                                         <% }) %>

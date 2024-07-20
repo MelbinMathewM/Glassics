@@ -62,40 +62,37 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/account/wishlist">
                             <span class="menu-title">Wishlist</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                            <i class="mdi mdi-heart menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/account/orders">
                             <span class="menu-title">Orders</span>
-                            <i class="mdi mdi-contacts menu-icon"></i>
+                            <i class="mdi mdi-format-list-bulleted menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item active bg-gradient-info">
                         <a class="nav-link" href="/account/address">
                             <span class="menu-title font-weight-bold text-white">Address</span>
-                            <i class="mdi mdi-chart-bar menu-icon"></i>
+                            <i class="mdi mdi-google-maps menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/account/wallet">
                             <span class="menu-title">Wallet</span>
-                            <i class="mdi mdi-table-large menu-icon"></i>
+                            <i class="mdi mdi-wallet menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/account/coupons">
                             <span class="menu-title">Coupons</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                            <i class="mdi mdi-ticket menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/logout">
                             <span class="menu-title">Logout</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                            <i class="mdi mdi-logout menu-icon"></i>
                         </a>
                     </li>
                 </ul>
@@ -119,12 +116,12 @@
                     </div>
                 </section>
                 <!-- Breadcrumb Section End -->
-                <div class="content-wrapper d-flex justify-content-center " style="background-color: rgb(240, 253, 241);">
+                <div class="content-wrapper d-flex justify-content-center " style="background-color: rgb(255, 255, 255);">
                     <div class="container mt-5">
                         <!-- Heading and Add Address Button -->
                         <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h2 class="mb-0">My Addresses</h2>
-                            <button class="btn btn-success" onclick="openAddAddressModal()">Add New Address</button>
+                            <h4 class="mb-0">My Addresses</h4>
+                            <button class="btn btn-outline-success" onclick="openAddAddressModal()">Add</button>
                         </div>
             
                         <!-- Address List -->
@@ -132,7 +129,7 @@
                             <div class="row">
                                 <% addresses.forEach((address) => { %>
                                 <div class="col-md-6">
-                                    <div class="card mb-3">
+                                    <div class="card mb-4 border-secondary">
                                         <div class="card-body">
                                             <h5 class="card-title"><%= address.addressName %></h5>
                                             <p class="card-text">
@@ -142,8 +139,8 @@
                                                 <%= address.addressPin %>
                                             </p>
                                             <!-- Button to open Edit Address Modal -->
-                                            <button class="btn btn-primary" onclick="openEditAddressModal('<%= address._id %>')">Edit</button>
-                                            <button class="btn btn-danger" onclick="deleteAddress('<%= address._id %>')">Delete</button>
+                                            <button class="btn btn-outline-primary me-2" onclick="openEditAddressModal('<%= address._id %>')">Edit</button>
+                                            <button class="btn btn-outline-danger" onclick="deleteAddress('<%= address._id %>')">Delete</button>
                                             <!-- Edit Address modal -->
                                             <div id="addressModal_<%= address._id %>" class="modal">
                                                 <div class="modal-content">
@@ -210,7 +207,7 @@
                                                         </div>
                                                         <input type="hidden" name="addressId" value="<%= address._id %>">
                                                         <div class="form-group text-center">
-                                                            <button type="submit" class="btn btn-primary" id="addressSubmitBtn">Update Address</button>
+                                                            <button type="submit" class="btn btn-outline-primary" id="addressSubmitBtn">Update Address</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -286,7 +283,7 @@
                 </div>
             </div>
             <div class="form-group text-center">
-                <button type="submit" class="btn btn-primary" id="addressSubmitBtn">Save Address</button>
+                <button type="submit" class="btn btn-outline-primary" id="addressSubmitBtn">Save Address</button>
             </div>
         </form>
     </div>
@@ -328,14 +325,12 @@
         }
         .modal {
             display: none;
-            position: fixed;
             z-index: 1;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
         }
 
         .modal-content {

@@ -24,29 +24,48 @@ const loadDashboard = async (req, res) => {
 
 const loadSalesData = async (req, res) => {
     const filter = req.query.filter;
-    let matchStage = {};
-    let groupStage = {};
     let dateFormat;
+    let startDate = new Date();
+    let endDate = new Date();
+    let previousStartDate, previousEndDate;
+
+
+    // Determine the date format and the interval based on the filter
     switch (filter) {
         case 'yearly':
             dateFormat = '%Y';
+            startDate.setFullYear(startDate.getFullYear() - 5);
             break;
         case 'monthly':
             dateFormat = '%Y-%m';
+            startDate.setMonth(startDate.getMonth() - 5);
             break;
         case 'weekly':
-            dateFormat = '%Y-%U';
+            dateFormat = '%Y-%W'; // ISO week format
+            endDate.setDate(endDate.getDate() - endDate.getDay() + 1); // Set endDate to the start of the current week (Monday)
+            startDate.setDate(endDate.getDate() - 6 * 7); // Go back 6 weeks
+
+            // Calculate previous week's start and end dates
+            previousEndDate = new Date(endDate);
+            previousStartDate = new Date(previousEndDate);
+            previousStartDate.setDate(previousStartDate.getDate() - 7 * 7); // Go back 7 weeks from the previous end date
+            previousEndDate.setDate(previousEndDate.getDate() - 7); // One week before the current end date
+            break;
+
             break;
         case 'daily':
             dateFormat = '%Y-%m-%d';
+            startDate.setDate(startDate.getDate() - 10);
             break;
         default:
             dateFormat = '%Y-%m-%d';
+            startDate.setDate(startDate.getDate() - 10);
     }
-    groupStage = {
-        _id: { $dateToString: { format: dateFormat, date: "$items.deliveryDate" } },
+
+    const groupStage = {
+        _id: null,
         totalSales: { $sum: "$items.productPrice" },
-        totalDiscount: { 
+        totalDiscount: {
             $sum: {
                 $add: [
                     { $ifNull: ["$items.offerDiscount", 0] },
@@ -57,18 +76,151 @@ const loadSalesData = async (req, res) => {
         totalQuantity: { $sum: "$items.quantity" },
         totalOrders: { $sum: 1 }
     };
+
+    if (filter === 'weekly') {
+        groupStage._id = {
+            $concat: [
+                { $substr: [{ $year: "$items.deliveryDate" }, 0, 4] },
+                "-W",
+                { $substr: [{ $isoWeek: "$items.deliveryDate" }, 0, 2] }
+            ]
+        };
+    } else if (filter === 'monthly') {
+        groupStage._id = { $dateToString: { format: "%Y-%m", date: "$items.deliveryDate" } };
+    } else if (filter === 'yearly') {
+        groupStage._id = { $dateToString: { format: "%Y", date: "$items.deliveryDate" } };
+    } else {
+        groupStage._id = { $dateToString: { format: "%Y-%m-%d", date: "$items.deliveryDate" } };
+    }
+
     try {
+        // Fetch the sales data
         const salesData = await Order.aggregate([
             { $unwind: "$items" },
+            { $match: { "items.deliveryDate": { $gte: startDate, $lte: endDate } } },
             { $group: groupStage },
             { $sort: { _id: 1 } }
         ]);
-        const labels = salesData.map(data => data._id);
-        const totalSales = salesData.map(data => data.totalSales/1000);
-        const totalDiscount = salesData.map(data => data.totalDiscount/1000);
-        const totalQuantity = salesData.map(data => data.totalQuantity);
-        const totalOrders = salesData.map(data => data.totalOrders);
-        res.json({ labels, totalSales, totalDiscount, totalQuantity, totalOrders });
+
+        // Generate all possible labels within the date range
+        const labels = [];
+        let currentDate = new Date(startDate);
+
+        if (filter === 'weekly') {
+            while (currentDate <= endDate) {
+                const startOfWeek = new Date(currentDate);
+                const weekNumber = Math.ceil(((startOfWeek - new Date(startOfWeek.getFullYear(), 0, 1)) / 86400000 + 1) / 7);
+                labels.push(`${startOfWeek.getFullYear()}-W${weekNumber.toString().padStart(2, '0')}`);
+                currentDate.setDate(currentDate.getDate() + 7); // Move to the start of the next week
+            }
+        } else if (filter === 'yearly') {
+            while (currentDate <= endDate) {
+                labels.push(currentDate.getFullYear().toString());
+                currentDate.setFullYear(currentDate.getFullYear() + 1); // Move to the next year
+            }
+        } else {
+            while (currentDate <= endDate) {
+                if (filter === 'monthly') {
+                    labels.push(currentDate.toISOString().slice(0, 7)); // YYYY-MM format
+                    currentDate.setMonth(currentDate.getMonth() + 1); // Move to the next month
+                } else {
+                    labels.push(currentDate.toISOString().slice(0, 10)); // YYYY-MM-DD format
+                    currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+                }
+            }
+        }
+
+        // Create a mapping of existing data for quick lookup
+        const dataMap = new Map();
+        salesData.forEach(data => {
+            dataMap.set(data._id, data);
+        });
+
+        // Fill in missing data points with zeros
+        const filledTotalSales = [];
+        const filledTotalDiscount = [];
+        const filledTotalQuantity = [];
+        const filledTotalOrders = [];
+
+        labels.forEach(label => {
+            if (dataMap.has(label)) {
+                const data = dataMap.get(label);
+                filledTotalSales.push(data.totalSales / 1000);
+                filledTotalDiscount.push(data.totalDiscount / 1000);
+                filledTotalQuantity.push(data.totalQuantity);
+                filledTotalOrders.push(data.totalOrders);
+            } else {
+                filledTotalSales.push(0);
+                filledTotalDiscount.push(0);
+                filledTotalQuantity.push(0);
+                filledTotalOrders.push(0);
+            }
+        });
+
+        res.json({ labels, totalSales: filledTotalSales, totalDiscount: filledTotalDiscount, totalQuantity: filledTotalQuantity, totalOrders: filledTotalOrders });
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+};
+
+const getWeeklyDates = (weekOffset = 0) => {
+    const today = new Date();
+    const startOfWeek = today.getDate() - today.getDay() + 1; // Adjust start of week (Monday)
+    const endOfWeek = startOfWeek + 6;
+
+    const startDate = new Date(today.setDate(startOfWeek - weekOffset * 7));
+    const endDate = new Date(today.setDate(endOfWeek - weekOffset * 7));
+
+    return { startDate, endDate };
+};
+
+const loadWeeklyData = async (req, res) => {
+    try {
+        const { startDate: currentWeekStart, endDate: currentWeekEnd } = getWeeklyDates(); // Current week
+        const { startDate: prevWeekStart, endDate: prevWeekEnd } = getWeeklyDates(1); // Previous week
+
+        // Aggregation for current week
+        const currentWeekData = await Order.aggregate([
+            { $unwind: "$items" },
+            { $match: { "items.deliveryDate": { $gte: currentWeekStart, $lte: currentWeekEnd } } },
+            {
+                $group: {
+                    _id: null,
+                    totalSales: { $sum: "$items.productPrice" },
+                    totalOrders: { $sum: 1 }
+                }
+            }
+        ]);
+
+        // Aggregation for previous week
+        const previousWeekData = await Order.aggregate([
+            { $unwind: "$items" },
+            { $match: { "items.deliveryDate": { $gte: prevWeekStart, $lte: prevWeekEnd } } },
+            {
+                $group: {
+                    _id: null,
+                    totalSales: { $sum: "$items.productPrice" },
+                    totalOrders: { $sum: 1 }
+                }
+            }
+        ]);
+
+        // Extract the total sales and orders
+        const currentWeekTotalSales = currentWeekData[0]?.totalSales || 0;
+        const currentWeekTotalOrders = currentWeekData[0]?.totalOrders || 0;
+        const previousWeekTotalSales = previousWeekData[0]?.totalSales || 0;
+        const previousWeekTotalOrders = previousWeekData[0]?.totalOrders || 0;
+
+        res.json({
+            currentWeek: {
+                totalSales: currentWeekTotalSales,
+                totalOrders: currentWeekTotalOrders
+            },
+            previousWeek: {
+                totalSales: previousWeekTotalSales,
+                totalOrders: previousWeekTotalOrders
+            }
+        });
     } catch (err) {
         res.status(500).send(err.message);
     }
@@ -569,6 +721,7 @@ const generateExcel = async ({ salesReport, overallReport }, filename) => {
 module.exports = {
     loadDashboard,
     loadSalesData,
+    loadWeeklyData,
     getTopProducts,
     getTopCategories,
     getTopBrands,

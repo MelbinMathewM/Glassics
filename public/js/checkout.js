@@ -208,7 +208,7 @@ selectBtn.onclick = function () {
 
 function addAddressToList(address) {
     var addressList = document.getElementById("address-list");
-    var index = addressList.children.length; // Calculate index based on current length
+    var index = addressList.children.length;
     console.log(index);
 
     var listItem = document.createElement("li");

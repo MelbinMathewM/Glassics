@@ -70,9 +70,7 @@ const insertUser = async (req, res) => {
             userName: req.body.userName,
             userEmail: req.body.userEmail,
             userMobile: req.body.userMobile,
-            userImage: req.file ? req.file.filename : null,
             password: await securePassword(req.body.password),
-            is_admin: 0,
             is_blocked: 0
         };
         await sendOTPViaEmail(req.body.userEmail, otp);
@@ -97,12 +95,13 @@ const loadOTP = async (req, res) => {
 const verifyOTP = async (req, res) => {
     try {
         const { otp } = req.body;
+        const otpExpires = req.session.otp.expires;
         const sessionOTP = req.session.otp.value;
         if (!sessionOTP) {
             return res.status(400).json({ success: false, message: "Session expired" });
         }
         const currentTime = Date.now();
-        if (currentTime > sessionOTP.expires) {
+        if (currentTime > otpExpires) {
             req.session.otp = null;
             return res.status(400).json({ success: false, message: "OTP expired" });
         }
@@ -157,18 +156,18 @@ const verifyUser = async (req,res) => {
             if(passwordMatch){
                 if(userData.is_blocked === 0){
                     req.session.user_id = userData._id;
-                    res.redirect('/');
+                    res.status(201).json({ success : true });
                 }else{
-                    res.render('login',{message : "User blocked"});
+                    res.status(400).json({ success : false, message : 'You are blocked'});
                 }
             }else{
-                res.render('login',{message : "Incorrect Password"});
+                res.status(400).json({ success : false, message : 'Incorrect password'});
             }
         }else{
-            res.render('login',{message : "User not found"});
+            res.status(404).json({ success : false, message : 'User not found'});
         }
     }catch(error){
-        res.send(error);
+        res.status(500).json({ success : false, error : 'Something went wrong'});
     }
 };
 
@@ -187,8 +186,7 @@ passport.use(new GoogleStrategy({
                 googleId: profile.id,
                 userName: profile.displayName,
                 userEmail: profile.emails[0].value,
-                customerName: profile.displayName,
-                userImage: profile.photos[0].value
+                customerName: profile.displayName
             });
             await user.save();
         }

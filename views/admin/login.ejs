@@ -1,66 +1,23 @@
 <%- include('../partials/header') %>
 
-<div class="center-div" style="background-image: url(/static/img/hero/bg-3.jpg);">
-    <div class="alogdiv container text-center">
-        <a class="text-decoration-none" href="/"><h1 class="fw-bold" style="font-style: italic;">Glassics</h1></a>
-        <div class="alogcon">
-            <h5 class="alogtit">Admin Login</h5>
-            <% if(locals.message) { %>
-                <div class="alert text-warning text-center" id="message">
-                    <%= message %>
-                </div>
-            <% } %>
-            <div id="error" class="text-warning fw-bold"></div>
-            <form id="form">
-                <div class="form-group mb-3">
-                    <input type="text" class="form-control" id="adminName" name="adminName" placeholder="Enter Username">
-                </div>
-                <div class="form-group mb-3">
-                    <input type="password" id="apassword" class="form-control" name="apassword" placeholder="Enter Password">
-                </div>
-                <button type="submit" class="btn btn-secondary rounded-pill">Submit</button>
-            </form>
-        </div>
+<div class="text-center mt-5 pt-5 mb-5 ms-3 me-3">
+    <div class="container align-self- border  mt-5 pt-3" style="max-width: 500px;background-image: url('/static/img/instagram/bg2.avif');background-position: center; border-radius: 1%;">
+        <a class="text-decoration-none" href="/"><h1 class="fw-bold mb-3 mt-3" style="font-style: italic;">Glassics</h1></a>
+        <h3 class="pb-2">Admin Login</h3>
+        <div id="error" class="text-warning fw-bold text-center"></div>
+        <form id="form">
+            <div class="form-group mb-2 position-relative">
+                <input type="text" name="adminName" class="form-control" placeholder="Enter Username" id="adminName">                </div>
+            <div class="form-group mb-2 position-relative">
+                <input type="password" name="apassword" class="form-control" placeholder="Enter Password" id="apassword">
+                <i class="fa fa-eye position-absolute top-50 end-0 translate-middle-y me-2 cursor-pointer" id="togglePassword"></i>
+            </div>
+            <button type="submit" class="btn btn-outline-primary rounded-pill mb-4 mt-2">Submit</button>
+        </form>
     </div>
 </div>
 <style>
-    .center-div {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-    }
-
-    .alogdiv {
-        background-color: #f8f9fa;
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        max-width: 400px; /* Adjust the max-width as needed */
-        width: 100%;
-    }
-
-    .alogtit {
-        color: #333;
-    }
-
-    .alert {
-        margin-bottom: 20px;
-    }
-
-    .form-control {
-        border-radius: 20px;
-    }
-
-    .btn-secondary {
-        background-color: #6c757d;
-        border-color: #6c757d;
-    }
-
-    .btn-secondary:hover {
-        background-color: #5a6268;
-        border-color: #545b62;
-    }
+   
 </style>
 
 <%- include('../partials/footer') %>

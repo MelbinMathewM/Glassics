@@ -62,40 +62,37 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/account/wishlist">
                         <span class="menu-title">Wishlist</span>
-                        <i class="menu-arrow"></i>
-                        <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                        <i class="mdi mdi-heart menu-icon"></i>
                     </a>
                 </li>
                 <li class="nav-item active bg-gradient-info">
                     <a class="nav-link">
                         <span class="menu-title font-weight-bold text-white">Orders</span>
-                        <i class="mdi mdi-contacts menu-icon"></i>
+                        <i class="mdi mdi-format-list-bulleted menu-icon"></i>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/account/address">
                         <span class="menu-title">Address</span>
-                        <i class="mdi mdi-chart-bar menu-icon"></i>
+                        <i class="mdi mdi-google-maps menu-icon"></i>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/account/wallet">
                         <span class="menu-title">Wallet</span>
-                        <i class="mdi mdi-table-large menu-icon"></i>
+                        <i class="mdi mdi-wallet menu-icon"></i>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/account/coupons">
                         <span class="menu-title">Coupons</span>
-                        <i class="menu-arrow"></i>
-                        <i class="mdi mdi-medical-bag menu-icon"></i>
+                        <i class="mdi mdi-ticket menu-icon"></i>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/logout">
                         <span class="menu-title">Logout</span>
-                        <i class="menu-arrow"></i>
-                        <i class="mdi mdi-medical-bag menu-icon"></i>
+                        <i class="mdi mdi-logout menu-icon"></i>
                     </a>
                 </li>
             </ul>
@@ -176,13 +173,13 @@
                                                         <% } else if (order.items.every(item => item.orderStatus === 'Delivered')) { %>
                                                             <p>All items Delivered</p>
                                                         <% } else if (order.paymentStatus === 'Pending') { %>
-                                                            <button class="btn btn-secondary pay-now-btn" data-order-id="<%= order._id %>">Pay Now</button>
+                                                            <button class="btn btn-outline-secondary pay-now-btn" data-order-id="<%= order._id %>">Pay Now</button>
                                                         <% } else { %>
                                                             <p>Paid</p>
                                                         <% } %>
                                                     </td>                                                    
                                                     <td class="pe-4">
-                                                        <a href="/account/orders/order_details?id=<%= order._id %>" class="btn btn-primary">Info</a>
+                                                        <a href="/account/orders/order_details?id=<%= order._id %>" class="btn btn-outline-primary">Info</a>
                                                     </td>
                                                 </tr>
                                             <% }); %>
@@ -199,15 +196,15 @@
                         <div class="row p-3">
                             <div class="pagination d-flex justify-content-center align-items-center">
                                 <% if (currentPage > 1) { %>
-                                    <a href="?page=<%= currentPage - 1 %>&limit=<%= limit %>" class="btn btn-info">&lt;</a>
+                                    <a href="?page=<%= currentPage - 1 %>&limit=<%= limit %>" class="btn btn-outline-info">&lt;</a>
                                 <% } %>
                                 <% for (let i = Math.max(1, currentPage - 1); i <= Math.min(currentPage + 1, totalPages); i++) { %>
-                                    <a href="?page=<%= i %>&limit=<%= limit %>" class="btn btn-secondary <%= currentPage === i ? 'active' : '' %>">
+                                    <a href="?page=<%= i %>&limit=<%= limit %>" class="btn btn-outline-secondary <%= currentPage === i ? 'active' : '' %>">
                                         <%= i %>
                                     </a>
                                 <% } %>
                                 <% if (currentPage < totalPages) { %>
-                                    <a href="?page=<%= currentPage + 1 %>&limit=<%= limit %>" class="btn btn-info">&gt;</a>
+                                    <a href="?page=<%= currentPage + 1 %>&limit=<%= limit %>" class="btn btn-outline-info">&gt;</a>
                                 <% } %>
                             </div>
                         </div>

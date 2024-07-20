@@ -64,40 +64,37 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/account/wishlist">
                             <span class="menu-title">Wishlist</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                            <i class="mdi mdi-heart menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/account/orders">
                             <span class="menu-title">Orders</span>
-                            <i class="mdi mdi-contacts menu-icon"></i>
+                            <i class="mdi mdi-format-list-bulleted menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/account/address">
                             <span class="menu-title">Address</span>
-                            <i class="mdi mdi-chart-bar menu-icon"></i>
+                            <i class="mdi mdi-google-maps menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/account/wallet">
                             <span class="menu-title">Wallet</span>
-                            <i class="mdi mdi-table-large menu-icon"></i>
+                            <i class="mdi mdi-wallet menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/account/coupons">
                             <span class="menu-title">Coupons</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                            <i class="mdi mdi-ticket menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/logout">
                             <span class="menu-title">Logout</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                            <i class="mdi mdi-logout menu-icon"></i>
                         </a>
                     </li>
                 </ul>
@@ -106,7 +103,7 @@
                 <!-- Breadcrumb Section Begin -->
                 <section class="breadcrumb-option mt-5" style="background-color: rgb(232, 243, 250);">
                     <div class="container-fluid">
-                        <div class="row">
+                        <div class="row mt-3">
                             <div class="col-lg-12">
                                 <div class="breadcrumb__text ps-4">
                                     <h4>Profile</h4>
@@ -123,59 +120,123 @@
                     </div>
                 </section>
                 <!-- Breadcrumb Section End -->
-                <div class="content-wrapper d-flex justify-content-center " style="background-color: white;">
-                    <section class="shopping-cart pb-4 prodiv w-50">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <!-- User Profile Section -->
-                                    <div class="user-profile-section">
-                                        <div class="row text-center">
-                                                <div class="text-center pt-3">
-                                                    <img src="<%= profileImage %>" alt="User Image"
-                                                    class="img-fluid rounded-circle" style="max-width: 150px;">
-                                                </div>
-                                                <!-- User Details -->
-                                                <h3 class="mt-2">
-                                                    <%= user.userName %>
-                                                </h3>
-                                                <p class="mb-1"><strong>Email : </strong>
-                                                    <%= user.userEmail %>
-                                                </p>
-                                                <% if (user.userMobile) { %>
-                                                    <p class="mb-1"><strong>Mobile : </strong>
-                                                        <%= user.userMobile %>
-                                                    </p>  
-                                                <% } %>                                          
-                                        </div>
+                <div class="text-center mt-5 mb-5 ms-3 me-3">
+                    <div class="container align-self-center border" style="max-width: 500px;background-image: url('/static/img/instagram/bbg2.jpg');background-position: center; border-radius: 1%;">
+                        <div class="user-profile-section">
+                            <div class="row text-center">
+                                    <div class="text-center pt-3">
+                                        <img src="<%= profileImage %>" alt="User Image"
+                                        class="img-fluid rounded-circle" style="max-width: 100px;">
                                     </div>
-                                    <!-- End of User Profile Section -->
+                                    <!-- User Details -->
+                                    <h4 id="f1" class="mt-2">
+                                        <%= user.userName %>
+                                    </h4>
+                                    <p id="f2" class="mb-1"><strong>Name : </strong>
+                                        <%= user.customerName %>
+                                    </p>
+                                    <p id="f3" class="mb-1"><strong>Email : </strong>
+                                        <%= user.userEmail %>
+                                    </p>
+                                    <% if (user.userMobile) { %>
+                                        <p id="f4" class="mb-1"><strong>Mobile : </strong>
+                                            <%= user.userMobile %>
+                                        </p>  
+                                    <% } %>                                          
+                            </div>
+                        </div>
+                        <% if (!user.googleId) { %>
+                            <div class="row mt-3 mb-3 text-center">
+                                <div class="col">
+                                    <a type="button" class="bbtn text-decoration-none text-danger pe-4" data-toggle="modal" data-target="#editPasswordModal">
+                                        Edit Password
+                                    </a>
+                                    <a type="button" class="bbtn text-decoration-none text-danger ps-4" data-toggle="modal" data-target="#editProfileModal">
+                                        Edit Profile
+                                    </a>
                                 </div>
                             </div>
-                            <% if (!user.googleId) { %>
-                                <div class="row mt-3 text-center">
-                                    <div class="col">
-                                        <a href="/account/profile/edit_password" class="editref text-decoration-none">
-                                            <span class="pe-5">Edit Password</span>
-                                        </a>
-                                        <a href="/account/profile/edit_details" class="editref text-decoration-none">
-                                            <span>Edit Details</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            <% } %>
-                        </div>
-                    </section>
+                        <% } %>
+                    </div>
                 </div>
                 <!-- content-wrapper ends -->
-                <!-- partial:partials/_footer.html -->
-                <!-- partial -->
             </div>
             <!-- main-panel ends -->
         </div>
         <!-- page-body-wrapper ends -->
     </div>
     <!-- container-scroller -->
+    <!-- Edit Details Modal -->
+    <div class="modal fade mt-5" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div class="header__logo text-center">
+                    <a class="text-decoration-none" href="/"><h1 class="fw-bold" style="font-style: italic;">Glassics</h1></a>
+                </div>
+                <div class="text-center">
+                <div id="message" class="fw-bold text-success text-center"></div>
+                <div id="error" class="text-danger fw-bold text-center"></div>
+                <form id="form">
+                    <div class="mb-2">
+                        <input type="text" name="customerName" value="<%= user.customerName %>" class="form-control" placeholder="Enter new Name" id="customerName">
+                    </div>
+                    <div class="mb-2">
+                        <input type="text" name="userName" value="<%= user.userName %>" class="form-control" placeholder="Enter new Username" id="userName">
+                    </div>
+                    <div class="mb-2">
+                        <input type="text" name="userMobile" value="<%= user.userMobile %>" class="form-control" placeholder="Enter the Mobile Number" id="userMobile">
+                    </div>
+                    <div class="mb-2">
+                        <input type="password" name="password" class="form-control" placeholder="Enter your password" id="password">
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary rounded-pill mb-3">Submit</button>
+                </form>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- EditPasswordModal -->
+    <div class="modal fade mt-5" id="editPasswordModal" tabindex="-1" role="dialog" aria-labelledby="editPasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editPasswordModalLabel">Edit Password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="header__logo text-center">
+                        <a class="text-decoration-none" href="/"><h1 class="fw-bold" style="font-style: italic;">Glassics</h1></a>
+                    </div>
+                    <div class="title mb-2 text-center">
+                        <div id="pmessage" class="fw-bold text-success text-center"></div>
+                        <div id="perror" class="text-warning fw-bold text-center"></div>
+                        <form id="pform">
+                            <div class="mb-2">
+                                <input type="password" name="opassword" class="form-control" placeholder="Enter old password" id="opassword">
+                            </div>
+                            <div class="mb-2">
+                                <input type="password" name="npassword" class="form-control" placeholder="Enter new password" id="npassword">
+                            </div>
+                            <div class="mb-2">
+                                <input type="password" name="cpassword" class="form-control" placeholder="Confirm Password" id="cpassword">
+                            </div>
+                            <button type="submit" class="btn btn-outline-primary rounded-pill mb-3">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <style>
         header {
             position: relative;
@@ -202,14 +263,155 @@
                 margin-top: 12.3px;
             }
         }
-        .prodiv {
-            box-shadow: 5px 5px 40px rgb(61, 147, 245);
-            border-radius: 6%;
-        }
-        .editref:hover {
-            color: red;
+        .bbtn:hover{
+            color:blueviolet;
         }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const messgeContainer = document.getElementById('message');
+            let form = document.getElementById('form');
+            let error = document.getElementById('error');
+            let name_reg = /^[a-zA-Z ]+$/;
+            let uname_reg = /^[A-Za-z][A-Za-z0-9_]*$/;
+            let mobile_reg = /^[1-9][0-9]{9}$/;
+            let mob_zero = /^0{10}$/;
+    
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                let message = [];
+                let customerName = document.getElementById('customerName').value.trim();
+                let userName = document.getElementById('userName').value.trim();
+                let userMobile = document.getElementById('userMobile').value.trim();
+                let password = document.getElementById('password').value.trim();
+    
+                if (!customerName) {
+                    message.push('Name is required');
+                } else if (!name_reg.test(customerName)) {
+                    message.push("Enter a valid Name");
+                }
+    
+                if (!userName) {
+                    message.push('Username is required');
+                } else if (!uname_reg.test(userName)) {
+                    message.push("Enter a valid Username");
+                }
+    
+                if (!userMobile) {
+                    message.push('Mobile Number is required');
+                } else if (!mobile_reg.test(userMobile)) {
+                    message.push("Mobile Number should be 10 digit numbers and first number cannot be zero");
+                } else if (mob_zero.test(userMobile)) {
+                    message.push("Mobile number cannot be 10 consecutive zeros.");
+                }
+
+                if (!password) {
+                    message.push('Password is required for verifying your request');
+                }
+
+                if (message.length > 0) {
+                    error.innerText = message[0];
+                    return;
+                }
+
+                error.innerText = '';
+
+                const formData = { customerName, userName, userMobile, password };
+                try {
+                    const response = await fetch('/account/profile/edit_details', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    });
+    
+                    const result = await response.json();
+                    if (response.ok) {
+                        messgeContainer.innerText = result.message;
+                        setTimeout(() => {
+                            location.reload();
+                    }, 1500);
+                    } else {
+                        error.innerText = result.message;
+                    }
+                } catch (error) {
+                    error.innerText = error;
+                }
+            });
+        });
+    </script>
+    <script>
+document.getElementById('pform').addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    let opassword = document.getElementById('opassword').value.trim();
+    let password = document.getElementById('npassword').value.trim();
+    let cpassword = document.getElementById('cpassword').value.trim();
+
+    let error = document.getElementById('perror');
+    let messageContainer = document.getElementById('pmessage');
+    let message = [];
+
+    // Validation checks
+    if (!opassword) {
+        message.push('Please enter the old password');
+    };
+
+    if (!password) {
+        message.push('Please enter the new password');
+    };
+
+    if (!cpassword) {
+        message.push('Please confirm your password');
+    };
+
+    if (opassword === password) {
+        message.push('New password cannot be the old password');
+    }
+
+    if (password !== cpassword) {
+        message.push('Passwords do not match');
+    };
+
+    if (message.length > 0) {
+        error.innerText = message[0];
+        return;
+    } else {
+        error.innerText = '';
+    }
+
+    const formData = { opassword, password };
+
+    try {
+        const response = await fetch('/account/profile/edit_password', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            messageContainer.innerText = result.message;
+            messageContainer.classList.add('text-success');
+            messageContainer.style.display = 'block';
+            error.innerText = '';
+
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        } else {
+            error.innerText = result.message;
+            messageContainer.style.display = 'none';
+        }
+    } catch (error) {
+        error.innerText = 'An error occurred. Please try again.';
+        messageContainer.style.display = 'none';
+    }
+});
+    </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

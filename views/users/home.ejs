@@ -179,7 +179,7 @@
                                         </del>
                                     </h5>
                                     <a href="#" class="add-cart ps-4 text-decoration-none"
-                                        data-product-id="<%= bestSeller._id %>">+ Add To Cart</a><br>
+                                        data-product-id="<%= bestSeller._id %>" data-section="bestSeller">+ Add To Cart</a><br>
                                     <a href="/product_details/<%= bestSeller._id %>"
                                         class="mt-4 ps-4 text-decoration-none">&gt; Details</a>
                                     <div class="product__color__select me-4 mb-3">
@@ -188,7 +188,8 @@
                                                 class="<%= index === 0 ? 'active' : '' %>"
                                                 style="background-color: <%= variant.color %>">
                                                 <input type="radio" name="color-bestSeller-<%= bestSeller._id %>"
-                                                    id="pc-<%= bestSeller._id %>-<%= index %>"
+                                                    id="pc-<%= bestSeller._id %>-<%= index %>" value="<%= variant.color %>"
+                                                    data-variant="<%= JSON.stringify(variant) %>"
                                                     data-image-url="/static/productImages/<%= variant.images[0] %>"
                                                     data-price="<%= variant.price %>"
                                                     data-disc-price="<%= variant.discountPrice %>" <%=index===0
@@ -241,7 +242,7 @@
                                         </del>
                                     </h5>
                                     <a href="#" class="add-cart ps-4 text-decoration-none"
-                                        data-product-id="<%= newArrival._id %>">+ Add To Cart</a><br>
+                                        data-product-id="<%= newArrival._id %>" data-section="newArrival">+ Add To Cart</a><br>
                                     <a href="/product_details/<%= newArrival._id %>"
                                         class="mt-4 ps-4 text-decoration-none">&gt; Details</a>
                                     <div class="product__color__select me-4 mb-3">
@@ -250,7 +251,8 @@
                                                 class="<%= index === 0 ? 'active' : '' %>"
                                                 style="background-color: <%= variant.color %>">
                                                 <input type="radio" name="color-newArrival-<%= newArrival._id %>"
-                                                    id="pc-<%= newArrival._id %>-<%= index %>"
+                                                    id="pc-<%= newArrival._id %>-<%= index %>" value="<%= variant.color %>"
+                                                    data-variant="<%= JSON.stringify(variant) %>"
                                                     data-image-url="/static/productImages/<%= variant.images[0] %>"
                                                     data-price="<%= variant.price %>"
                                                     data-disc-price="<%= variant.discountPrice %>" <%=index===0
@@ -263,83 +265,7 @@
                         </div>
                         <% }); %>
                 </div>
-
         </section>
-
-        <!-- Categories Section Begin -->
-        <section class="categories spad">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-3">
-                        <div class="categories__text">
-                            <h2>Glasses Hot <br /> <span>Glasses Collection</span> <br /> Accessories</h2>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="categories__hot__deal">
-                            <img src="/static/img/banner/ba-6.jpg" alt="">
-                            <div class="hot__deal__sticker">
-                                <span>Sale Of</span>
-                                <h5>&#8377;999</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 offset-lg-1">
-                        <div class="categories__deal__countdown">
-                            <span>Deal Of The Week</span>
-                            <h2>High index lenses</h2>
-                            <div class="categories__deal__countdown__timer" id="countdown">
-                                <div class="cd-item">
-                                    <span>3</span>
-                                    <p>Days</p>
-                                </div>
-                                <div class="cd-item">
-                                    <span>1</span>
-                                    <p>Hours</p>
-                                </div>
-                                <div class="cd-item">
-                                    <span>50</span>
-                                    <p>Minutes</p>
-                                </div>
-                                <div class="cd-item">
-                                    <span>18</span>
-                                    <p>Seconds</p>
-                                </div>
-                            </div>
-                            <a href="#" class="primary-btn text-decoration-none">Shop now</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Categories Section End -->
-
-        <!-- Instagram Section Begin -->
-        <!-- <section class="instagram spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="instagram__pic">
-                        <div class="instagram__pic__item set-bg" data-setbg="img/instagram/instagram-1.jpg"></div>
-                        <div class="instagram__pic__item set-bg" data-setbg="img/instagram/instagram-2.jpg"></div>
-                        <div class="instagram__pic__item set-bg" data-setbg="img/instagram/instagram-3.jpg"></div>
-                        <div class="instagram__pic__item set-bg" data-setbg="img/instagram/instagram-4.jpg"></div>
-                        <div class="instagram__pic__item set-bg" data-setbg="img/instagram/instagram-5.jpg"></div>
-                        <div class="instagram__pic__item set-bg" data-setbg="img/instagram/instagram-6.jpg"></div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="instagram__text">
-                        <h2>Instagram</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore et dolore magna aliqua.</p>
-                        <h3>#Male_Fashion</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> -->
-        <!-- Instagram Section End -->
 
         <!-- Latest Blog Section Begin -->
         <section class="latest spad">
@@ -490,12 +416,9 @@
             });
 
             function updatePrice(productItem, section, productId, newPrice, newDiscPrice) {
-                console.log(`Section: ${section}, ProductId: ${productId}`);
 
                 const priceElement = productItem.querySelector(`#${section}-price-${productId}`);
                 const discPriceElement = productItem.querySelector(`#${section}-disc-price-${productId}`);
-                console.log(priceElement);
-                console.log(discPriceElement);
 
                 if (priceElement && discPriceElement) {
                     discPriceElement.textContent = `₹${newDiscPrice}`;
@@ -518,11 +441,10 @@
                     event.preventDefault();
 
                     const productId = button.getAttribute('data-product-id');
-                    console.log(productId);
+                    const section = button.getAttribute('data-section');
                     const quantity = 1;
 
-                    const selectedColorElement = document.querySelector(`input[name="color-${productId}"]:checked`);
-                    console.log(selectedColorElement);
+                    const selectedColorElement = document.querySelector(`input[name="color-${section}-${productId}"]:checked`);
                     if (!selectedColorElement) {
                         Swal.fire({
                             icon: 'error',
@@ -531,11 +453,10 @@
                         });
                         return;
                     }
-
+                    
                     const selectedColor = selectedColorElement.value;
                     const variantData = JSON.parse(selectedColorElement.getAttribute('data-variant'));
-                    const subVariantData = variantData.subVariants[0]; // Use the first size of the selected variant
-
+                    const subVariantData = variantData.subVariants[0];
                     const availableQuantity = subVariantData.quantity;
 
                     if (availableQuantity > 0) {
@@ -556,12 +477,8 @@
                                 })
                             });
 
-                            if (!response.ok) {
-                                throw new Error('Failed to add item to cart');
-                            }
-
                             const data = await response.json();
-                            if (data && data.message) {
+                            if (data.success) {
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Added to Cart',
@@ -573,14 +490,12 @@
                                         window.location.href = '/cart';
                                     }
                                 });
-                            } else if (data && data.error) {
+                            } else {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Error',
-                                    text: data.error
+                                    text: data.message
                                 });
-                            } else {
-                                throw new Error('Invalid response format');
                             }
                         } catch (error) {
                             Swal.fire({

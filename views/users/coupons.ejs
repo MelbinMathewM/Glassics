@@ -64,47 +64,44 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/account/wishlist">
                         <span class="menu-title">Wishlist</span>
-                        <i class="menu-arrow"></i>
-                        <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                        <i class="mdi mdi-heart menu-icon"></i>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/account/orders">
                         <span class="menu-title">Orders</span>
-                        <i class="mdi mdi-contacts menu-icon"></i>
+                        <i class="mdi mdi-format-list-bulleted menu-icon"></i>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/account/address">
                         <span class="menu-title">Address</span>
-                        <i class="mdi mdi-chart-bar menu-icon"></i>
+                        <i class="mdi mdi-google-maps menu-icon"></i>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/account/wallet">
                         <span class="menu-title">Wallet</span>
-                        <i class="mdi mdi-table-large menu-icon"></i>
+                        <i class="mdi mdi-wallet menu-icon"></i>
                     </a>
                 </li>
                 <li class="nav-item  active bg-gradient-info">
                     <a class="nav-link" href="/account/coupons">
                         <span class="menu-title font-weight-bold text-white">Coupons</span>
-                        <i class="menu-arrow"></i>
-                        <i class="mdi mdi-medical-bag menu-icon"></i>
+                        <i class="mdi mdi-ticket menu-icon"></i>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/logout">
                         <span class="menu-title">Logout</span>
-                        <i class="menu-arrow"></i>
-                        <i class="mdi mdi-medical-bag menu-icon"></i>
+                        <i class="mdi mdi-logout menu-icon"></i>
                     </a>
                 </li>
             </ul>
         </nav>
         <div class="main-panel mt-5 w-100">
             <!-- Breadcrumb Section Begin -->
-            <section class="breadcrumb-option mt-5" style="background-color: rgb(111, 193, 245);">
+            <section class="breadcrumb-option mt-5" style="background-color: rgb(232, 243, 250);">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-12">
@@ -129,7 +126,7 @@
                     <div class="container">
                         <div class="card-grid">
                             <% coupons.forEach((coupon)=> { %>
-                                <div class="card">
+                                <div class="card border-secondary">
                                     <div class="card-body">
                                         <h5 class="card-title font-weight-bold mb-4 text-center">
                                             <%= coupon.code %>

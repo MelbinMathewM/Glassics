@@ -179,13 +179,19 @@ const insertCart = async (req, res) => {
     try {
         const { productId, quantity, productImage, productPrice, productDiscPrice, color, size } = req.body;
         const userId = req.session.user_id;
-        if (!mongoose.Types.ObjectId.isValid(productId) || !mongoose.Types.ObjectId.isValid(userId)) {
-            return res.status(400).json({ error: 'Invalid product or user ID.' });
+        if (!mongoose.Types.ObjectId.isValid(productId)) {
+            return res.status(400).json({ success : false, message: 'Invalid product ID.' });
+        }
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ success : false, message: 'Login to add item to cart' });
         }
         const product = await Product.findById(productId);
         const user = await User.findById(userId);
-        if (!product || !user) {
-            return res.status(404).json({ error: 'Product or user not found.' });
+        if (!product) {
+            return res.status(404).json({ success : false, message: 'Product not found.' });
+        }
+        if (!user) {
+            return res.status(404).json({ success : false, message: 'Login to add to cart.' });
         }
         const existingProduct = await Cart.findOne({
             userId: userId,
@@ -194,7 +200,7 @@ const insertCart = async (req, res) => {
             productSize: size,
         });
         if (existingProduct) {
-            return res.status(201).json({ error: 'Product Already in cart.' });
+            return res.status(201).json({ success : false, message: 'Product Already in cart.' });
         } else {
             const cartPrice = productDiscPrice * quantity;
             const cart = new Cart({
@@ -211,13 +217,13 @@ const insertCart = async (req, res) => {
             });
             const cartData = await cart.save();
             if (cartData) {
-                return res.status(200).json({ message: 'Added to cart' });
+                return res.status(200).json({ success : true, message: 'Added to cart' });
             } else {
-                return res.status(500).json({ error: "Couldn't add to cart" });
+                return res.status(500).json({ success : false , message : "Couldn't add to cart" });
             }
         }
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while processing the request' });
+        res.status(500).json({ success : false, message : 'An error occurred while processing the request' });
     }
 };
 

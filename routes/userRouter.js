@@ -76,7 +76,7 @@ u_route.get('/auth/google',passport.authenticate('google', { scope: ['profile', 
 //otp routes
 u_route.get('/otp_validation',userAuth.isLogout,loginController.loadOTP);
 u_route.post('/otp_validation',loginController.verifyOTP);
-u_route.post('/otp_resend',loginController.resendOTP);
+u_route.get('/otp_resend',loginController.resendOTP);
 
 //login routes
 u_route.get('/login',userAuth.isLogout,loginController.loadLogin);
@@ -99,10 +99,8 @@ u_route.post('/handle_failed_payment',orderController.handleFailedPayment);
 
 //profile routes
 u_route.get('/account/profile',userAuth.isLogin,accountController.loadProfile);
-u_route.get('/account/profile/edit_password',userAuth.isLogin,userAuth.isLogin,accountController.loadEditPassword);
-u_route.post('/account/profile/edit_password',accountController.updatePassword);
-u_route.get('/account/profile/edit_details',userAuth.isLogin,userAuth.isLogin,accountController.loadEditDetail);
-u_route.post('/account/profile/edit_details',accountController.updateDetail);
+u_route.put('/account/profile/edit_password',accountController.updatePassword);
+u_route.put('/account/profile/edit_details',accountController.updateDetail);
 
 //wishlist routes
 u_route.get('/account/wishlist',userAuth.isLogin,userController.loadWishlist);

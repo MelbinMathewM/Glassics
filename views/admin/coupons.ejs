@@ -9,15 +9,20 @@
                 </a>
             </div>
             <div class="navbar-menu-wrapper d-flex align-items-stretch">
-
-                <div class="collapse navbar-collapse" id="sidebar">
-                    <form class="d-flex ms-auto">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <form class="d-flex ms-auto search-form" method="GET" action="/admin/coupons">
+                        <input class="form-control me-2" name="search" type="search" placeholder="Search" aria-label="Search" value="<%= search %>">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
                 </div>
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSearchContent" aria-controls="navbarSearchContent" aria-expanded="false" aria-label="Toggle search">
+                    <span class="fa fa-search text-secondary"></span>
+                </button>
+                <ul class="navbar-nav navbar-nav-right ms-2">
+                    <button id="openAddModalBtn" class="btn btn-outline-primary">Add</button>
+                </ul>
                 <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-                    <span class="mdi mdi-menu"></span>
+                    <span class="mdi mdi-menu text-secondary"></span>
                 </button>
             </div>
         </nav>
@@ -36,18 +41,19 @@
                         <a class="nav-link" href="/admin/products">
                             <span class="menu-title">Products</span>
                             <i class="menu-arrow"></i>
-                            <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                            <i class="mdi mdi-shopping menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/admin/users">
                             <span class="menu-title">Users</span>
-                            <i class="mdi mdi-contacts menu-icon"></i>
+                            <i class="mdi mdi-face menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/admin/orders">
                             <span class="menu-title">Orders</span>
+                            <i class="menu-arrow"></i>
                             <i class="mdi mdi-format-list-bulleted menu-icon"></i>
                         </a>
                     </li>
@@ -55,35 +61,32 @@
                         <a class="nav-link" href="/admin/categories">
                             <span class="menu-title">Categories</span>
                             <i class="menu-arrow"></i>
-                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                            <i class="mdi mdi-group menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/admin/brands">
                             <span class="menu-title">Brands</span>
                             <i class="menu-arrow"></i>
-                            <i class="mdi mdi-table-large menu-icon"></i>
+                            <i class="mdi mdi-grid menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="/admin/coupons">
                             <span class="menu-title">Coupons</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                            <i class="mdi mdi-ticket menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/admin/offers">
                             <span class="menu-title">Offers</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                            <i class="mdi mdi-percent menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/admin/logout">
                             <span class="menu-title">Logout</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-medical-bag menu-icon"></i>
+                            <i class="mdi mdi-logout menu-icon"></i>
                         </a>
                     </li>
                 </ul>
@@ -91,6 +94,15 @@
             <!-- partial -->
             <div class="main-panel">
                 <div class="content-wrapper">
+                    <!-- Collapsible Search Bar -->
+          <div class="collapse" id="navbarSearchContent">
+            <div class="bg-light p-3 mb-3 d-md-none">
+                <form class="d-flex w-100 search-form" method="GET" action="/admin/coupons">
+                    <input class="form-control me-2" name="search" type="search" placeholder="Search" aria-label="Search" value="<%+ search %>">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+          </div>
                     <div class="page-header">
                         <h3 class="page-title">
                             <span class="page-title-icon bg-gradient-primary text-white mr-2">
@@ -121,8 +133,8 @@
                                                 </p>
                                                 <div class="text-center">
                                                     <button id="openEditModalBtn_<%= coupon._id %>"
-                                                        class="btn btn-primary">Edit</button>
-                                                    <button class="btn btn-danger"
+                                                        class="btn btn-outline-primary">Edit</button>
+                                                    <button class="btn btn-outline-danger"
                                                         onclick="confirmDelete('<%= coupon._id %>')">Delete</button>
                                                 </div>
                                                 <!-- edit category modal -->
@@ -134,24 +146,33 @@
                                                             class="message-container"></div>
                                                             <div id="error_<%= coupon._id %>" class="text-warning fw-bold text-center"></div>
                                                             <form id="couponEditForm_<%= coupon._id %>" action="/edit_coupons" method="POST" onsubmit="return validateForm('<%= coupon._id %>')">
-                                                                <label for="code_<%= coupon._id %>">Code:</label>
-                                                                <p class="form-control" id="code_<%= coupon._id %>"><%= coupon.code %></p>
-                                                                <br>
-                                                                <label for="discount_<%= coupon._id %>">Discount (%):</label>
-                                                                <input type="number" class="form-control" value="<%= coupon.discount %>" name="discount" id="discount_<%= coupon._id %>" >
-                                                                <br>
-                                                                <label for="minPurchase_<%= coupon._id %>">Min purchase:</label>
-                                                                <input type="number" class="form-control" value="<%= coupon.minPurchase %>" name="minPurchase" id="minPurchase_<%= coupon._id %>" >
-                                                                <br>
-                                                                <label for="expirationDate_<%= coupon._id %>">Expiration Date:</label>
-                                                                <input type="date" class="form-control" value="<%= coupon.expirationDate.toISOString().split('T')[0] %>" name="expirationDate" id="expirationDate_<%= coupon._id %>" >
-                                                                <br>
-                                                                <label for="usageLimit_<%= coupon._id %>">Usage Limit:</label>
-                                                                <input type="number" class="form-control" value="<%= coupon.usageLimit %>" name="usageLimit" id="usageLimit_<%= coupon._id %>" >
-                                                                <br>
+                                                                <div class="row form-group">
+                                                                    <div class="col">
+                                                                        <label for="code_<%= coupon._id %>">Code:</label>
+                                                                        <p class="form-control" id="code_<%= coupon._id %>"><%= coupon.code %></p>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <label for="discount_<%= coupon._id %>">Discount (%):</label>
+                                                                        <input type="number" class="form-control" value="<%= coupon.discount %>" name="discount" id="discount_<%= coupon._id %>" >
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <label for="minPurchase_<%= coupon._id %>">Min purchase:</label>
+                                                                        <input type="number" class="form-control" value="<%= coupon.minPurchase %>" name="minPurchase" id="minPurchase_<%= coupon._id %>" >
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row form-group">
+                                                                    <div class="col">
+                                                                        <label for="expirationDate_<%= coupon._id %>">Expiration Date:</label>
+                                                                        <input type="date" class="form-control" value="<%= coupon.expirationDate.toISOString().split('T')[0] %>" name="expirationDate" id="expirationDate_<%= coupon._id %>" >
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <label for="usageLimit_<%= coupon._id %>">Usage Limit:</label>
+                                                                        <input type="number" class="form-control" value="<%= coupon.usageLimit %>" name="usageLimit" id="usageLimit_<%= coupon._id %>" >
+                                                                    </div>
+                                                                </div>
                                                                 <input type="hidden" value="<%= coupon._id %>" name="couponId">
                                                                 <div class="text-center">
-                                                                    <button class="btn btn-primary" type="submit">Edit Coupon</button>
+                                                                    <button class="btn btn-outline-primary" type="submit">Edit Coupon</button>
                                                                 </div>
                                                             </form>
                                                     </div>
@@ -159,6 +180,20 @@
                                             </div>
                                         </div>
                                         <% }) %>
+                                </div>
+                                <div class="pagination d-flex justify-content-center align-items-center mt-3 pt-3 pb-3" style="background-color: white;">
+                                    <% if (currentPage> 1) { %>
+                                      <a href="?page=<%= currentPage - 1 %>&limit=<%= limit %>&search= <%= search %>" class="btn btn-outline-info">&lt;</a>
+                                    <% } %>
+                                    <% for (let i = Math.max(1, currentPage - 1); i <= Math.min(currentPage + 1, totalPages); i++) { %>
+                                      <a href="?page=<%= i %>&limit=<%= limit %>&search=<%= search %>"
+                                            class="btn btn-outline-secondary <%= currentPage === i ? 'active' : '' %>">
+                                          <%= i %>
+                                      </a>
+                                    <% } %>
+                                    <% if (currentPage < totalPages) { %>
+                                        <a href="?page=<%= currentPage + 1 %>&limit=<%= limit %>&search=<%= search %>" class="btn btn-outline-info">&gt;</a>
+                                    <% } %>
                                 </div>
                             </div>
                 </div>
@@ -173,23 +208,32 @@
             <div id="messageContainer" class="message-container"></div>
             <div id="error" class="text-warning fw-bold text-center"></div>
             <form id="couponAddForm" action="/add_coupons" method="POST">
-                <label for="code">Code:</label>
-                <input type="text" name="code" class="form-control" id="code">
-                <br>
-                <label for="discount">Discount (%):</label>
-                <input type="number" name="discount" class="form-control" id="discount">
-                <br>
-                <label for="minPurchase">Min purchase:</label>
-                <input type="number" class="form-control" name="minPurchase" id="minPurchase">
-                <br>
-                <label for="expirationDate">Expiration Date:</label>
-                <input type="date" name="expirationDate" class="form-control" id="expirationDate">
-                <br>
-                <label for="usageLimit">Usage Limit:</label>
-                <input type="number" name="usageLimit" class="form-control" id="usageLimit">
-                <br>
+                <div class="row form-group">
+                    <div class="col">
+                        <label for="code">Code:</label>
+                        <input type="text" name="code" class="form-control" id="code">
+                    </div>
+                    <div class="col">
+                        <label for="discount">Discount (%):</label>
+                        <input type="number" name="discount" class="form-control" id="discount">
+                    </div>
+                    <div class="col">
+                        <label for="minPurchase">Min purchase:</label>
+                        <input type="number" class="form-control" name="minPurchase" id="minPurchase">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col">
+                        <label for="expirationDate">Expiration Date:</label>
+                        <input type="date" name="expirationDate" class="form-control" id="expirationDate">
+                    </div>
+                    <div class="col">
+                        <label for="usageLimit">Usage Limit:</label>
+                        <input type="number" name="usageLimit" class="form-control" id="usageLimit">
+                    </div>
+                </div>
                 <div class="text-center">
-                    <button class="btn btn-primary text-cente" type="submit">Create Coupon</button>
+                    <button class="btn btn-outline-primary text-cente" type="submit">Create Coupon</button>
                 </div>
               </form>
         </div>
