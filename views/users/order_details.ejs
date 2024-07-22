@@ -23,19 +23,18 @@
                         </nav>
                     </div>
                     <div class="col-lg-3 col-md-3 col-6 d-flex justify-content-end align-items-center">
-                        <div class="header__nav__option mr-3">
-                            <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
-                            <a href="#"><img src="img/icon/heart.png" alt=""></a>
-                            <a href="/cart"><img src="img/icon/cart.png" alt=""> <span>0</span></a>
-                            <div class="price">$0.00</div>
+                        <div class="button-container d-flex flex-row">
+                            <div class="mb-3 mt-2 ml-auto justify-content-end align-items-end d-flex">
+                                <a href="/cart"><img src="/static/img/icon/cart.png" alt=""></a>
+                            </div>
+                            <button class="navbar-toggler d-lg-none mt-2" type="button" data-toggle="collapse" data-target="#navbarNav">
+                                <span class="navbar-toggler-icon fa fa-bars"></span>
+                            </button>
+                            <button class="navbar-toggler navbar-toggler-right d-lg-none mb-2 p-0 mt-2" type="button" data-toggle="offcanvas">
+                                <span class="fa fa-chevron-down"></span>
+                            </button>
                         </div>
-                        <button class="navbar-toggler d-lg-none ml-auto mt-1" type="button" data-toggle="collapse"
-                            data-target="#navbarNav">
-                            <span class="navbar-toggler-icon fa fa-bars"></span>
-                        </button>
-                        <button class="navbar-toggler navbar-toggler-right d-lg-none mb-2" type="button"
-                            data-toggle="offcanvas"><span class="fa fa-chevron-down"></span></button>
-                    </div>
+                    </div>    
                 </div>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <nav class="navbar-nav active">
@@ -135,7 +134,7 @@
                                                     <span class="fw-bold">Payment Method: </span><%= order.paymentMethod %><br>
                                                     <span class="fw-bold">Payment Status : </span><%= order.paymentStatus %>
                                                     <% if (allDelivered) { %>
-                                                        <button id="download-invoice" data-order-id="<%= order._id %>">Download Invoice</button>
+                                                        <button id="download-invoice" class="btn btn-outline-secondary" data-order-id="<%= order._id %>">Download Invoice</button>
                                                     <% } %>
                                                 </p>
                                             </div>

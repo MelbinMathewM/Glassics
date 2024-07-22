@@ -501,9 +501,9 @@ const updateOffer = async (req, res) => {
         );
         if (updatedOffer) {
             if (isActive) {
-                await applyDiscounts(offerType, product, category, discountPercentage);
+                await applyDiscounts(updatedOffer.offerType, product, category, discountPercentage);
             } else {
-                await revertToHighestAvailableDiscount(offerType, product, category);
+                await revertToHighestAvailableDiscount(updatedOffer.offerType, product, category);
             }
             res.status(200).json({ success: true, message: 'Offer updated successfully', offer: updatedOffer });
         } else {

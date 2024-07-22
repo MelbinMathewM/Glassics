@@ -18,25 +18,24 @@
                             <li class="active"><a class="text-decoration-none" href="/shop">Shop</a></li>
                             <% if (isAuthenticated) { %>
                                 <li><a class="text-decoration-none" href='/account/profile'>Account</a></li>
-                                <% } else { %>
-                                    <li><a class="text-decoration-none" href="/login">Sign In</a></li>
-                                    <% } %>
-                                        <li><a class="text-decoration-none" href="./blog.html">Blog</a></li>
-                                        <li><a class="text-decoration-none" href="./contact.html">Contacts</a></li>
+                            <% } else { %>
+                                <li><a class="text-decoration-none" href="/login">Sign In</a></li>
+                            <% } %>
+                            <li><a class="text-decoration-none" href="./blog.html">Blog</a></li>
+                            <li><a class="text-decoration-none" href="./contact.html">Contacts</a></li>
                         </ul>
                     </nav>
                 </div>
                 <div class="col-lg-3 col-md-3 col-6 d-flex justify-content-end align-items-center">
-                    <div class="header__nav__option mb-3">
-                        <a href="#" class="search-switch"><img src="/static/img/icon/search.png" alt=""></a>
-                        <a href="#"><img src="/static/img/icon/heart.png" alt=""></a>
-                        <a href="/cart"><img src="/static/img/icon/cart.png" alt=""></a>
+                    <div class="button-container d-flex flex-row">
+                        <div class="mb-3 mt-2 ml-auto justify-content-end align-items-end d-flex">
+                            <a href="/cart"><img src="/static/img/icon/cart.png" alt=""></a>
+                        </div>
+                        <button class="navbar-toggler d-lg-none mt-2" type="button" data-toggle="collapse" data-target="#navbarNav">
+                            <span class="navbar-toggler-icon fa fa-bars"></span>
+                        </button>
                     </div>
-                    <button class="navbar-toggler d-md-none ml-auto mt-1 me-3" type="button" data-toggle="collapse"
-                        data-target="#navbarNav">
-                        <span class="navbar-toggler-icon fa fa-bars"></span>
-                    </button>
-                </div>
+                </div>  
             </div>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <nav class="navbar-nav active">
@@ -45,16 +44,12 @@
                         <li><a class="nav-link" href="/shop" style="color: red;">Shop</a></li>
                         <% if (isAuthenticated) { %>
                             <li><a class="text-decoration-none" href='/account/profile'>Account</a></li>
-                            <% } else { %>
-                                <li><a class="text-decoration-none" href="/login">Sign In</a></li>
-                                <% } %>
-                                    <li><a class="nav-link" href="./blog.html">Blog</a></li>
-                                    <li><a class="nav-link" href="./contact.html">Contacts</a></li>
-                                    <li><span><a href="#" class="search-switch"><img src="/static/img/icon/search.png"
-                                                    alt=""></a>
-                                            <a href="#"><img src="/static/img/icon/heart.png" alt=""></a>
-                                            <a href="/cart"><img src="/static/img/icon/cart.png" alt=""></a></span></li>
-                    </ul>
+                        <% } else { %>
+                            <li><a class="text-decoration-none" href="/login">Sign In</a></li>
+                        <% } %>
+                        <li><a class="nav-link" href="./blog.html">Blog</a></li>
+                        <li><a class="nav-link" href="./contact.html">Contacts</a></li>
+                     </ul>
                 </nav>
             </div>
         </div>
@@ -236,13 +231,15 @@
     </section>
 
     <!-- Footer Section Begin -->
-    <footer class="footer">
+    <footer class="footer" style="background-color: rgb(12, 10, 10);">
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="footer__about">
                         <div class="footer__logo">
-                            <a href="#"><img src="img/footer-logo.png" alt=""></a>
+                            <a class="text-decoration-none" href="/">
+                                <h1 class="fw-bold" style="font-style: italic;color: white;">Glassics</h1>
+                            </a>
                         </div>
                         <p>The customer is at the heart of our unique business model, which includes design.</p>
                         <a href="#"><img src="img/payment.png" alt=""></a>
@@ -252,21 +249,21 @@
                     <div class="footer__widget">
                         <h6>Shopping</h6>
                         <ul>
-                            <li><a href="#">Clothing Store</a></li>
-                            <li><a href="#">Trending Shoes</a></li>
-                            <li><a href="#">Accessories</a></li>
-                            <li><a href="#">Sale</a></li>
+                            <li><a class="text-decoration-none" href="#">Glasses Store</a></li>
+                            <li><a class="text-decoration-none" href="#">Trending Glasses</a></li>
+                            <li><a class="text-decoration-none" href="#">Accessories</a></li>
+                            <li><a class="text-decoration-none" href="#">Sale</a></li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-6">
                     <div class="footer__widget">
-                        <h6>Shopping</h6>
+                        <h6>Enquiry</h6>
                         <ul>
-                            <li><a href="#">Contact Us</a></li>
-                            <li><a href="#">Payment Methods</a></li>
-                            <li><a href="#">Delivary</a></li>
-                            <li><a href="#">Return & Exchanges</a></li>
+                            <li><a class="text-decoration-none" href="#">Contact Us</a></li>
+                            <li><a class="text-decoration-none" href="#">Payment Methods</a></li>
+                            <li><a class="text-decoration-none" href="#">Delivery</a></li>
+                            <li><a class="text-decoration-none" href="#">Return & Exchanges</a></li>
                         </ul>
                     </div>
                 </div>
@@ -277,7 +274,7 @@
                             <p>Be the first to know about new arrivals, look books, sales & promos!</p>
                             <form action="#">
                                 <input type="text" placeholder="Your email">
-                                <button type="submit"><span class="icon_mail_alt"></span></button>
+                                <button type="submit"><span class="fa fa-envelope"></span></button>
                             </form>
                         </div>
                     </div>

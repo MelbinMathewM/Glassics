@@ -18,25 +18,24 @@
                                 <li><a class="text-decoration-none" href="/shop">Shop</a></li>
                                 <% if (isAuthenticated) { %>
                                     <li><a class="text-decoration-none" href='/account/profile'>Account</a></li>
-                                    <% } else { %>
-                                        <li><a class="text-decoration-none" href="/login">Sign In</a></li>
-                                        <% } %>
-                                            <li><a class="text-decoration-none" href="./blog.html">Blog</a></li>
-                                            <li><a class="text-decoration-none" href="./contact.html">Contacts</a></li>
+                                <% } else { %>
+                                    <li><a class="text-decoration-none" href="/login">Sign In</a></li>
+                                <% } %>
+                                <li><a class="text-decoration-none" href="./blog.html">Blog</a></li>
+                                <li><a class="text-decoration-none" href="./contact.html">Contacts</a></li>
                             </ul>
                         </nav>
                     </div>
                     <div class="col-lg-3 col-md-3 col-6 d-flex justify-content-end align-items-center">
-                        <div class="header__nav__option mb-3">
-                            <a href="#" class="search-switch"><img src="/static/img/icon/search.png" alt=""></a>
-                            <a href="#"><img src="/static/img/icon/heart.png" alt=""></a>
-                            <a href="/cart"><img src="/static/img/icon/cart.png" alt=""></a>
+                        <div class="button-container d-flex flex-row">
+                            <div class="mb-3 mt-2 ml-auto justify-content-end align-items-end d-flex">
+                                <a href="/cart"><img src="/static/img/icon/cart.png" alt=""></a>
+                            </div>
+                            <button class="navbar-toggler d-lg-none mt-2" type="button" data-toggle="collapse" data-target="#navbarNav">
+                                <span class="navbar-toggler-icon fa fa-bars"></span>
+                            </button>
                         </div>
-                        <button class="navbar-toggler d-md-none ml-auto mt-1 me-3" type="button" data-toggle="collapse"
-                            data-target="#navbarNav">
-                            <span class="navbar-toggler-icon fa fa-bars"></span>
-                        </button>
-                    </div>
+                    </div>  
                 </div>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <nav class="navbar-nav active">
@@ -45,11 +44,11 @@
                             <li><a class="nav-link" href="/shop">Shop</a></li>
                             <% if (isAuthenticated) { %>
                                 <li><a class="text-decoration-none" href='/account/profile'>Account</a></li>
-                                <% } else { %>
-                                    <li><a class="text-decoration-none" href="/login">Sign In</a></li>
-                                    <% } %>
-                                        <li><a class="nav-link" href="./blog.html">Blog</a></li>
-                                        <li><a class="nav-link" href="./contact.html">Contacts</a></li>
+                            <% } else { %>
+                                <li><a class="text-decoration-none" href="/login">Sign In</a></li>
+                            <% } %>
+                            <li><a class="nav-link" href="./blog.html">Blog</a></li>
+                            <li><a class="nav-link" href="./contact.html">Contacts</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -142,48 +141,35 @@
 
                 <!-- Best Sellers Section -->
                 <div id="best-sellers" class="row product__filter">
-                    <% bestSellers.forEach(bestSeller=> { %>
+                    <% bestSellers.forEach(bestSeller => { %>
                         <div class="col-lg-3 col-md-6 col-sm-6">
-                            <div class="product__item">
-                                <a href="/product_details/<%= bestSeller._id %>">
+                            <div class="product__item border">
+                                <!-- Clickable image div that navigates to product details -->
+                                <a href="/product_details/<%= bestSeller._id %>" class="product-image-link">
                                     <div id="product-image-<%= bestSeller._id %>" class="product__item__pic set-bg"
                                         style="background-image: url('/static/productImages/<%= bestSeller.variants[0].images[0] %>');">
-                                        <ul class="product__hover">
-                                            <li><a href="#"><img src="/static/img/icon/heart.png"
-                                                        data-product-id="<%= bestSeller._id %>" class="add-wishlist"
-                                                        alt=""><span>Wishlist</span></a></li>
-                                            <li><a href="#"><img src="/static/img/icon/compare.png"
-                                                        alt=""><span>Compare</span></a></li>
-                                            <li><a href="/product_details/<%= bestSeller._id %>"><img
-                                                        src="/static/img/icon/search.png"
-                                                        alt=""><span>Details</span></a></li>
-                                        </ul>
                                     </div>
                                 </a>
-                                <div class="product__item__text">
+                                <div class="product__item__text" style="background-color: whitesmoke;">
                                     <h5 class="ps-4 pname">
                                         <%= bestSeller.productName %>
                                     </h5>
                                     <div class="rating ms-4">
-                                        <% for (let i=0; i < 5; i++) { %>
+                                        <% for (let i = 0; i < 5; i++) { %>
                                             <i class="fa fa-star"></i>
-                                            <% } %>
+                                        <% } %>
                                     </div>
                                     <h5 class="product-price ps-4">
-                                        <span id="bestSeller-disc-price-<%= bestSeller._id %>">&#8377;<%=
-                                                bestSeller.productDiscPrice %></span>
+                                        <span id="bestSeller-disc-price-<%= bestSeller._id %>">&#8377;<%= bestSeller.productDiscPrice %></span>
                                         &nbsp;&nbsp;
-                                        <del class="product-old-price text-muted text-small"
-                                            id="bestSeller-price-<%= bestSeller._id %>">
+                                        <del class="product-old-price text-muted text-small" id="bestSeller-price-<%= bestSeller._id %>">
                                             &#8377;<%= bestSeller.productPrice %>
                                         </del>
                                     </h5>
-                                    <a href="#" class="add-cart ps-4 text-decoration-none"
+                                    <a href="javascript:void(0);" class="add-cart ps-4 text-decoration-none"
                                         data-product-id="<%= bestSeller._id %>" data-section="bestSeller">+ Add To Cart</a><br>
-                                    <a href="/product_details/<%= bestSeller._id %>"
-                                        class="mt-4 ps-4 text-decoration-none">&gt; Details</a>
                                     <div class="product__color__select me-4 mb-3">
-                                        <% bestSeller.variants.forEach((variant, index)=> { %>
+                                        <% bestSeller.variants.forEach((variant, index) => { %>
                                             <label for="pc-<%= bestSeller._id %>-<%= index %>"
                                                 class="<%= index === 0 ? 'active' : '' %>"
                                                 style="background-color: <%= variant.color %>">
@@ -192,79 +178,63 @@
                                                     data-variant="<%= JSON.stringify(variant) %>"
                                                     data-image-url="/static/productImages/<%= variant.images[0] %>"
                                                     data-price="<%= variant.price %>"
-                                                    data-disc-price="<%= variant.discountPrice %>" <%=index===0
-                                                    ? 'checked' : '' %>>
+                                                    data-disc-price="<%= variant.discountPrice %>" <%= index === 0 ? 'checked' : '' %>>
                                             </label>
-                                            <% }); %>
+                                        <% }); %>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <% }); %>
-                </div>
+                    <% }); %>
+                </div>                
 
                 <!-- New Arrivals Section -->
                 <div id="new-arrivals" class="row product__filter" style="display: none;">
-                    <% newArrivals.forEach(newArrival=> { %>
+                    <% newArrivals.forEach(newArrival => { %>
                         <div class="col-lg-3 col-md-6 col-sm-6">
-                            <div class="product__item">
-                                <a href="/product_details/<%= newArrival._id %>">
-                                    <div id="product-image-<%= newArrival._id %>" class="product__item__pic set-bg"
+                            <div class="product__item border">
+                                <!-- Clickable image div that navigates to product details -->
+                                <a href="/product_details/<%= newArrival._id %>" class="product-image-link">
+                                    <div class="product__item__pic" id="product-image-<%= newArrival._id %>"
                                         style="background-image: url('/static/productImages/<%= newArrival.variants[0].images[0] %>');">
-                                        <ul class="product__hover">
-                                            <li><a href="#"><img src="/static/img/icon/heart.png"
-                                                        data-product-id="<%= newArrival._id %>" class="add-wishlist"
-                                                        alt=""><span>Wishlist</span></a></li>
-                                            <li><a href="#"><img src="/static/img/icon/compare.png"
-                                                        alt=""><span>Compare</span></a></li>
-                                            <li><a href="/product_details/<%= newArrival._id %>"><img
-                                                        src="/static/img/icon/search.png"
-                                                        alt=""><span>Details</span></a></li>
-                                        </ul>
                                     </div>
                                 </a>
-                                <div class="product__item__text">
+                                <div class="product__item__text" style="background-color: whitesmoke;">
                                     <h5 class="ps-4 pname">
                                         <%= newArrival.productName %>
                                     </h5>
                                     <div class="rating ms-4">
-                                        <% for (let i=0; i < 5; i++) { %>
+                                        <% for (let i = 0; i < 5; i++) { %>
                                             <i class="fa fa-star"></i>
-                                            <% } %>
+                                        <% } %>
                                     </div>
                                     <h5 class="product-price ps-4">
-                                        <span id="newArrival-disc-price-<%= newArrival._id %>">&#8377;<%=
-                                                newArrival.productDiscPrice %></span>
+                                        <span id="newArrival-disc-price-<%= newArrival._id %>">&#8377;<%= newArrival.productDiscPrice %></span>
                                         &nbsp;&nbsp;
-                                        <del class="product-old-price text-muted text-small"
-                                            id="newArrival-price-<%= newArrival._id %>">
+                                        <del class="product-old-price text-muted text-small" id="newArrival-price-<%= newArrival._id %>">
                                             &#8377;<%= newArrival.productPrice %>
                                         </del>
                                     </h5>
-                                    <a href="#" class="add-cart ps-4 text-decoration-none"
-                                        data-product-id="<%= newArrival._id %>" data-section="newArrival">+ Add To Cart</a><br>
-                                    <a href="/product_details/<%= newArrival._id %>"
-                                        class="mt-4 ps-4 text-decoration-none">&gt; Details</a>
+                                    <a href="javascript:void(0);" class="add-cart ps-4 text-decoration-none" data-product-id="<%= newArrival._id %>" data-section="newArrival">
+                                        + Add To Cart
+                                    </a>
                                     <div class="product__color__select me-4 mb-3">
-                                        <% newArrival.variants.forEach((variant, index)=> { %>
-                                            <label for="pc-<%= newArrival._id %>-<%= index %>"
-                                                class="<%= index === 0 ? 'active' : '' %>"
+                                        <% newArrival.variants.forEach((variant, index) => { %>
+                                            <label for="pc-<%= newArrival._id %>-<%= index %>" class="<%= index === 0 ? 'active' : '' %>"
                                                 style="background-color: <%= variant.color %>">
-                                                <input type="radio" name="color-newArrival-<%= newArrival._id %>"
-                                                    id="pc-<%= newArrival._id %>-<%= index %>" value="<%= variant.color %>"
-                                                    data-variant="<%= JSON.stringify(variant) %>"
-                                                    data-image-url="/static/productImages/<%= variant.images[0] %>"
-                                                    data-price="<%= variant.price %>"
-                                                    data-disc-price="<%= variant.discountPrice %>" <%=index===0
-                                                    ? 'checked' : '' %>>
+                                                <input type="radio" name="color-newArrival-<%= newArrival._id %>" id="pc-<%= newArrival._id %>-<%= index %>"
+                                                    value="<%= variant.color %>" data-variant="<%= JSON.stringify(variant) %>"
+                                                    data-image-url="/static/productImages/<%= variant.images[0] %>" data-price="<%= variant.price %>"
+                                                    data-disc-price="<%= variant.discountPrice %>" <%= index === 0 ? 'checked' : '' %>>
                                             </label>
-                                            <% }); %>
+                                        <% }); %>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <% }); %>
-                </div>
+                    <% }); %>
+                </div>                              
+            </div>
         </section>
 
         <!-- Latest Blog Section Begin -->
@@ -363,7 +333,7 @@
                                 <p>Be the first to know about new arrivals, look books, sales & promos!</p>
                                 <form action="#">
                                     <input type="text" placeholder="Your email">
-                                    <button type="submit"><span class="icon_mail_alt"></span></button>
+                                    <button type="submit"><span class="fa fa-envelope"></span></button>
                                 </form>
                             </div>
                         </div>
@@ -381,6 +351,30 @@
             width: 100%;
             z-index: 999;
         }
+        .product-image-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+}
+
+.product-image-link .product__item__pic {
+    cursor: pointer;
+}
+.pname {
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+        }
+
+.product__item__pic {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+}
+
     </style>
      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>

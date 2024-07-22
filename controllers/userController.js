@@ -5,28 +5,25 @@ const Brand = require('../model/brandModel');
 const Address = require('../model/addressModel');
 const Cart = require('../model/cartModel');
 const Order = require('../model/orderModel');
+const Wallet = require('../model/walletModel');
 const Wishlist = require('../model/wishlistModel');
 const mongoose = require('mongoose');
 
 const loadHome = async (req, res) => {
     try {
-        // Fetch best sellers
         const bestSellers = await Product.find({ is_delete: false })
             .sort({ orderCount: -1 })
             .limit(8);
 
-        // Fetch new arrivals
         const newArrivals = await Product.find({ is_delete: false })
             .sort({ createdAt: -1 })
             .limit(8);
 
-        // Render the home page with data
         res.render('home', { 
             bestSellers: bestSellers,
             newArrivals: newArrivals,
         });
     } catch (error) {
-        // Handle errors
         res.send(error);
     }
 };
@@ -34,43 +31,56 @@ const loadHome = async (req, res) => {
 const loadShop = async (req, res) => {
     try {
         const userId = req.session.user_id;
-        const category = req.query.category || '';
-        const brand = req.query.brand || '';
-        const minPrice = req.query.minPrice || '';
-        const maxPrice = req.query.maxPrice || '';
+        const categoriesParam = req.query.category || [];
+        const brandsParam = req.query.brand || [];
+        const minPrice = parseFloat(req.query.minPrice) || null;
+        const maxPrice = parseFloat(req.query.maxPrice) || null;
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 12;
         const sortOption = req.query.sort || 'popularity';
         const searchQuery = req.query.search || '';
+
+        // Ensure categoriesParam and brandsParam are arrays
+        const categories = Array.isArray(categoriesParam) ? categoriesParam : categoriesParam.split(',').filter(Boolean);
+        const brands = Array.isArray(brandsParam) ? brandsParam : brandsParam.split(',').filter(Boolean);
+
         let filter = { is_delete: false };
-        if (category) {
-            const categoryData = await Category.findOne({ categoryName: new RegExp(category, 'i') });
-            if (categoryData) {
-                filter.productCategory = categoryData._id;
-            } else {
-                filter.productCategory = null;
+
+        // Process categories
+        if (categories.length > 0) {
+            const categoryData = await Category.find({ categoryName: { $in: categories.map(cat => new RegExp(cat, 'i')) } });
+            if (categoryData.length > 0) {
+                filter.productCategory = { $in: categoryData.map(cat => cat._id) };
             }
         }
-        if (brand) {
-            const brandData = await Brand.findOne({ brandName: new RegExp(brand, 'i') });
-            if (brandData) {
-                filter.productBrand = brandData._id;
-            } else {
-                filter.productBrand = null;
+
+        // Process brands
+        if (brands.length > 0) {
+            const brandData = await Brand.find({ brandName: { $in: brands.map(b => new RegExp(b, 'i')) } });
+            if (brandData.length > 0) {
+                filter.productBrand = { $in: brandData.map(b => b._id) };
             }
         }
-        if (minPrice && maxPrice) {
-            filter['variants.discountPrice'] = { $gte: parseFloat(minPrice), $lte: parseFloat(maxPrice) };
-        } else if (minPrice) {
-            filter['variants.discountPrice'] = { $gte: parseFloat(minPrice) };
-        } else if (maxPrice) {
-            filter['variants.discountPrice'] = { $lte: parseFloat(maxPrice) };
+
+        // Process price range
+        if (minPrice !== null && maxPrice !== null) {
+            filter['variants.discountPrice'] = { $gte: minPrice, $lte: maxPrice };
+        } else if (minPrice !== null) {
+            filter['variants.discountPrice'] = { $gte: minPrice };
+        } else if (maxPrice !== null) {
+            filter['variants.discountPrice'] = { $lte: maxPrice };
         }
+
+        // Process search query
         const searchFilter = searchQuery ? {
             productName: { $regex: new RegExp(searchQuery, 'i') }
         } : {};
+
+        // Combine filters
         const combinedFilter = { ...filter, ...searchFilter };
         const totalProducts = await Product.countDocuments(combinedFilter);
+
+        // Fetch products with aggregation
         const products = await Product.aggregate([
             { $match: combinedFilter },
             {
@@ -83,31 +93,39 @@ const loadShop = async (req, res) => {
             { $skip: (page - 1) * limit },
             { $limit: limit }
         ]).collation({ locale: "en", strength: 2 });
-        const categories = await Category.find({ is_delete: false });
-        const brands = await Brand.find({ is_delete: false });
+
+        // Fetch categories and brands
+        const categoryList = await Category.find({ is_delete: false });
+        const brandList = await Brand.find({ is_delete: false });
+
+        // Fetch wishlist items if user is logged in
         let wishlistItems = [];
         if (userId) {
             wishlistItems = await Wishlist.find({ userId: userId });
         }
+
+        // Render the shop page with filters and products
         res.render('shop', {
             products,
-            categories,
-            brands,
+            categories: categoryList,
+            brands: brandList,
             currentPage: page,
             totalPages: Math.ceil(totalProducts / limit),
             totalProducts,
             sort: sortOption,
             search: searchQuery,
-            category,
-            brand,
+            selectedCategories: categories, // Pass selected categories
+            selectedBrands: brands, // Pass selected brands
             minPrice,
             maxPrice,
             wishlistItems
         });
     } catch (error) {
+        console.error(error);
         res.status(500).send('Internal Server Error');
     }
 };
+
 
 function getSortCriteria(sortOption) {
     switch (sortOption) {

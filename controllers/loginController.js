@@ -3,6 +3,7 @@ const Wallet = require('../model/walletModel');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 const bcrypt =  require('bcrypt');
 
 const securePassword = async (password) => {
@@ -156,6 +157,15 @@ const verifyUser = async (req,res) => {
             if(passwordMatch){
                 if(userData.is_blocked === 0){
                     req.session.user_id = userData._id;
+                    let wallet = await Wallet.findOne({ userId: userData._id });
+                    if (!wallet) {
+                        wallet = new Wallet({
+                            user: userData._id,
+                            balance: 0
+                        });
+
+                        await wallet.save();
+                    }
                     res.status(201).json({ success : true });
                 }else{
                     res.status(400).json({ success : false, message : 'You are blocked'});
@@ -171,7 +181,6 @@ const verifyUser = async (req,res) => {
     }
 };
 
-// middleWare/googleAuth.js
 passport.use(new GoogleStrategy({
     clientID: process.env.clientID,
     clientSecret: process.env.clientSecret,
@@ -220,10 +229,106 @@ const googleSuccess = async (req, res, next) => {
             return res.render('login',{ message : 'User blocked'});
         }
         req.session.user_id = req.user._id;
+        let wallet = await Wallet.findOne({ userId: req.user._id });
+        if (!wallet) {
+            wallet = new Wallet({
+                user: req.user._id,
+                balance: 0
+            });
+            await wallet.save();
+        }
         res.redirect('/');
     } catch (error) {
         res.send(error);
     }
+};
+
+const loadForgotPassword = async (req,res) => {
+    try{
+        res.render('forgot_password');
+    }catch(error){
+        res.send(error);
+    }
+};
+
+const postForgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ userEmail: email });
+        if (!user) {
+            return res.status(400).json({ message: 'User with this email does not exist.' });
+        }
+        const token = crypto.randomBytes(32).toString('hex');
+        user.resetToken = token;
+        user.resetTokenExpiration = Date.now() + 3600000;
+        await user.save();
+        const resetUrl = `http://localhost:3003/reset_password/${token}`;
+        await sendResetLinkViaEmail(email, `${resetUrl}`);
+        res.json({ message: 'Password reset link has been sent to your email.' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'An error occurred while processing your request.' });
+    }
+};
+
+const loadResetPassword = async (req, res) => {
+    try {
+        const { token } = req.params;
+        const user = await User.findOne({
+            resetToken: token,
+            resetTokenExpiration: { $gt: Date.now() }
+        });
+        if (!user) {
+            return res.render('reset_password', { token: null, message: 'Password reset token is invalid or has expired.' });
+        }
+        res.render('reset_password', { token });
+    } catch (error) {
+        res.status(500).send('Error loading reset password page: ' + error.message);
+    }
+};
+
+const postResetPassword = async (req, res) => {
+    const { token, password } = req.body;
+    try {
+        const user = await User.findOne({
+            resetToken: token,
+            resetTokenExpiration: { $gt: Date.now() }
+        });
+        if (!user) {
+            return res.status(400).json({ message: 'Password reset token is invalid or has expired.' });
+        }
+        if (!password) {
+            return res.status(400).json({ message: 'Password is required.' });
+        }
+        const hashedPassword = await securePassword(password);
+        user.password = hashedPassword;
+        user.resetToken = undefined;
+        user.resetTokenExpiration = undefined;
+        await user.save();
+        res.json({ message: 'Password has been reset successfully.' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'An error occurred while processing your request.' });
+    }
+};
+
+
+async function sendResetLinkViaEmail(email, url) {
+    const mailOptions = {
+        from: process.env.email,
+        to: email,
+        subject: 'Your link to reset password',
+        text: `Your Link: ${url}`
+    };
+    return new Promise((resolve, reject) => {
+        transporter.sendMail(mailOptions, (error, info) => {
+            if(error){
+                reject(error);
+            }else{
+                resolve('OTP sent successfully.');
+            };
+        });
+    });
 };
 
 const logoutUser = async (req,res) => {
@@ -235,6 +340,7 @@ const logoutUser = async (req,res) => {
     }
 };
 
+
 module.exports = {
     loadRegister,
     loadOTP,
@@ -244,5 +350,9 @@ module.exports = {
     insertUser,
     verifyUser,
     googleSuccess,
+    loadForgotPassword,
+    postForgotPassword,
+    loadResetPassword,
+    postResetPassword,
     logoutUser
 }

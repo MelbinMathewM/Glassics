@@ -81,6 +81,10 @@ u_route.get('/otp_resend',loginController.resendOTP);
 //login routes
 u_route.get('/login',userAuth.isLogout,loginController.loadLogin);
 u_route.post('/login',loginController.verifyUser);
+u_route.get('/forgot_password',userAuth.isLogout,loginController.loadForgotPassword);
+u_route.post('/forgot_password',loginController.postForgotPassword);
+u_route.get('/reset_password/:token',userAuth.isLogout,loginController.loadResetPassword);
+u_route.post('/reset_password/:token',loginController.postResetPassword);
 
 //cart routes
 u_route.get('/cart',userAuth.isLogin,userController.loadCart);

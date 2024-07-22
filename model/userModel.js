@@ -25,6 +25,12 @@ const User = new Schema({
         type : String,
         required : false
     },
+    resetToken : {
+        type : String
+    },
+    resetTokenExpiration : {
+        type : Date
+    },
     is_blocked : {
         type : Number,
         default : 0

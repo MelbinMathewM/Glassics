@@ -121,4 +121,14 @@ a_route.get('/dashboard/sales_report/excel',adminAuth.isLogin,dashboardControlle
 //logout
 a_route.get('/logout',adminAuth.isLogin,adminController.logoutAdmin);
 
+
+a_route.use((err, req, res, next) => {
+    console.error('Error:', err);
+    res.status(500).render('500', { error: err.message });
+});
+
+a_route.use((req, res, next) => {
+    res.status(404).render('404', { message: 'Page not found' });
+});
+
 module.exports = a_route;

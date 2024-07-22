@@ -161,6 +161,9 @@
                                                                             value="<%= offer.offerName %>"
                                                                             id="offerName_<%= offer._id %>">
                                                                     </div>
+                                                                    <input type="hidden" id="productId" name="productId" value="<%= offer.productId ? offer.productId._id : '' %>">
+                                                                    <input type="hidden" id="categoryId" name="categoryId" value="<%= offer.categoryId ? offer.categoryId._id : '' %>">
+
                                                                     <div class="col">
                                                                         <label
                                                                             for="discountPercentage_<%= offer._id %>">Discount
@@ -514,6 +517,8 @@
                 offerDescription: formData.get('offerDescription').trim(),
                 discountPercentage: parseFloat(formData.get('discountPercentage')),
                 typeName: formData.get('typeName').trim(),
+                productId : formData.get('productId'),
+                categoryId : formData.get('categoryId'),
                 isActive: formData.get('isActive') === 'on'
             };
             if (!offerData.offerName) {

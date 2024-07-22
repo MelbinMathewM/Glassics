@@ -25,16 +25,15 @@
                     </nav>
                 </div>
                 <div class="col-lg-3 col-md-3 col-6 d-flex justify-content-end align-items-center">
-                    <div class="header__nav__option mb-3">
-                        <a href="#" class="search-switch"><img src="/static/img/icon/search.png" alt=""></a>
-                        <a href="#"><img src="/static/img/icon/heart.png" alt=""></a>
-                        <a href="/cart"><img src="/static/img/icon/cart.png" alt=""></a>
+                    <div class="button-container d-flex flex-row">
+                        <div class="mb-3 mt-2 ml-auto justify-content-end align-items-end d-flex">
+                            <a href="/cart"><img src="/static/img/icon/cart.png" alt=""></a>
+                        </div>
+                        <button class="navbar-toggler d-lg-none mt-2" type="button" data-toggle="collapse" data-target="#navbarNav">
+                            <span class="navbar-toggler-icon fa fa-bars"></span>
+                        </button>
                     </div>
-                    <button class="navbar-toggler d-md-none ml-auto mt-1 me-3" type="button" data-toggle="collapse"
-                        data-target="#navbarNav">
-                        <span class="navbar-toggler-icon fa fa-bars"></span>
-                    </button>
-                </div>
+                </div>  
             </div>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <nav class="navbar-nav active">
@@ -43,11 +42,11 @@
                         <li><a class="nav-link" href="/shop" style="color: red;">Shop</a></li>
                         <% if (isAuthenticated) { %>
                             <li><a class="text-decoration-none" href='/account/profile'>Account</a></li>
-                            <% } else { %>
-                                <li><a class="text-decoration-none" href="/login">Sign In</a></li>
-                                <% } %>
-                                    <li><a class="nav-link" href="./blog.html">Blog</a></li>
-                                    <li><a class="nav-link" href="./contact.html">Contacts</a></li>
+                        <% } else { %>
+                            <li><a class="text-decoration-none" href="/login">Sign In</a></li>
+                        <% } %>
+                        <li><a class="nav-link" href="./blog.html">Blog</a></li>
+                        <li><a class="nav-link" href="./contact.html">Contacts</a></li>
                     </ul>
                 </nav>
             </div>
@@ -84,165 +83,143 @@
                                 <input type="text" name="search" class="text-black" value="<%= search %>"
                                     placeholder="Search...">
                                 <input type="hidden" name="sort" value="<%= sort %>">
-                                <button type="submit" class="me-4"><span class="fa fa-search"></span></button>
-                                <button onclick="clearSearch()" class="text-black"><span
-                                        class="mdi mdi-close"></span></button>
+                                <input type="hidden" name="minPrice" value="<%= minPrice %>">
+                                <input type="hidden" name="maxPrice" value="<%= maxPrice %>">
+                                <input type="hidden" name="brand" value="<%= selectedBrands.join(',') %>">
+                                <input type="hidden" name="category" value="<%= selectedCategories.join(',') %>">
+                                <button type="submit"><span class="fa fa-search"></span></button>
                             </form>
                         </div>
                         <div class="shop__sidebar__accordion">
-                            <!-- Category Filter -->
-                            <div class="card">
-                                <div class="card-heading d-flex justify-content-between align-items-center">
-                                    <a class="d-flex justify-content-between w-100" data-toggle="collapse"
-                                        data-target="#collapseOne">Categories<span class="align-items-center"><i
-                                                class="fa fa-chevron-down"></i></span></a>
-                                </div>
-                                <div id="collapseOne" class="collapse">
-                                    <div class="card-body">
-                                        <div class="shop__sidebar__brand">
-                                            <ul>
-                                                <% categories.forEach(category=> { %>
-                                                    <li><a class="text-decoration-none"
-                                                            href="?category=<%= category.categoryName %>&brand=<%= brand %>&minprice=<%= minPrice %>&maxPrice=<%= maxPrice %>&search=<%= search %>&sort=<%= sort %>&page=<%= currentPage %>">
-                                                            <%= category.categoryName %>
-                                                        </a></li>
-                                                    <% }); %>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <!-- Filter Form -->
+                            <form id="filter-form" action="/shop" method="GET">
+                                <input type="hidden" name="search" value="<%= search %>">
+                                <input type="hidden" name="sort" value="<%= sort %>">
+                                <input type="hidden" name="minPrice" value="<%= minPrice %>">
+                                <input type="hidden" name="maxPrice" value="<%= maxPrice %>">
 
-                            <!-- Brand Filter -->
-                            <div class="card">
-                                <div class="card-heading d-flex justify-content-between align-items-center">
-                                    <a class="d-flex justify-content-between w-100" data-toggle="collapse"
-                                        data-target="#collapseTwo">Branding<span class="align-items-center"><i
-                                                class="fa fa-chevron-down"></i></span></a>
-                                </div>
-                                <div id="collapseTwo" class="collapse">
-                                    <div class="card-body">
-                                        <div class="shop__sidebar__brand">
-                                            <ul>
-                                                <% brands.forEach(brand=> { %>
-                                                    <li><a class="text-decoration-none"
-                                                            href="?category=<%= category %>&brand=<%= brand.brandName %>&minprice=<%= minPrice %>&maxPrice=<%= maxPrice %>&search=<%= search %>&sort=<%= sort %>&page=<%= currentPage %>">
-                                                            <%= brand.brandName %>
-                                                        </a></li>
-                                                    <% }); %>
-                                            </ul>
+                                <!-- Category Filter -->
+                                <div class="card">
+                                    <div class="card-heading d-flex justify-content-between align-items-center">
+                                        <a class="d-flex justify-content-between w-100" data-toggle="collapse"
+                                            data-target="#collapseOne">
+                                            Categories<span class="align-items-center"><i
+                                                    class="fa fa-chevron-down"></i></span>
+                                        </a>
+                                    </div>
+                                    <div id="collapseOne" class="collapse">
+                                        <div class="card-body">
+                                            <div class="shop__sidebar__brand">
+                                                <ul class="list-unstyled filter-list">
+                                                    <% categories.forEach(category=> { %>
+                                                        <li>
+                                                            <label>
+                                                                <input type="checkbox" name="category"
+                                                                    value="<%= category.categoryName %>"
+                                                                    <%=selectedCategories.includes(category.categoryName)
+                                                                    ? 'checked' : '' %>>
+                                                                <%= category.categoryName %>
+                                                            </label>
+                                                        </li>
+                                                        <% }); %>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- Price Filter -->
-                            <div class="card">
-                                <div class="card-heading d-flex justify-content-between align-items-center">
-                                    <a class="d-flex justify-content-between w-100" data-toggle="collapse"
-                                        data-target="#collapseThree">Filter Price<span class="align-items-center"><i
-                                                class="fa fa-chevron-down"></i></span></a>
-                                </div>
-                                <div id="collapseThree" class="collapse">
-                                    <div class="card-body">
-                                        <div class="shop__sidebar__price">
-                                            <ul>
-                                                <li><a href="?category=<%= category %>&brand=<%= brand %>&minPrice=0&maxPrice=500&search=<%= search %>&sort=<%= sort %>&page=<%= currentPage %>"
-                                                        class="text-decoration-none">₹0.00
-                                                        - ₹500.00</a></li>
-                                                <li><a href="?category=<%= category %>&brand=<%= brand %>&minPrice=500&maxPrice=1000&search=<%= search %>&sort=<%= sort %>&page=<%= currentPage %>"
-                                                        class="text-decoration-none">₹500.00
-                                                        - ₹1000.00</a></li>
-                                                <li><a href="?category=<%= category %>&brand=<%= brand %>&minPrice=1000&maxPrice=1500&search=<%= search %>&sort=<%= sort %>&page=<%= currentPage %>"
-                                                        class="text-decoration-none">₹1000.00
-                                                        - ₹1500.00</a></li>
-                                                <li><a href="?category=<%= category %>&brand=<%= brand %>&minPrice=1500&maxPrice=2000&search=<%= search %>&sort=<%= sort %>&page=<%= currentPage %>"
-                                                        class="text-decoration-none">₹1500.00
-                                                        - ₹2000.00</a></li>
-                                                <li><a href="?category=<%= category %>&brand=<%= brand %>&minPrice=2000&maxPrice=2500&search=<%= search %>&sort=<%= sort %>&page=<%= currentPage %>"
-                                                        class="text-decoration-none">₹2000.00
-                                                        - ₹2500.00</a></li>
-                                                <li><a href="?category=<%= category %>&brand=<%= brand %>&minPrice=2500&search=<%= search %>&sort=<%= sort %>"
-                                                        class="text-decoration-none">₹2500.00+</a>
-                                                </li>
-                                            </ul>
+                                <!-- Brand Filter -->
+                                <div class="card">
+                                    <div class="card-heading d-flex justify-content-between align-items-center">
+                                        <a class="d-flex justify-content-between w-100" data-toggle="collapse"
+                                            data-target="#collapseTwo">
+                                            Branding<span class="align-items-center"><i
+                                                    class="fa fa-chevron-down"></i></span>
+                                        </a>
+                                    </div>
+                                    <div id="collapseTwo" class="collapse">
+                                        <div class="card-body">
+                                            <div class="shop__sidebar__brand">
+                                                <ul class="list-unstyled filter-list">
+                                                    <% brands.forEach(brand=> { %>
+                                                        <li>
+                                                            <label>
+                                                                <input type="checkbox" name="brand"
+                                                                    value="<%= brand.brandName %>"
+                                                                    <%=selectedBrands.includes(brand.brandName)
+                                                                    ? 'checked' : '' %>>
+                                                                <%= brand.brandName %>
+                                                            </label>
+                                                        </li>
+                                                        <% }); %>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-heading">
-                                    <a data-toggle="collapse" data-target="#collapseFour">Size</a>
-                                </div>
-                                <div id="collapseFour" class="collapse">
-                                    <div class="card-body">
-                                        <div class="shop__sidebar__size">
-                                            <label for="xs">xs
-                                                <input type="radio" id="xs">
-                                            </label>
-                                            <label for="sm">s
-                                                <input type="radio" id="sm">
-                                            </label>
-                                            <label for="md">m
-                                                <input type="radio" id="md">
-                                            </label>
-                                            <label for="xl">xl
-                                                <input type="radio" id="xl">
-                                            </label>
-                                            <label for="2xl">2xl
-                                                <input type="radio" id="2xl">
-                                            </label>
-                                            <label for="xxl">xxl
-                                                <input type="radio" id="xxl">
-                                            </label>
-                                            <label for="3xl">3xl
-                                                <input type="radio" id="3xl">
-                                            </label>
-                                            <label for="4xl">4xl
-                                                <input type="radio" id="4xl">
-                                            </label>
+
+                                <!-- Price Filter -->
+                                <div class="card">
+                                    <div class="card-heading d-flex justify-content-between align-items-center">
+                                        <a class="d-flex justify-content-between w-100" data-toggle="collapse"
+                                            data-target="#collapseThree">
+                                            Filter Price<span class="align-items-center"><i
+                                                    class="fa fa-chevron-down"></i></span>
+                                        </a>
+                                    </div>
+                                    <div id="collapseThree" class="collapse">
+                                        <div class="card-body">
+                                            <div class="shop__sidebar__price">
+                                                <ul class="list-unstyled filter-list">
+                                                    <li>
+                                                        <label>
+                                                            <input type="radio" name="price" value="0-1000" data-min="0"
+                                                                data-max="1000" <%=minPrice==='0' && maxPrice==='1000'
+                                                                ? 'checked' : '' %>> ₹0.00 - ₹1000.00
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            <input type="radio" name="price" value="1000-2000"
+                                                                data-min="1000" data-max="2000" <%=minPrice==='1000' &&
+                                                                maxPrice==='2000' ? 'checked' : '' %>> ₹1000.00 -
+                                                            ₹2000.00
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            <input type="radio" name="price" value="2000-4000"
+                                                                data-min="2000" data-max="4000" <%=minPrice==='2000' &&
+                                                                maxPrice==='4000' ? 'checked' : '' %>> ₹2000.00 -
+                                                            ₹4000.00
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            <input type="radio" name="price" value="4000-"
+                                                                data-min="4000" data-max="" <%=minPrice==='4000'
+                                                                ? 'checked' : '' %>> ₹4000.00+
+                                                        </label>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-heading">
-                                    <a data-toggle="collapse" data-target="#collapseFive">Colors</a>
-                                </div>
-                                <div id="collapseFive" class="collapse">
+
+                                <!-- Apply Filters Button -->
+                                <div class="card">
                                     <div class="card-body">
-                                        <div class="shop__sidebar__color">
-                                            <label class="c-1" for="sp-1">
-                                                <input type="radio" id="sp-1">
-                                            </label>
-                                            <label class="c-2" for="sp-2">
-                                                <input type="radio" id="sp-2">
-                                            </label>
-                                            <label class="c-3" for="sp-3">
-                                                <input type="radio" id="sp-3">
-                                            </label>
-                                            <label class="c-4" for="sp-4">
-                                                <input type="radio" id="sp-4">
-                                            </label>
-                                            <label class="c-5" for="sp-5">
-                                                <input type="radio" id="sp-5">
-                                            </label>
-                                            <label class="c-6" for="sp-6">
-                                                <input type="radio" id="sp-6">
-                                            </label>
-                                            <label class="c-7" for="sp-7">
-                                                <input type="radio" id="sp-7">
-                                            </label>
-                                            <label class="c-8" for="sp-8">
-                                                <input type="radio" id="sp-8">
-                                            </label>
-                                            <label class="c-9" for="sp-9">
-                                                <input type="radio" id="sp-9">
-                                            </label>
+                                        <div class="row">
+                                            <div class="col d-flex justify-content-between">
+                                                <button type="submit" class="btn btn-outline-primary">Apply</button>
+                                                <button type="button" class="btn btn-outline-secondary" onclick="resetFilters()"><i class="mdi mdi-apply"></i>Reset</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                                
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -256,12 +233,15 @@
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-3 col-sm-3">
-                                <p>Sort</p>
+                                <p class="d-md-block d-sm-none">Sort</p>
                                 <div class="shop__product__option__right form-co">
+                                    <p class="d-sm-block d-md-none">Sort</p>
                                     <form action="/shop" method="get">
                                         <input type="hidden" name="search" value="<%= search %>">
-                                        <input type="hidden" name="category" value="<%= category %>">
-                                        <input type="hidden" name="brand" value="<%= brand %>">
+                                        <!-- Maintain selected categories and brands in hidden inputs -->
+                                        <input type="hidden" name="category"
+                                            value="<%= selectedCategories.join(',') %>">
+                                        <input type="hidden" name="brand" value="<%= selectedBrands.join(',') %>">
                                         <input type="hidden" name="minPrice" value="<%= minPrice %>">
                                         <input type="hidden" name="maxPrice" value="<%= maxPrice %>">
                                         <input type="hidden" name="page" value="<%= currentPage %>">
@@ -292,67 +272,60 @@
                         <% products.forEach(product=> { %>
                             <div class="col-lg-4 col-md-6 col-sm-6">
                                 <div class="product__item border">
-                                    <a href="/product_details/<%= product._id %>">
-                                        <div class="product__item__pic set-bg"
-                                            style="background-image: url('/static/productImages/<%= product.variants[0].images[0] %>');"
-                                            id="product-image-<%= product._id %>">
-                                            <ul class="product__hover">
-                                                <li><a href="javascript:void(0);" class="add-wishlist"
+                                    <!-- Clickable image div that navigates to product details -->
+                                    <div class="product__item__pic" id="product-image-<%= product._id %>"
+                                        style="background-image: url('/static/productImages/<%= product.variants[0].images[0] %>');">
+                                        <a href="/product_details/<%= product._id %>" class="product-image-link">
+                                            <div class="product__hover">
+                                                <li>
+                                                    <!-- Wishlist icon -->
+                                                    <a href="javascript:void(0);" class="add-wishlist"
                                                         data-product-id="<%= product._id %>">
-                                                        <img src="/static/img/icon/heart.png" alt=""
-                                                            style="background: transparent;">
-                                                        <span>Wishlist</span></a>
+                                                        <img src="/static/img/icon/<%= product.isWishlisted ? 'heart-red' : 'heart' %>.png"
+                                                            alt="" style="background: transparent;">
+                                                        <span>Wishlist</span>
+                                                    </a>
                                                 </li>
-                                                <li><a href="#"><img src="/static/img/icon/compare.png" alt=""
-                                                            style="background: transparent;">
-                                                        <span>Compare</span></a>
-                                                </li>
-                                                <li><a href="/product_details/<%= product._id %>"><img
-                                                            src="/static/img/icon/search.png" alt=""
-                                                            style="background: transparent;"><span>Details</span></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="product__item__text" style="background-color: whitesmoke;">
-                                            <h5 class="ps-4 pname">
-                                                <%= product.productName %>
-                                            </h5>
-                                            <div class="rating ms-4">
-                                                <% for (let i=0; i < 5; i++) { %>
-                                                    <i class="fa fa-star"></i>
-                                                    <% } %>
                                             </div>
-                                            <h5 class="product-price ps-4">
-                                                <span id="product-disc-price-<%= product._id %>">&#8377;<%=
-                                                        product.variants[0].discountPrice %></span>&nbsp;&nbsp;
-                                                <del class="product-old-price text-muted text-small"
-                                                    id="product-price-<%= product._id %>">
-                                                    &#8377;<%= product.variants[0].price %></del>
-                                            </h5>
-                                            <div class="product__color__select me-4 mb-3">
-                                                <% product.variants.forEach((variant, index)=> { %>
-                                                    <label for="pc-<%= product._id %>-<%= index %>"
-                                                        class="<%= index === 0 ? 'active' : '' %>"
-                                                        style="background-color: <%= variant.color %>">
-                                                        <input type="radio" name="color-<%= product._id %>"
-                                                            value="<%= variant.color %>"
-                                                            id="pc-<%= product._id %>-<%= index %>"
-                                                            data-image-url="/static/productImages/<%= variant.images[0] %>"
-                                                            data-price="<%= variant.price %>"
-                                                            data-disc-price="<%= variant.discountPrice %>"
-                                                            data-variant='<%= JSON.stringify(variant) %>' <%=index===0
-                                                            ? 'checked' : '' %>>
-                                                    </label>
-                                                    <% }); %>
-                                            </div>
-                                            <a href="javascript:void(0);" class="add-cart ps-4 text-decoration-none"
-                                                data-product-id="<%= product._id %>">
-                                                + Add To Cart
-                                            </a><br>
-                                            <a href="/product_details/<%= product._id %>"
-                                                class="mt-4 ps-4 text-decoration-none">&gt; Details</a>
+                                        </a>
+                                    </div>
+                                    <div class="product__item__text" style="background-color: whitesmoke;">
+                                        <h5 class="ps-4 pname">
+                                            <%= product.productName %>
+                                        </h5>
+                                        <div class="rating ms-4">
+                                            <% for (let i=0; i < 5; i++) { %>
+                                                <i class="fa fa-star"></i>
+                                                <% } %>
                                         </div>
-                                    </a>
+                                        <h5 class="product-price ps-4">
+                                            <span id="product-disc-price-<%= product._id %>">&#8377;<%=
+                                                    product.variants[0].discountPrice %></span>&nbsp;&nbsp;
+                                            <del class="product-old-price text-muted text-small"
+                                                id="product-price-<%= product._id %>">
+                                                &#8377;<%= product.variants[0].price %></del>
+                                        </h5>
+                                        <div class="product__color__select me-4 mb-3">
+                                            <% product.variants.forEach((variant, index)=> { %>
+                                                <label for="pc-<%= product._id %>-<%= index %>"
+                                                    class="<%= index === 0 ? 'active' : '' %>"
+                                                    style="background-color: <%= variant.color %>">
+                                                    <input type="radio" name="color-<%= product._id %>"
+                                                        value="<%= variant.color %>"
+                                                        id="pc-<%= product._id %>-<%= index %>"
+                                                        data-image-url="/static/productImages/<%= variant.images[0] %>"
+                                                        data-price="<%= variant.price %>"
+                                                        data-disc-price="<%= variant.discountPrice %>"
+                                                        data-variant='<%= JSON.stringify(variant) %>' <%=index===0
+                                                        ? 'checked' : '' %>>
+                                                </label>
+                                                <% }); %>
+                                        </div>
+                                        <a href="javascript:void(0);" class="add-cart ps-4 text-decoration-none"
+                                            data-product-id="<%= product._id %>">
+                                            + Add To Cart
+                                        </a><br>
+                                    </div>
                                 </div>
                             </div>
                             <% }); %>
@@ -361,20 +334,19 @@
                         <div class="col-lg-12">
                             <div class="product__pagination">
                                 <% if (currentPage> 1) { %>
-                                    <a href="?category=<%= category %>&brand=<%= brand %>&search=<%= search %>&minPrice=<%= minPrice %>&maxPrice=<%= maxPrice %>&sort=<%= sort %>&page=<%= currentPage - 1 %>"
+                                    <a href="?category=<%= selectedCategories.join(',') %>&brand=<%= selectedBrands.join(',') %>&minPrice=<%= minPrice %>&maxPrice=<%= maxPrice %>&page=<%= currentPage - 1 %>"
                                         class="text-decoration-none">&laquo;</a>
                                     <% } %>
-                                        <% for (let i=Math.max(1, currentPage - 1); i <=Math.min(currentPage + 1,
-                                            totalPages); i++) { %>
-                                            <a class="<%= i === currentPage ? 'active' : '' %> text-decoration-none"
-                                                href="?category=<%= category %>&brand=<%= brand %>&minPrice=<%= minPrice %>&maxPrice=<%= maxPrice %>&search=<%= search %>&sort=<%= sort %>&page=<%= i %>">
-                                                <%= i %>
-                                            </a>
-                                            <% } %>
-                                                <% if (currentPage < totalPages) { %>
-                                                    <a href="?category=<%= category %>&brand=<%= brand %>&minprice=<%= minPrice %>&maxPrice=<%= maxPrice %>&search=<%= search %>&sort=<%= sort %>&page=<%= currentPage + 1 %>"
-                                                        class="text-decoration-none">&raquo;</a>
-                                                    <% } %>
+                                    <% for (let i=Math.max(1, currentPage - 1); i <=Math.min(currentPage + 1, totalPages); i++) { %>
+                                        <a class="<%= i === currentPage ? 'active' : '' %> text-decoration-none"
+                                                href="?category=<%= selectedCategories.join(',') %>&brand=<%= selectedBrands.join(',') %>&minPrice=<%= minPrice %>&maxPrice=<%= maxPrice %>&page=<%= i %>">
+                                            <%= i %>
+                                        </a>
+                                    <% } %>
+                                    <% if (currentPage < totalPages) { %>
+                                        <a href="?category=<%= selectedCategories.join(',') %>&brand=<%= selectedBrands.join(',') %>&minPrice=<%= minPrice %>&maxPrice=<%= maxPrice %>&page=<%= currentPage + 1 %>"
+                                            class="text-decoration-none">&raquo;</a>                                            
+                                    <% } %>
                             </div>
                         </div>
                     </div>
@@ -384,8 +356,8 @@
     </section>
     <!--shop section end  -->
     <!-- Footer Section Begin -->
-    <footer class="footer" style="background-color: rgb(20, 19, 19);">
-        <div class="container pt-3">
+    <footer class="footer" style="background-color: rgb(12, 10, 10);">
+        <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="footer__about">
@@ -395,7 +367,7 @@
                             </a>
                         </div>
                         <p>The customer is at the heart of our unique business model, which includes design.</p>
-                        <a href="#"><img src="/img/payment.png" alt=""></a>
+                        <a href="#"><img src="img/payment.png" alt=""></a>
                     </div>
                 </div>
                 <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
@@ -427,7 +399,7 @@
                             <p>Be the first to know about new arrivals, look books, sales & promos!</p>
                             <form action="#">
                                 <input type="text" placeholder="Your email">
-                                <button type="submit"><span class="icon_mail"></span></button>
+                                <button type="submit"><span class="fa fa-envelope"></span></button>
                             </form>
                         </div>
                     </div>
@@ -468,12 +440,56 @@
             border: 1px solid #ddd;
             color: #fff;
         }
+
+        .product__item__pic {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            /* Adjust height as needed */
+            background-size: cover;
+            background-position: center;
+        }
+
+        .product-image-link {
+            display: block;
+            height: 100%;
+            width: 100%;
+            text-decoration: none;
+        }
+
+        .pname {
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+        }
+        .filter-list li {
+    margin-bottom: 10px;
+}
+
+.filter-list label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+.filter-list input[type="checkbox"],
+.filter-list input[type="radio"] {
+    margin-right: 10px;
+    transform: scale(1.2);
+}
+.shop__sidebar__search input[type="text"] {
+    border-radius: 20px;
+}
+
+.shop__sidebar__search button {
+    border-radius: 20px;
+    padding: 8px 16px;
+}
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function clearSearch() {
-            document.querySelector('.shop__sidebar__search input[name="search"]').value = '';
-        }
         document.addEventListener('DOMContentLoaded', () => {
             const colorSelectors = document.querySelectorAll('.product__color__select input[type="radio"]');
 
@@ -650,6 +666,54 @@
                 window.location.search = urlParams.toString();
             });
         });
+        document.addEventListener('DOMContentLoaded', () => {
+            const collapsibleItems = document.querySelectorAll('.card-heading a');
+
+            collapsibleItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    // Close all sections
+                    collapsibleItems.forEach(i => {
+                        if (i !== item) {
+                            const target = document.querySelector(i.getAttribute('data-target'));
+                            target.classList.remove('show');
+                        }
+                    });
+                });
+            });
+        });
+        document.getElementById('filter-form').addEventListener('submit', function (event) {
+            const selectedRadio = document.querySelector('input[name="price"]:checked');
+
+            if (selectedRadio) {
+                const minPrice = selectedRadio.getAttribute('data-min');
+                const maxPrice = selectedRadio.getAttribute('data-max');
+
+                // Set hidden inputs for minPrice and maxPrice
+                document.querySelector('input[name="minPrice"]').value = minPrice;
+                document.querySelector('input[name="maxPrice"]').value = maxPrice;
+            }
+        });
+        function resetFilters() {
+            document.querySelector('input[name="search"]').value = '';
+
+            document.querySelector('input[name="minPrice"]').value = '';
+            document.querySelector('input[name="maxPrice"]').value = '';
+
+            document.querySelectorAll('input[name="price"]').forEach(radio => {
+                radio.checked = false;
+            });
+
+            document.querySelectorAll('input[name="category"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            document.querySelectorAll('input[name="brand"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+
+            document.getElementById('filter-form').submit();
+        }
+
+
 
     </script>
     <!-- Js Plugins -->
