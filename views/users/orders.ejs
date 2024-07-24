@@ -173,12 +173,12 @@
                                                             <p>All items canceled</p>
                                                         <% } else if (order.items.every(item => item.orderStatus === 'Delivered')) { %>
                                                             <p>All items Delivered</p>
-                                                        <% } else if (order.paymentStatus === 'Pending') { %>
+                                                        <% } else if (order.paymentStatus === 'Pending' && order.items.some(item => ['Pending', 'Processing', 'Dispatched'].includes(item.orderStatus))) { %>
                                                             <button class="btn btn-outline-secondary pay-now-btn" data-order-id="<%= order._id %>">Pay Now</button>
                                                         <% } else { %>
                                                             <p>Paid</p>
                                                         <% } %>
-                                                    </td>                                                    
+                                                    </td>                                                                                                    
                                                     <td class="pe-4">
                                                         <a href="/account/orders/order_details?id=<%= order._id %>" class="btn btn-outline-primary">Info</a>
                                                     </td>

@@ -146,7 +146,7 @@
                                                     <tr>
                                                         <td class="p-4"><%= order.orderID %></td>
                                                         <td class="p-4"><%= new Date(order.orderDate).toLocaleDateString() %></td>
-                                                        <td class="p-4"><%= order.customer_id.userName %></td>
+                                                        <td class="p-4"><%= order.customer_id ? order.customer_id.userName : 'Unknown' %></td>
                                                         <td class="p-4">&#8377;<%= totalPrice.toFixed(2) %></td>
                                                         <td class="p-4"><%= itemsCount %></td>
                                                         <td class="pe-4 pt-3">

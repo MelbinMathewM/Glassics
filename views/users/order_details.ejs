@@ -398,15 +398,14 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Order returned successfully');
-                    window.location.reload();
+                    Swal.fire('Return Requested!', 'Your request to return was send.', 'success');
                 } else {
-                    alert('Failed to return the order');
+                    Swal.fire('Failed!', data.message || 'Failed to return the order.', 'error');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('An error occurred while returning the order');
+                Swal.fire('Failed!', data.message || 'Failed to return the order.', 'error');
             });
         }
     </script>

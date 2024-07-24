@@ -115,10 +115,7 @@ const loadOrder = async (req, res) => {
             ]
         };
         const orders = await Order.find(query)
-            .populate({
-                path: 'customer_id',
-                select: 'userName'
-            })
+            .populate('customer_id')
             .populate('address_id')
             .populate('items.product_id')
             .sort({ orderDate: -1 })

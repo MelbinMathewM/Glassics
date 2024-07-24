@@ -484,7 +484,7 @@ document.getElementById('checkout-form').onsubmit = async function (event) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Payment Failed',
-                        text: 'Your payment could not be processed. Please try again.',
+                        text: 'Order placed. You can continue pay from orders page',
                     }).then(async () => {
                         await fetch('/handle_failed_payment', {
                             method: 'POST',
