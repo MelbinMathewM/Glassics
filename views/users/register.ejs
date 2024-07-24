@@ -77,6 +77,7 @@
                 cpassword: formData.get('cpassword').trim()
             };
 
+            console.log('aa',userName,'aa');
             const errors = validateForm(data);
             if (errors.length > 0) {
                 errorDiv.innerText = errors[0];
@@ -109,19 +110,19 @@
             const mob_zero = /^0{10}$/;
             const password_reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-            if (data.customerName === '') {
+            if (data.customerName.trim() === '') {
                 errors.push('Name is required');
             } else if (!name_reg.test(data.customerName)) {
                 errors.push('Enter a valid Name');
             }
 
-            if (data.userName === '') {
+            if (data.userName.trim() === '') {
                 errors.push('Username is required');
             } else if (!uname_reg.test(data.userName)) {
                 errors.push('Enter a valid username. Username must start with an alphabet and can only include uppercase letters, lowercase letters, numbers, and underscores.');
             }
 
-            if (data.userEmail === '') {
+            if (data.userEmail.trim() === '') {
                 errors.push('Email is required');
             } else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(data.userEmail)) {
                 errors.push('Invalid Email');

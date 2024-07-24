@@ -382,6 +382,7 @@ const addCheckout = async (req, res) => {
         let savedOrder;
         const totalAmount = orderItems.reduce((acc, item) => acc + item.productDiscPrice * item.quantity, 0);
         if (paymentOption === 'RazorPay') {
+            await handleOrderProcessingRazorpay(orderItems);
             const options = {
                 amount: totalAmount * 100,
                 currency: "INR",
@@ -390,7 +391,6 @@ const addCheckout = async (req, res) => {
             };
             const razorpayOrder = await razorpayInstance.orders.create(options);
             newOrderData.razorpayOrderId = razorpayOrder.id;
-            
             return res.status(201).json({
                 message: 'Razorpay order created',
                 orderData: newOrderData,
@@ -482,6 +482,32 @@ const handleOrderProcessing = async (orderItems, code, userId) => {
                     { _id: couponData._id },
                     { $inc: { usedCount: 1 } }
                 );
+            }
+        }
+    } catch (error) {
+        throw error;
+    }
+};
+
+const handleOrderProcessingRazorpay = async (orderItems) => {
+    try {
+        for (const item of orderItems) {
+            const product = await Product.findById(item.product_id);
+            if (!product) {
+                throw new Error(`Product not found`);
+            }
+            const variant = product.variants.find(v => v.color === item.productColor);
+            if (!variant) {
+                throw new Error(`Variant with color ${item.productColor} not found for product ${product.productName}`);
+            }
+            const subvariant = variant.subVariants.find(s => s.size === item.productSize);
+            if (!subvariant) {
+                throw new Error(`Subvariant with size ${item.productSize} not found for product ${product.productName}`);
+            }
+            if (subvariant.quantity === 0) {
+                throw new Error(`Product is out of stock for the size ${item.productSize}`);
+            } else if (subvariant.quantity < item.quantity) {
+                throw new Error(`Only ${subvariant.quantity} stock for the size ${item.productSize}`);
             }
         }
     } catch (error) {

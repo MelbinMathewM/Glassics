@@ -149,7 +149,7 @@
                         title: 'OTP Verified',
                         text: data.message,
                     }).then(() => {
-                        setTimeout(() => location.href = '/login', 1500);
+                        setTimeout(() => location.href = '/login',500);
                     });
                 } else {
                     messageElement.textContent = data.message;

@@ -144,9 +144,9 @@ const loadShop = async (req, res) => {
             priceRanges: priceRanges,
             wishlistItems
         });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
+    } catch (err) {
+        console.error('Error:', err);
+        res.status(500).render('500', { error: err.message });
     }
 };
 
@@ -197,8 +197,9 @@ const loadProductDetail = async (req, res) => {
             product: { ...product.toObject(), defaultImage }, 
             reproducts: relatedProducts 
         });
-    } catch (error) {
-        res.status(500).send(error.message);
+    } catch (err) {
+        console.error('Error:', err);
+       res.status(500).render('500', { error: err.message });
     }
 };
 

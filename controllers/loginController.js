@@ -56,25 +56,30 @@ const loadRegister = async (req,res) => {
 
 const insertUser = async (req, res) => {
     try {
-        const existingUser = await User.findOne({ userName: req.body.userName });
+        const trimmedUserName = req.body.userName.trim();
+        const trimmedUserEmail = req.body.userEmail.trim();
+        const trimmedCustomerName = req.body.customerName.trim();
+        const trimmedUserMobile = req.body.userMobile.trim();
+        const trimmedPassword = req.body.password.trim();
+        const existingUser = await User.findOne({ userName: trimmedUserName });
         if (existingUser) {
             return res.status(400).json({ message: "Username already taken" });
         }
-        const existingEmail = await User.findOne({ userEmail: req.body.userEmail });
+        const existingEmail = await User.findOne({ userEmail: trimmedUserEmail });
         if (existingEmail) {
             return res.status(400).json({ message: "Email already in use" });
         }
         const otp = generateOTP();
         req.session.otp = { value: otp, expires: Date.now() + 60000 };
         req.session.userData = {
-            customerName: req.body.customerName,
-            userName: req.body.userName,
-            userEmail: req.body.userEmail,
-            userMobile: req.body.userMobile,
-            password: await securePassword(req.body.password),
+            customerName: trimmedCustomerName,
+            userName: trimmedUserName,
+            userEmail: trimmedUserEmail,
+            userMobile: trimmedUserMobile,
+            password: await securePassword(trimmedPassword),
             is_blocked: 0
         };
-        await sendOTPViaEmail(req.body.userEmail, otp);
+        await sendOTPViaEmail(trimmedUserEmail, otp);
         res.status(200).json({ redirectUrl: '/otp_validation' });
     } catch (error) {
         res.status(500).json({ message: error.message });

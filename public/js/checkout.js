@@ -493,7 +493,7 @@ document.getElementById('checkout-form').onsubmit = async function (event) {
                             },
                             body: JSON.stringify({ orderData: data.orderData })
                         });
-                        window.location.href = '/shop';
+                        window.location.href = '/account/orders';
                     });
                 });
                 rzp1.open();
@@ -502,6 +502,13 @@ document.getElementById('checkout-form').onsubmit = async function (event) {
                     icon: 'error',
                     title: 'Error',
                     text: data.error,
+                    showCancelButton: true,
+                    confirmButtonText: 'Go to Cart',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/cart';
+                    }
                 });
             }
         } catch (error) {
