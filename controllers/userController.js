@@ -39,6 +39,7 @@ const loadShop = async (req, res) => {
         const searchQuery = req.query.search || '';
         const priceRangesParam = req.query.price || [];
 
+        // Handle priceRanges and categories as arrays
         const priceRanges = Array.isArray(priceRangesParam)
             ? priceRangesParam
             : priceRangesParam.split(',').filter(Boolean);
@@ -46,12 +47,14 @@ const loadShop = async (req, res) => {
         const categories = Array.isArray(categoriesParam)
             ? categoriesParam
             : categoriesParam.split(',').filter(Boolean);
+
         const brands = Array.isArray(brandsParam)
             ? brandsParam
             : brandsParam.split(',').filter(Boolean);
 
         let filter = { is_delete: false };
 
+        // Add category filter if categories are provided
         if (categories.length > 0) {
             const categoryData = await Category.find({ categoryName: { $in: categories.map(cat => new RegExp(cat, 'i')) } });
             if (categoryData.length > 0) {
@@ -59,6 +62,7 @@ const loadShop = async (req, res) => {
             }
         }
 
+        // Add brand filter if brands are provided
         if (brands.length > 0) {
             const brandData = await Brand.find({ brandName: { $in: brands.map(b => new RegExp(b, 'i')) } });
             if (brandData.length > 0) {
@@ -66,9 +70,9 @@ const loadShop = async (req, res) => {
             }
         }
 
+        // Add price range filter if priceRanges are provided
         if (priceRanges.length > 0) {
             let priceFilter = [];
-        
             priceRanges.forEach(range => {
                 if (range.endsWith('-')) {
                     const min = parseInt(range.replace('-', ''), 10);
@@ -86,20 +90,22 @@ const loadShop = async (req, res) => {
                     }
                 }
             });
-        
             if (priceFilter.length > 0) {
                 filter = { ...filter, $or: priceFilter };
             }
         }
-        
 
+        // Add search filter if searchQuery is provided
         const searchFilter = searchQuery ? {
             productName: { $regex: new RegExp(searchQuery, 'i') }
         } : {};
 
         const combinedFilter = { ...filter, ...searchFilter };
+
+        // Count documents matching the combined filter
         const totalProducts = await Product.countDocuments(combinedFilter);
 
+        // Aggregate products with the combined filter
         const products = await Product.aggregate([
             { $match: combinedFilter },
             {
@@ -113,14 +119,17 @@ const loadShop = async (req, res) => {
             { $limit: limit }
         ]).collation({ locale: "en", strength: 2 });
 
+        // Fetch categories and brands
         const categoryList = await Category.find({ is_delete: false });
         const brandList = await Brand.find({ is_delete: false });
 
+        // Fetch wishlist items if user is logged in
         let wishlistItems = [];
         if (userId) {
             wishlistItems = await Wishlist.find({ userId: userId });
         }
 
+        // Render the shop page
         res.render('shop', {
             products,
             categories: categoryList,
@@ -132,7 +141,7 @@ const loadShop = async (req, res) => {
             search: searchQuery,
             selectedCategories: categories,
             selectedBrands: brands,
-            priceRanges: priceRanges, 
+            priceRanges: priceRanges,
             wishlistItems
         });
     } catch (error) {
@@ -140,7 +149,6 @@ const loadShop = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 };
-
 
 function getSortCriteria(sortOption) {
     switch (sortOption) {
