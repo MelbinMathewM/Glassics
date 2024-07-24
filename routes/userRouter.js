@@ -21,7 +21,7 @@ u_route.use(session({
     saveUninitialized: false,
     cookie: {
         path: '/',
-        _expires: 86400000,
+        expires: 86400000,
         httpOnly: true
     }
 }));
@@ -138,5 +138,14 @@ u_route.post('/checkout/remove_coupon',orderController.removeCoupon);
 
 //logout routes
 u_route.get('/logout',userAuth.isLogin,loginController.logoutUser);
+
+u_route.use((err, req, res, next) => {
+    console.error('Error:', err);
+    res.status(500).render('500', { error: err.message });
+});
+
+u_route.use((req, res, next) => {
+    res.status(404).render('404');
+});
 
 module.exports = u_route;

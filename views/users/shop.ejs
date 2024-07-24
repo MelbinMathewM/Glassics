@@ -29,11 +29,12 @@
                         <div class="mb-3 mt-2 ml-auto justify-content-end align-items-end d-flex">
                             <a href="/cart"><img src="/static/img/icon/cart.png" alt=""></a>
                         </div>
-                        <button class="navbar-toggler d-lg-none mt-2" type="button" data-toggle="collapse" data-target="#navbarNav">
+                        <button class="navbar-toggler d-lg-none mt-2" type="button" data-toggle="collapse"
+                            data-target="#navbarNav">
                             <span class="navbar-toggler-icon fa fa-bars"></span>
                         </button>
                     </div>
-                </div>  
+                </div>
             </div>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <nav class="navbar-nav active">
@@ -42,11 +43,11 @@
                         <li><a class="nav-link" href="/shop" style="color: red;">Shop</a></li>
                         <% if (isAuthenticated) { %>
                             <li><a class="text-decoration-none" href='/account/profile'>Account</a></li>
-                        <% } else { %>
-                            <li><a class="text-decoration-none" href="/login">Sign In</a></li>
-                        <% } %>
-                        <li><a class="nav-link" href="./blog.html">Blog</a></li>
-                        <li><a class="nav-link" href="./contact.html">Contacts</a></li>
+                            <% } else { %>
+                                <li><a class="text-decoration-none" href="/login">Sign In</a></li>
+                                <% } %>
+                                    <li><a class="nav-link" href="./blog.html">Blog</a></li>
+                                    <li><a class="nav-link" href="./contact.html">Contacts</a></li>
                     </ul>
                 </nav>
             </div>
@@ -78,149 +79,134 @@
             <div class="row">
                 <div class="col-lg-3">
                     <div class="shop__sidebar">
+                        <!-- Search Form -->
                         <div class="shop__sidebar__search">
-                            <form action="/shop" method="get">
+                            <form id="search-form" action="/shop" method="get">
                                 <input type="text" name="search" class="text-black" value="<%= search %>"
                                     placeholder="Search...">
                                 <input type="hidden" name="sort" value="<%= sort %>">
-                                <input type="hidden" name="minPrice" value="<%= minPrice %>">
-                                <input type="hidden" name="maxPrice" value="<%= maxPrice %>">
+                                <input type="hidden" name="price" value="<%= priceRanges.join(',') %>">
                                 <input type="hidden" name="brand" value="<%= selectedBrands.join(',') %>">
                                 <input type="hidden" name="category" value="<%= selectedCategories.join(',') %>">
+                                <input type="hidden" name="page" value="<%= currentPage %>">
                                 <button type="submit"><span class="fa fa-search"></span></button>
                             </form>
                         </div>
-                        <div class="shop__sidebar__accordion">
-                            <!-- Filter Form -->
-                            <form id="filter-form" action="/shop" method="GET">
-                                <input type="hidden" name="search" value="<%= search %>">
-                                <input type="hidden" name="sort" value="<%= sort %>">
-                                <input type="hidden" name="minPrice" value="<%= minPrice %>">
-                                <input type="hidden" name="maxPrice" value="<%= maxPrice %>">
 
-                                <!-- Category Filter -->
-                                <div class="card">
-                                    <div class="card-heading d-flex justify-content-between align-items-center">
-                                        <a class="d-flex justify-content-between w-100" data-toggle="collapse"
-                                            data-target="#collapseOne">
-                                            Categories<span class="align-items-center"><i
-                                                    class="fa fa-chevron-down"></i></span>
-                                        </a>
-                                    </div>
-                                    <div id="collapseOne" class="collapse">
-                                        <div class="card-body">
-                                            <div class="shop__sidebar__brand">
-                                                <ul class="list-unstyled filter-list">
-                                                    <% categories.forEach(category=> { %>
-                                                        <li>
-                                                            <label>
-                                                                <input type="checkbox" name="category"
-                                                                    value="<%= category.categoryName %>"
-                                                                    <%=selectedCategories.includes(category.categoryName)
-                                                                    ? 'checked' : '' %>>
+                        <!-- Filter Form -->
+                        <form id="filter-form" action="/shop" method="GET">
+                            <input type="hidden" name="search" value="<%= search %>">
+                            <input type="hidden" name="sort" value="<%= sort %>">
+                            <input type="hidden" name="page" value="<%= currentPage %>">
+
+                            <!-- Category Filter -->
+                            <div class="card">
+                                <div class="card-heading d-flex justify-content-between align-items-center">
+                                    <a class="d-flex justify-content-between w-100 p-2" data-toggle="collapse"
+                                        data-target="#collapseOne">
+                                        Categories<span class="align-items-center"><i
+                                                class="fa fa-chevron-down"></i></span>
+                                    </a>
+                                </div>
+                                <div id="collapseOne" class="collapse">
+                                    <div class="card-body">
+                                        <div class="shop__sidebar__brand">
+                                            <ul class="list-unstyled">
+                                                <% categories.forEach(category=> { %>
+                                                    <li>
+                                                        <input type="checkbox" name="category"
+                                                            value="<%= category.categoryName %>"
+                                                            <%=selectedCategories.includes(category.categoryName)
+                                                            ? 'checked' : '' %> id="category_<%= category.categoryName
+                                                            %>">
+                                                            <label for="category_<%= category.categoryName %>">
                                                                 <%= category.categoryName %>
                                                             </label>
-                                                        </li>
-                                                        <% }); %>
-                                                </ul>
-                                            </div>
+                                                    </li>
+                                                    <% }); %>
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- Brand Filter -->
-                                <div class="card">
-                                    <div class="card-heading d-flex justify-content-between align-items-center">
-                                        <a class="d-flex justify-content-between w-100" data-toggle="collapse"
-                                            data-target="#collapseTwo">
-                                            Branding<span class="align-items-center"><i
-                                                    class="fa fa-chevron-down"></i></span>
-                                        </a>
-                                    </div>
-                                    <div id="collapseTwo" class="collapse">
-                                        <div class="card-body">
-                                            <div class="shop__sidebar__brand">
-                                                <ul class="list-unstyled filter-list">
-                                                    <% brands.forEach(brand=> { %>
-                                                        <li>
-                                                            <label>
-                                                                <input type="checkbox" name="brand"
-                                                                    value="<%= brand.brandName %>"
-                                                                    <%=selectedBrands.includes(brand.brandName)
-                                                                    ? 'checked' : '' %>>
+                            <!-- Brand Filter -->
+                            <div class="card">
+                                <div class="card-heading d-flex justify-content-between align-items-center">
+                                    <a class="d-flex justify-content-between w-100 p-2" data-toggle="collapse"
+                                        data-target="#collapseTwo">
+                                        Branding<span class="align-items-center"><i
+                                                class="fa fa-chevron-down"></i></span>
+                                    </a>
+                                </div>
+                                <div id="collapseTwo" class="collapse">
+                                    <div class="card-body">
+                                        <div class="shop__sidebar__brand">
+                                            <ul class="list-unstyled">
+                                                <% brands.forEach(brand=> { %>
+                                                    <li>
+                                                        <input type="checkbox" name="brand"
+                                                            value="<%= brand.brandName %>"
+                                                            <%=selectedBrands.includes(brand.brandName) ? 'checked' : ''
+                                                            %> id="brand_<%= brand.brandName %>">
+                                                            <label for="brand_<%= brand.brandName %>">
                                                                 <%= brand.brandName %>
                                                             </label>
-                                                        </li>
-                                                        <% }); %>
-                                                </ul>
-                                            </div>
+                                                    </li>
+                                                    <% }); %>
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- Price Filter -->
-                                <div class="card">
-                                    <div class="card-heading d-flex justify-content-between align-items-center">
-                                        <a class="d-flex justify-content-between w-100" data-toggle="collapse"
-                                            data-target="#collapseThree">
-                                            Filter Price<span class="align-items-center"><i
-                                                    class="fa fa-chevron-down"></i></span>
-                                        </a>
-                                    </div>
-                                    <div id="collapseThree" class="collapse">
-                                        <div class="card-body">
-                                            <div class="shop__sidebar__price">
-                                                <ul class="list-unstyled filter-list">
-                                                    <li>
-                                                        <label>
-                                                            <input type="radio" name="price" value="0-1000" data-min="0"
-                                                                data-max="1000" <%=minPrice==='0' && maxPrice==='1000'
-                                                                ? 'checked' : '' %>> ₹0.00 - ₹1000.00
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label>
-                                                            <input type="radio" name="price" value="1000-2000"
-                                                                data-min="1000" data-max="2000" <%=minPrice==='1000' &&
-                                                                maxPrice==='2000' ? 'checked' : '' %>> ₹1000.00 -
-                                                            ₹2000.00
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label>
-                                                            <input type="radio" name="price" value="2000-4000"
-                                                                data-min="2000" data-max="4000" <%=minPrice==='2000' &&
-                                                                maxPrice==='4000' ? 'checked' : '' %>> ₹2000.00 -
-                                                            ₹4000.00
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label>
-                                                            <input type="radio" name="price" value="4000-"
-                                                                data-min="4000" data-max="" <%=minPrice==='4000'
-                                                                ? 'checked' : '' %>> ₹4000.00+
-                                                        </label>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <!-- Price Filter -->
+                            <div class="card">
+                                <div class="card-heading d-flex justify-content-between align-items-center">
+                                    <a class="d-flex justify-content-between w-100 p-2" data-toggle="collapse"
+                                        data-target="#collapseThree">
+                                        Filter Price<span class="align-items-center"><i
+                                                class="fa fa-chevron-down"></i></span>
+                                    </a>
                                 </div>
-
-                                <!-- Apply Filters Button -->
-                                <div class="card">
+                                <div id="collapseThree" class="collapse">
                                     <div class="card-body">
-                                        <div class="row">
-                                            <div class="col d-flex justify-content-between">
-                                                <button type="submit" class="btn btn-outline-primary">Apply</button>
-                                                <button type="button" class="btn btn-outline-secondary" onclick="resetFilters()"><i class="mdi mdi-apply"></i>Reset</button>
-                                            </div>
+                                        <div class="shop__sidebar__price">
+                                            <ul class="list-unstyled">
+                                                <!-- Example price ranges -->
+                                                <li>
+                                                    <input type="checkbox" name="price" value="0-1000"
+                                                        <%=priceRanges.includes('0-1000') ? 'checked' : '' %>
+                                                    id="price_0_1000">
+                                                    <label for="price_0_1000">₹0 - ₹1000</label>
+                                                </li>
+                                                <li>
+                                                    <input type="checkbox" name="price" value="1000-2000"
+                                                        <%=priceRanges.includes('1000-2000') ? 'checked' : '' %>
+                                                    id="price_1000_2000">
+                                                    <label for="price_1000_2000">₹1000 - ₹2000</label>
+                                                </li>
+                                                <li>
+                                                    <input type="checkbox" name="price" value="2000-4000"
+                                                        <%=priceRanges.includes('2000-4000') ? 'checked' : '' %>
+                                                    id="price_2000_4000">
+                                                    <label for="price_2000_4000">₹2000 - ₹4000</label>
+                                                </li>
+                                                <li>
+                                                    <input type="checkbox" name="price" value="4000-"
+                                                        <%=priceRanges.includes('4000-') ? 'checked' : '' %>
+                                                    id="price_4000-">
+                                                    <label for="price_4000-">₹4000 - </label>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>
-                                
-                            </form>
-                        </div>
+                            </div>
+
+                            <!-- Apply Button -->
+                            <button type="submit" class="btn btn-primary mt-3">Apply Filters</button>
+                        </form>
                     </div>
                 </div>
                 <div class="col-lg-9">
@@ -242,8 +228,7 @@
                                         <input type="hidden" name="category"
                                             value="<%= selectedCategories.join(',') %>">
                                         <input type="hidden" name="brand" value="<%= selectedBrands.join(',') %>">
-                                        <input type="hidden" name="minPrice" value="<%= minPrice %>">
-                                        <input type="hidden" name="maxPrice" value="<%= maxPrice %>">
+                                        <input type="hidden" name="price" value="<%= priceRanges.join(',') %>">
                                         <input type="hidden" name="page" value="<%= currentPage %>">
                                         <select name="sort" class="form-control" onchange="this.form.submit()">
                                             <option value="popularity" <%=sort==='popularity' ? 'selected' : '' %>
@@ -281,8 +266,7 @@
                                                     <!-- Wishlist icon -->
                                                     <a href="javascript:void(0);" class="add-wishlist"
                                                         data-product-id="<%= product._id %>">
-                                                        <img src="/static/img/icon/<%= product.isWishlisted ? 'heart-red' : 'heart' %>.png"
-                                                            alt="" style="background: transparent;">
+                                                        <i class="mdi mdi-heart"></i>
                                                         <span>Wishlist</span>
                                                     </a>
                                                 </li>
@@ -290,7 +274,7 @@
                                         </a>
                                     </div>
                                     <div class="product__item__text" style="background-color: whitesmoke;">
-                                        <h5 class="ps-4 pname">
+                                        <h5 class="ps-4 pname text-black">
                                             <%= product.productName %>
                                         </h5>
                                         <div class="rating ms-4">
@@ -334,19 +318,20 @@
                         <div class="col-lg-12">
                             <div class="product__pagination">
                                 <% if (currentPage> 1) { %>
-                                    <a href="?category=<%= selectedCategories.join(',') %>&brand=<%= selectedBrands.join(',') %>&minPrice=<%= minPrice %>&maxPrice=<%= maxPrice %>&page=<%= currentPage - 1 %>"
+                                    <a href="?category=<%= selectedCategories.join(',') %>&brand=<%= selectedBrands.join(',') %>&priceRange=<%= priceRanges.join(',') %>&page=<%= currentPage - 1 %>"
                                         class="text-decoration-none">&laquo;</a>
                                     <% } %>
-                                    <% for (let i=Math.max(1, currentPage - 1); i <=Math.min(currentPage + 1, totalPages); i++) { %>
-                                        <a class="<%= i === currentPage ? 'active' : '' %> text-decoration-none"
-                                                href="?category=<%= selectedCategories.join(',') %>&brand=<%= selectedBrands.join(',') %>&minPrice=<%= minPrice %>&maxPrice=<%= maxPrice %>&page=<%= i %>">
-                                            <%= i %>
-                                        </a>
-                                    <% } %>
-                                    <% if (currentPage < totalPages) { %>
-                                        <a href="?category=<%= selectedCategories.join(',') %>&brand=<%= selectedBrands.join(',') %>&minPrice=<%= minPrice %>&maxPrice=<%= maxPrice %>&page=<%= currentPage + 1 %>"
-                                            class="text-decoration-none">&raquo;</a>                                            
-                                    <% } %>
+                                        <% for (let i=Math.max(1, currentPage - 1); i <=Math.min(currentPage + 1,
+                                            totalPages); i++) { %>
+                                            <a class="<%= i === currentPage ? 'active' : '' %> text-decoration-none"
+                                                href="?category=<%= selectedCategories.join(',') %>&brand=<%= selectedBrands.join(',') %>&priceRange=<%= priceRanges.join(',') %>&page=<%= i %>">
+                                                <%= i %>
+                                            </a>
+                                            <% } %>
+                                                <% if (currentPage < totalPages) { %>
+                                                    <a href="?category=<%= selectedCategories.join(',') %>&brand=<%= selectedBrands.join(',') %>&priceRange=<%= priceRanges.join(',') %>&page=<%= currentPage + 1 %>"
+                                                        class="text-decoration-none">&raquo;</a>
+                                                    <% } %>
                             </div>
                         </div>
                     </div>
@@ -464,29 +449,31 @@
             text-overflow: ellipsis;
             display: block;
         }
+
         .filter-list li {
-    margin-bottom: 10px;
-}
+            margin-bottom: 10px;
+        }
 
-.filter-list label {
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-}
+        .filter-list label {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
 
-.filter-list input[type="checkbox"],
-.filter-list input[type="radio"] {
-    margin-right: 10px;
-    transform: scale(1.2);
-}
-.shop__sidebar__search input[type="text"] {
-    border-radius: 20px;
-}
+        .filter-list input[type="checkbox"],
+        .filter-list input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
 
-.shop__sidebar__search button {
-    border-radius: 20px;
-    padding: 8px 16px;
-}
+        .shop__sidebar__search input[type="text"] {
+            border-radius: 20px;
+        }
+
+        .shop__sidebar__search button {
+            border-radius: 20px;
+            padding: 8px 16px;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
@@ -620,44 +607,39 @@
                 });
             });
 
-            document.querySelectorAll('.add-wishlist').forEach(button => {
-                button.addEventListener('click', async (event) => {
-                    event.preventDefault();
-                    const productId = button.getAttribute('data-product-id');
-                    const isInWishlist = button.getAttribute('data-in-wishlist') === 'true';
+
+            const buttons = document.querySelectorAll('.add-wishlist');
+            console.log('Buttons found:', buttons.length);
+
+            buttons.forEach(button => {
+                console.log('Button:', button);
+                button.addEventListener('click', async function () {
+                    const productId = this.getAttribute('data-product-id');
+                    console.log('Product ID:', productId);
 
                     try {
                         const response = await fetch('/account/wishlist/add_wishlist', {
                             method: 'POST',
                             headers: {
-                                'Content-Type': 'application/json'
+                                'Content-Type': 'application/json',
                             },
                             body: JSON.stringify({ productId })
                         });
+
                         if (response.ok) {
-                            button.querySelector('img').src = '/static/img/icon/full-heart.png';
-                            button.setAttribute('data-in-wishlist', 'true');
+                            this.querySelector('i').classList.add('text-danger');
+                            this.setAttribute('data-in-wishlist', 'true');
                         } else {
-                            const errorData = await response.json();
-                            console.error('Error:', errorData);
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Error adding product to wishlist.',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
+                            console.error('Failed to add to wishlist');
                         }
                     } catch (error) {
-                        console.error('Fetch error:', error);
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'Error adding product to wishlist.',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
+                        console.error('Error:', error);
                     }
                 });
             });
+
+
+
 
             document.getElementById('sort-options').addEventListener('change', function () {
                 const selectedSortOption = this.value;
@@ -681,39 +663,8 @@
                 });
             });
         });
-        document.getElementById('filter-form').addEventListener('submit', function (event) {
-            const selectedRadio = document.querySelector('input[name="price"]:checked');
-
-            if (selectedRadio) {
-                const minPrice = selectedRadio.getAttribute('data-min');
-                const maxPrice = selectedRadio.getAttribute('data-max');
-
-                // Set hidden inputs for minPrice and maxPrice
-                document.querySelector('input[name="minPrice"]').value = minPrice;
-                document.querySelector('input[name="maxPrice"]').value = maxPrice;
-            }
-        });
-        function resetFilters() {
-            document.querySelector('input[name="search"]').value = '';
-
-            document.querySelector('input[name="minPrice"]').value = '';
-            document.querySelector('input[name="maxPrice"]').value = '';
-
-            document.querySelectorAll('input[name="price"]').forEach(radio => {
-                radio.checked = false;
-            });
-
-            document.querySelectorAll('input[name="category"]').forEach(checkbox => {
-                checkbox.checked = false;
-            });
-            document.querySelectorAll('input[name="brand"]').forEach(checkbox => {
-                checkbox.checked = false;
-            });
-
-            document.getElementById('filter-form').submit();
-        }
-
-
+    </script>
+    <script>
 
     </script>
     <!-- Js Plugins -->

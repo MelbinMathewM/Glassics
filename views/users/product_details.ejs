@@ -203,25 +203,25 @@
 												Now&nbsp;&nbsp;&nbsp;&nbsp;</button>
 										</div>
 
-										<ul class="product-btns">
-											<li><a href="#" class="text-decoration-none"><i class="fa fa-heart-o"></i>
-													add to wishlist</a></li>
-											<li><a href="#" class="text-decoration-none"><i class="fa fa-exchange"></i>
-													add to compare</a></li>
-										</ul>
+										<a href="javascript:void(0);" class="add-wishlist text-decoration-none fw-bold"
+                                                        data-product-id="<%= product._id %>">
+                                                        <i class="mdi mdi-heart"></i>
+                                                        <span>Wishlist</span>
+                                                    </a>																	
+										
 
 										<ul class="product-links">
 											<li>Category:</li>
 											<li><a href="#" class="text-decoration-none">
-													<%= product.productCategory %>
+													<%= product.productCategory.categoryName %>
 												</a></li>
 										</ul>
 
 										<ul class="product-links">
 											<li>Share:</li>
-											<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-											<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-											<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+											<li><a href="#"><i class="mdi mdi-facebook"></i></a></li>
+											<li><a href="#"><i class="mdi mdi-twitter"></i></a></li>
+											<li><a href="#"><i class="mdi mdi-google-plus"></i></a></li>
 											<li><a href="#"><i class="fa fa-envelope"></i></a></li>
 										</ul>
 									</div>
@@ -266,34 +266,57 @@
 												<div id="tab2" class="tab-pane fade">
 													<div class="row">
 														<div class="col-md-12">
-															<p><strong>Product Name :</strong>
-																<%= product.productName %>
-															</p>
-															<p><strong>Product Category :</strong>
-																<%= product.productCategory %>
-															</p>
-															<p><strong>Product Brand :</strong>
-																<%= product.productBrand %>
-															</p>
-															<p><strong>Product Gender :</strong>
-																<%= product.productGender %>
-															</p>
-															<p><strong>Frame material:</strong>
-																<%= product.frameMaterial %>
-															</p>
-															<p><strong>Frame shape:</strong>
-																<%= product.frameShape %>
-															</p>
-															<p><strong>Frame style:</strong>
-																<%= product.frameStyle %>
-															</p>
-															<p><strong>Lens type:</strong>
-																<%= product.lensType %>
-															</p>
-															<p><strong>Special features:</strong>
-																<%= product.specialFeatures %>
-															</p>
-
+															<div class="row">
+																<div class="col-12 col-md-4">
+																	<p><strong>Product Name :</strong>
+																		<%= product.productName %>
+																	</p>
+																</div>
+																<div class="col-12 col-md-4">
+																	<p><strong>Product Category :</strong>
+																		<%= product.productCategory.categoryName %>
+																	</p>
+																</div>
+																<div class="col-12 col-md-4">
+																	<p><strong>Product Brand :</strong>
+																		<%= product.productBrand.brandName %>
+																	</p>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-12 col-md-4">
+																	<p><strong>Product Gender :</strong>
+																		<%= product.productGender %>
+																	</p>
+																</div>
+																<div class="col-12 col-md-4">
+																	<p><strong>Frame material:</strong>
+																		<%= product.frameMaterial %>
+																	</p>
+																</div>
+																<div class="col-12 col-md-4">
+																	<p><strong>Frame shape:</strong>
+																		<%= product.frameShape %>
+																	</p>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-12 col-md-4">
+																	<p><strong>Frame style:</strong>
+																		<%= product.frameStyle %>
+																	</p>
+																</div>
+																<div class="col-12 col-md-4">
+																	<p><strong>Lens type:</strong>
+																		<%= product.lensType %>
+																	</p>
+																</div>
+																<div class="col-12 col-md-4">
+																	<p><strong>Special features:</strong>
+																		<%= product.specialFeatures %>
+																	</p>
+																</div>
+															</div>
 														</div>
 													</div>
 												</div>
@@ -876,6 +899,61 @@
 				});
 			}
 		});
+
+		document.addEventListener('DOMContentLoaded', function() {
+    const wishlistButton = document.querySelector('.add-wishlist');
+
+    if (wishlistButton) {
+        wishlistButton.addEventListener('click', async (event) => {
+            event.preventDefault();
+            const productId = wishlistButton.getAttribute('data-product-id');
+            
+            try {
+                const response = await fetch('/account/wishlist/add_wishlist', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ productId })
+                });
+
+                if (response.ok) {
+                    // Update UI to indicate product has been added to wishlist
+                    wishlistButton.querySelector('i').className = 'mdi mdi-heart text-danger';
+                    wishlistButton.setAttribute('data-in-wishlist', 'true');
+
+                    Swal.fire({
+                        title: 'Added!',
+                        text: 'Product has been added to your wishlist.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    const errorData = await response.json();
+                    console.error('Error:', errorData);
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Error adding product to wishlist.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Error adding product to wishlist.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    }
+});
+
+
+
+
 	</script>
 	
 	<!-- Js Plugins -->

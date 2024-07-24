@@ -15,7 +15,7 @@ a_route.use(session({
     saveUninitialized: false,
     cookie: {
         path: '/admin',
-        _expires: 86400000,
+        expires: 86400000,
         httpOnly: true
     }
 }));
@@ -128,7 +128,7 @@ a_route.use((err, req, res, next) => {
 });
 
 a_route.use((req, res, next) => {
-    res.status(404).render('404', { message: 'Page not found' });
+    res.status(404).render('404');
 });
 
 module.exports = a_route;

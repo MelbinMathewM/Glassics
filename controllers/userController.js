@@ -33,20 +33,25 @@ const loadShop = async (req, res) => {
         const userId = req.session.user_id;
         const categoriesParam = req.query.category || [];
         const brandsParam = req.query.brand || [];
-        const minPrice = parseFloat(req.query.minPrice) || null;
-        const maxPrice = parseFloat(req.query.maxPrice) || null;
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 12;
         const sortOption = req.query.sort || 'popularity';
         const searchQuery = req.query.search || '';
+        const priceRangesParam = req.query.price || [];
 
-        // Ensure categoriesParam and brandsParam are arrays
-        const categories = Array.isArray(categoriesParam) ? categoriesParam : categoriesParam.split(',').filter(Boolean);
-        const brands = Array.isArray(brandsParam) ? brandsParam : brandsParam.split(',').filter(Boolean);
+        const priceRanges = Array.isArray(priceRangesParam)
+            ? priceRangesParam
+            : priceRangesParam.split(',').filter(Boolean);
+
+        const categories = Array.isArray(categoriesParam)
+            ? categoriesParam
+            : categoriesParam.split(',').filter(Boolean);
+        const brands = Array.isArray(brandsParam)
+            ? brandsParam
+            : brandsParam.split(',').filter(Boolean);
 
         let filter = { is_delete: false };
 
-        // Process categories
         if (categories.length > 0) {
             const categoryData = await Category.find({ categoryName: { $in: categories.map(cat => new RegExp(cat, 'i')) } });
             if (categoryData.length > 0) {
@@ -54,7 +59,6 @@ const loadShop = async (req, res) => {
             }
         }
 
-        // Process brands
         if (brands.length > 0) {
             const brandData = await Brand.find({ brandName: { $in: brands.map(b => new RegExp(b, 'i')) } });
             if (brandData.length > 0) {
@@ -62,25 +66,40 @@ const loadShop = async (req, res) => {
             }
         }
 
-        // Process price range
-        if (minPrice !== null && maxPrice !== null) {
-            filter['variants.discountPrice'] = { $gte: minPrice, $lte: maxPrice };
-        } else if (minPrice !== null) {
-            filter['variants.discountPrice'] = { $gte: minPrice };
-        } else if (maxPrice !== null) {
-            filter['variants.discountPrice'] = { $lte: maxPrice };
+        if (priceRanges.length > 0) {
+            let priceFilter = [];
+        
+            priceRanges.forEach(range => {
+                if (range.endsWith('-')) {
+                    const min = parseInt(range.replace('-', ''), 10);
+                    if (!isNaN(min)) {
+                        priceFilter.push({ 'variants.discountPrice': { $gte: min } });
+                    } else {
+                        console.error('Invalid price range:', range);
+                    }
+                } else {
+                    const [min, max] = range.split('-').map(Number);
+                    if (!isNaN(min) && !isNaN(max)) {
+                        priceFilter.push({ 'variants.discountPrice': { $gte: min, $lte: max } });
+                    } else {
+                        console.error('Invalid price range:', range);
+                    }
+                }
+            });
+        
+            if (priceFilter.length > 0) {
+                filter = { ...filter, $or: priceFilter };
+            }
         }
+        
 
-        // Process search query
         const searchFilter = searchQuery ? {
             productName: { $regex: new RegExp(searchQuery, 'i') }
         } : {};
 
-        // Combine filters
         const combinedFilter = { ...filter, ...searchFilter };
         const totalProducts = await Product.countDocuments(combinedFilter);
 
-        // Fetch products with aggregation
         const products = await Product.aggregate([
             { $match: combinedFilter },
             {
@@ -94,17 +113,14 @@ const loadShop = async (req, res) => {
             { $limit: limit }
         ]).collation({ locale: "en", strength: 2 });
 
-        // Fetch categories and brands
         const categoryList = await Category.find({ is_delete: false });
         const brandList = await Brand.find({ is_delete: false });
 
-        // Fetch wishlist items if user is logged in
         let wishlistItems = [];
         if (userId) {
             wishlistItems = await Wishlist.find({ userId: userId });
         }
 
-        // Render the shop page with filters and products
         res.render('shop', {
             products,
             categories: categoryList,
@@ -114,10 +130,9 @@ const loadShop = async (req, res) => {
             totalProducts,
             sort: sortOption,
             search: searchQuery,
-            selectedCategories: categories, // Pass selected categories
-            selectedBrands: brands, // Pass selected brands
-            minPrice,
-            maxPrice,
+            selectedCategories: categories,
+            selectedBrands: brands,
+            priceRanges: priceRanges, 
             wishlistItems
         });
     } catch (error) {
@@ -154,28 +169,28 @@ function getSortCriteria(sortOption) {
 const loadProductDetail = async (req, res) => {
     try {
         const productId = req.params.productId;
-        const product = await Product.findById(productId).populate('productCategory').populate('productBrand');
+        const product = await Product.findById(productId)
+            .populate('productCategory')
+            .populate('productBrand');
         if (!product) {
             return res.status(404).send('Product not found');
         }
-        const {
-            _id, productName, productGender, productDescription, productImage, frameMaterial,
-            frameShape, frameStyle, lensType, specialFeatures, variants, is_delete
-        } = product;
-        const productCategory = product.productCategory ? product.productCategory.categoryName : null;
-        const productBrand = product.productBrand ? product.productBrand.brandName : null;
-        const transformedProduct = {
-            _id, productName, productGender, productDescription, productCategory, productBrand, productImage,
-            frameMaterial, frameShape, frameStyle, lensType, specialFeatures, variants, is_delete,
-        };
-        const relatedProducts = await Product.find({ productCategory: product.productCategory });
-        transformedProduct.defaultImage =
-            variants.length > 0 && variants[0].images.length > 0
-                ? `/static/productImages/${variants[0].images[0]}`
+        const relatedProducts = await Product.find({ 
+            productCategory: product.productCategory, 
+            _id: { $ne: productId } 
+        });
+        const defaultImage = 
+            product.variants.length > 0 && product.variants[0].images.length > 0
+                ? `/static/productImages/${product.variants[0].images[0]}`
                 : '/static/default-image.jpg';
-        res.render('product_details', { product: transformedProduct, reproducts: relatedProducts });
+
+        // Render the product details page
+        res.render('product_details', { 
+            product: { ...product.toObject(), defaultImage }, 
+            reproducts: relatedProducts 
+        });
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send(error.message);
     }
 };
 
@@ -345,9 +360,9 @@ const insertWishlist = async (req, res) => {
             });
             const wishlistData = await wishlist.save();
             if (wishlistData) {
-                return res.json({ message: "added successfully" });
+                res.status(200).json({ message: "added successfully" });
             } else {
-                return res.json({ message: "Couldn't add to wishlist" })
+                return res.status(400).json({ message: "Couldn't add to wishlist" });
             }
         }
     } catch (error) {

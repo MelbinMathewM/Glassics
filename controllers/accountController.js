@@ -232,7 +232,7 @@ const addMoneyToWallet = async (req, res) => {
             receipt: `receipt_order_${Math.random() * 1000}`,
         };
         const order = await razorpayInstance.orders.create(options);
-        if (!order) return res.status(500).send('Error creating Razorpay order');
+        if (!order) return res.status(400).send('Error creating Razorpay order');
         res.json({
             success: true,
             orderId: order.id,

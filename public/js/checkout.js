@@ -171,7 +171,9 @@ addAddressForm.onsubmit = async function (event) {
                 text: data.message,
             });
             addAddressToList(newAddress);
-        addAddressModal.style.display = "none"; // Close the add address modal
+        addAddressModal.style.display = "none";
+        modalc.style.display = 'none'; 
+        addAddressForm.reset();
         } else {
             Swal.fire({
                 icon: 'error',
@@ -209,7 +211,6 @@ selectBtn.onclick = function () {
 function addAddressToList(address) {
     var addressList = document.getElementById("address-list");
     var index = addressList.children.length;
-    console.log(index);
 
     var listItem = document.createElement("li");
     listItem.innerHTML = `
@@ -229,37 +230,44 @@ function addAddressToList(address) {
 
     addressList.appendChild(listItem);
 
-    // Rebind select button click event to handle dynamically added addresses
-    selectBtn.onclick = function () {
-        var selectedAddressRadio = document.querySelector('input[name="address"]:checked');
-        if (selectedAddressRadio) {
-            var selectedAddressIndex = selectedAddressRadio.value;
-            var selectedAddress = document.querySelector('label[for="address-' + selectedAddressIndex + '"]').innerText;
-            document.getElementById("addressDetails").value = selectedAddressIndex;
-            currentAddress.innerText = "Current Address: " + selectedAddress;
-            modalc.style.display = "none";
-        } else {
-            Swal.fire({
-                icon: 'warning',
-                title: 'No Address Selected',
-                text: 'Please select an address.',
-            });
-        }
-    };
-
     // Automatically select the newly added address
     var newAddressRadio = document.getElementById(`address-${index}`);
-    newAddressRadio.checked = true;
-    var selectedAddress = document.querySelector('label[for="address-' + index + '"]').innerText;
-    document.getElementById("addressDetails").value = index;
-    currentAddress.innerText = "Current Address: " + selectedAddress;
+    if (newAddressRadio) {
+        newAddressRadio.checked = true;
+        var selectedAddress = document.querySelector('label[for="address-' + index + '"]').innerText;
+        var addressDetails = document.getElementById("addressDetails");
+        var currentAddress = document.getElementById("current-address");
 
-    newAddressRadio.onclick = function () {
-        document.getElementById("addressDetails").value = index;
-        currentAddress.innerText = "Current Address: " + selectedAddress;
-    };
+        if (addressDetails) {
+            addressDetails.value = index;
+        } else {
+            console.warn('Element with ID "addressDetails" not found.');
+        }
+
+        if (currentAddress) {
+            currentAddress.innerText = "Current Address: " + selectedAddress;
+        } else {
+            console.warn('Element with ID "current-address" not found. Creating it dynamically.');
+
+            // Create currentAddress element if it doesn't exist
+            var newCurrentAddress = document.createElement('div');
+            newCurrentAddress.id = 'current-address';
+            newCurrentAddress.innerText = "Current Address: " + selectedAddress;
+            document.querySelector('.address-container').appendChild(newCurrentAddress);
+        }
+
+        newAddressRadio.onclick = function () {
+            if (addressDetails) {
+                addressDetails.value = index;
+            }
+            if (currentAddress) {
+                currentAddress.innerText = "Current Address: " + selectedAddress;
+            }
+        };
+    } else {
+        console.error('Radio button with ID "address-' + index + '" not found.');
+    }
 }
-
 
 function formatPrice(price) {
     return `₹${price.toFixed(2)}`;

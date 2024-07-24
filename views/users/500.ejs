@@ -2,7 +2,34 @@
 
 <h1>500 - Internal Server Error</h1>
     <p>Sorry, something went wrong on our end.</p>
-    <button onclick="window.history.back()">Go Back</button>
-    <a href="/">Go to Home</a>
+    <button class="btn btn-outline-secondary m-3" onclick="window.history.back()">Go Back</button>
+    <a href="/" class="text-decoration-none fw-bold">Go to Home</a>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            color: #333;
+            text-align: center;
+        }
 
+        h1 {
+            font-size: 4em;
+            margin: 0;
+            color: #e74c3c;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        .text-decoration-none:hover{
+            color: red;
+        }
+    </style>
 <%- include('../partials/footer') %>
