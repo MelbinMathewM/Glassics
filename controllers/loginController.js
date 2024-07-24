@@ -262,7 +262,7 @@ const postForgotPassword = async (req, res) => {
         user.resetToken = token;
         user.resetTokenExpiration = Date.now() + 3600000;
         await user.save();
-        const resetUrl = `http://www.glassics.shop/reset_password/${token}`;
+        const resetUrl = `https://glassics.shop/reset_password/${token}`;
         await sendResetLinkViaEmail(email, `${resetUrl}`);
         res.json({ message: 'Password reset link has been sent to your email.' });
     } catch (error) {
