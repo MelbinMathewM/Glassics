@@ -38,12 +38,16 @@ const loadShop = async (req, res) => {
         const sortOption = req.query.sort || 'popularity';
         const searchQuery = req.query.search || '';
         const priceRangesParam = req.query.price || [];
+        console.log(priceRangesParam);
+        
 
         // Handle priceRanges and categories as arrays
         const priceRanges = Array.isArray(priceRangesParam)
             ? priceRangesParam
             : priceRangesParam.split(',').filter(Boolean);
 
+            console.log(priceRanges);
+            
         const categories = Array.isArray(categoriesParam)
             ? categoriesParam
             : categoriesParam.split(',').filter(Boolean);

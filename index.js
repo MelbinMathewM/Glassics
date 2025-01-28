@@ -30,6 +30,6 @@ app.use('/',u_route);
 
 //port specify
 const port = process.env.PORT || 3003;
-app.listen(port,() => {
+app.listen(port,"0.0.0.0",() => {
     console.log(`server started at http://localhost:${port}`);
 });

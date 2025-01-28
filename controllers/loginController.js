@@ -77,7 +77,7 @@ const insertUser = async (req, res) => {
             userEmail: trimmedUserEmail,
             userMobile: trimmedUserMobile,
             password: await securePassword(trimmedPassword),
-            is_blocked: 0
+            is_blocked: 0   
         };
         await sendOTPViaEmail(trimmedUserEmail, otp);
         res.status(200).json({ redirectUrl: '/otp_validation' });
@@ -205,7 +205,7 @@ passport.use(new GoogleStrategy({
             await user.save();
         }
 
-        done(null, user);
+        done(null, user); 
     } catch (err) {
         console.error('Error in Google OAuth:', err);
         done(err);
@@ -267,7 +267,7 @@ const postForgotPassword = async (req, res) => {
         user.resetToken = token;
         user.resetTokenExpiration = Date.now() + 3600000;
         await user.save();
-        const resetUrl = `https://glassics.shop/reset_password/${token}`;
+        const resetUrl = `http://localhost:3003/reset_password/${token}`;
         await sendResetLinkViaEmail(email, `${resetUrl}`);
         res.json({ message: 'Password reset link has been sent to your email.' });
     } catch (error) {

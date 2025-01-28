@@ -87,7 +87,7 @@
                                 <input type="hidden" name="sort" value="<%= sort %>">
                                 <input type="hidden" name="brand" value="<%= selectedBrands.join(',') %>">
                                 <input type="hidden" name="category" value="<%= selectedCategories.join(',') %>">
-                                
+                                <input type="hidden" name="price" value="<%= priceRanges.join(',') %>">
                                 <input type="hidden" name="page" value="<%= currentPage %>">
                                 <button type="submit"><span class="fa fa-search"></span></button>
                             </form>
@@ -176,25 +176,25 @@
                                                 <!-- Example price ranges -->
                                                 <li>
                                                     <input type="checkbox" name="price" value="0-1000"
-                                                        
+                                                        <%=priceRanges.includes('0-1000') ? 'checked' : '' %>
                                                     id="price_0_1000">
                                                     <label for="price_0_1000">₹0 - ₹1000</label>
                                                 </li>
                                                 <li>
                                                     <input type="checkbox" name="price" value="1000-2000"
-                                                       
+                                                        <%=priceRanges.includes('1000-2000') ? 'checked' : '' %>
                                                     id="price_1000_2000">
                                                     <label for="price_1000_2000">₹1000 - ₹2000</label>
                                                 </li>
                                                 <li>
                                                     <input type="checkbox" name="price" value="2000-4000"
-                                                        
+                                                        <%=priceRanges.includes('2000-4000') ? 'checked' : '' %>
                                                     id="price_2000_4000">
                                                     <label for="price_2000_4000">₹2000 - ₹4000</label>
                                                 </li>
                                                 <li>
                                                     <input type="checkbox" name="price" value="4000-"
-                                                        
+                                                        <%=priceRanges.includes('4000-') ? 'checked' : '' %>
                                                     id="price_4000-">
                                                     <label for="price_4000-">₹4000 - </label>
                                                 </li>
@@ -228,7 +228,7 @@
                                         <input type="hidden" name="category"
                                             value="<%= selectedCategories.join(',') %>">
                                         <input type="hidden" name="brand" value="<%= selectedBrands.join(',') %>">
-                                        
+                                        <input type="hidden" name="price" value="<%= priceRanges.join(',') %>">
                                         <input type="hidden" name="page" value="<%= currentPage %>">
                                         <select name="sort" class="form-control" onchange="this.form.submit()">
                                             <option value="popularity" <%=sort==='popularity' ? 'selected' : '' %>
@@ -318,18 +318,18 @@
                         <div class="col-lg-12">
                             <div class="product__pagination">
                                 <% if (currentPage> 1) { %>
-                                    <a href="?category=<%= selectedCategories.join(',') %>&brand=<%= selectedBrands.join(',') %>&page=<%= currentPage - 1 %>"
+                                    <a href="?category=<%= selectedCategories.join(',') %>&brand=<%= selectedBrands.join(',') %>&priceRange=<%= priceRanges.join(',') %>&page=<%= currentPage - 1 %>"
                                         class="text-decoration-none">&laquo;</a>
                                     <% } %>
                                         <% for (let i=Math.max(1, currentPage - 1); i <=Math.min(currentPage + 1,
                                             totalPages); i++) { %>
                                             <a class="<%= i === currentPage ? 'active' : '' %> text-decoration-none"
-                                                href="?category=<%= selectedCategories.join(',') %>&brand=<%= selectedBrands.join(',') %>&page=<%= i %>">
+                                                href="?category=<%= selectedCategories.join(',') %>&brand=<%= selectedBrands.join(',') %>&priceRange=<%= priceRanges.join(',') %>&page=<%= i %>">
                                                 <%= i %>
                                             </a>
                                             <% } %>
                                                 <% if (currentPage < totalPages) { %>
-                                                    <a href="?category=<%= selectedCategories.join(',') %>&brand=<%= selectedBrands.join(',') %>&page=<%= currentPage + 1 %>"
+                                                    <a href="?category=<%= selectedCategories.join(',') %>&brand=<%= selectedBrands.join(',') %>&priceRange=<%= priceRanges.join(',') %>&page=<%= currentPage + 1 %>"
                                                         class="text-decoration-none">&raquo;</a>
                                                     <% } %>
                             </div>
