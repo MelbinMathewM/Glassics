@@ -1,62 +1,10 @@
 <%- include('../partials/header') %>
     <!-- header section start -->
-    <header class="header border-bottom">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-3 col-md-3 col-6">
-                    <div class="header__logo">
-                        <a class="text-decoration-none" href="/">
-                            <h1 class="fw-bold" style="font-style: italic;">Glassics</h1>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 d-none d-md-block">
-                    <nav class="header__menu mobile-menu">
-                        <ul>
-                            <li><a class="text-decoration-none" href="/">Home</a></li>
-                            <li class="active"><a class="text-decoration-none" href="/shop">Shop</a></li>
-                            <% if (isAuthenticated) { %>
-                                <li><a class="text-decoration-none" href='/account/profile'>Account</a></li>
-                            <% } else { %>
-                                <li><a class="text-decoration-none" href="/login">Sign In</a></li>
-                            <% } %>
-                            <li><a class="text-decoration-none" href="./blog.html">Blog</a></li>
-                            <li><a class="text-decoration-none" href="./contact.html">Contacts</a></li>
-                        </ul>
-                    </nav>
-                </div>
-                <div class="col-lg-3 col-md-3 col-6 d-flex justify-content-end align-items-center">
-                    <div class="button-container d-flex flex-row">
-                        <div class="mb-3 mt-2 ml-auto justify-content-end align-items-end d-flex">
-                            <a><img src="/static/img/icon/cart.png" alt=""></a>
-                        </div>
-                        <button class="navbar-toggler d-lg-none mt-2" type="button" data-toggle="collapse" data-target="#navbarNav">
-                            <span class="navbar-toggler-icon fa fa-bars"></span>
-                        </button>
-                    </div>
-                </div>    
-            </div>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <nav class="navbar-nav active">
-                    <ul class="navbar-nav">
-                        <li><a class="nav-link" href="/">Home</a></li>
-                        <li><a class="nav-link" href="/shop" style="color: red;">Shop</a></li>
-                        <% if (isAuthenticated) { %>
-                            <li><a class="text-decoration-none" href='/account/profile'>Account</a></li>
-                            <% } else { %>
-                                <li><a class="text-decoration-none" href="/login">Sign In</a></li>
-                                <% } %>
-                                    <li><a class="nav-link" href="./blog.html">Blog</a></li>
-                                    <li><a class="nav-link" href="./contact.html">Contacts</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </header>
+    <%- include('../partials/user-header', { isAuthenticated: isAuthenticated }) %>
     <!-- Header Section End -->
 
     <!-- Breadcrumb Section Begin -->
-    <section class="breadcrumb-option mt-5 pt-5">
+    <section class="breadcrumb-option mt-4 pt-4">
         <div class="container mt-5">
             <div class="row">
                 <div class="col-lg-12">
